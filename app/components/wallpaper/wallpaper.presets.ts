@@ -1,0 +1,44 @@
+import { ImageStyle } from "react-native"
+
+/**
+ * All wallpaper will start off looking like this.
+ */
+const BASE: ImageStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+}
+const FULL_WIDTH: ImageStyle = {
+  position: "absolute",
+}
+
+/**
+ * All the variations of wallpaper styling within the app.
+ *
+ * You want to customize these to whatever you need in your app.
+ */
+export const presets = {
+  /**
+   * The default wallpaper styles.
+   */
+  stretch: {
+    ...BASE,
+    resizeMode: 'stretch',
+    width: null, // Have to set these to null because android ¯\_(ツ)_/¯
+    height: null,
+  } as ImageStyle,
+
+  fullWidth: {
+    ...FULL_WIDTH,
+    width: "100%", // Have to set these to null because android ¯\_(ツ)_/¯
+    height: null,
+    aspectRatio: 375 / 354
+  } as ImageStyle,
+}
+
+/**
+ * A list of preset names.
+ */
+export type WallpaperPresets = keyof typeof presets
