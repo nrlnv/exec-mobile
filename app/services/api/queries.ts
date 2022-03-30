@@ -197,8 +197,8 @@ export const GET_CATEGORIES = gql`
 `
 
 export const GET_BENEFITS = gql`
-  query Benefits($page: Int, $limit: Int, $category: String, $order: Order) {
-    benefits(page: $page, limit: $limit, category: $category, order: $order) {
+  query Benefits($page: Int, $limit: Int, $category: String, $order: Order, $city: String, $scope: String) {
+    benefits(page: $page, limit: $limit, category: $category, order: $order, city: $city,  scope: $scope) {
       collection {
         id
         additionalInformation

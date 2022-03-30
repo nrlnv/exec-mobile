@@ -31,7 +31,7 @@ export const CategoryBenefitItem = (props) => {
                 </View>
             </View>
             <Text style={styles.title} text={value.name}/>
-            <Text style={styles.description} text={value.benefitSummary}/>
+            <Text style={styles.description} text={value.otherRateOffer}/>
         </Pressable>
     )
 }

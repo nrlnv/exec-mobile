@@ -1,51 +1,94 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Avatar, Header, Screen, Text, Wallpaper } from '../../components';
-import { color } from '../../theme';
-import { CARET_DOWN, CATEGORY_HEADER, FILTER } from '../../../assets/images';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { perfectSize } from '../../utils/dimmesion';
-import Hotel from '../../../assets/svgs/hotel';
-import { destinationsConst, filtersConst } from '../../utils/constants';
-import { DestinationsItem } from './components/destinationsItem';
-import { CityItem } from './components/cityItem';
-import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql';
-import { useLazyQuery } from '@apollo/client';
-import { GET_BENEFITS } from '../../services/api/queries';
-import { CategoryBenefitItem } from './components/categoryBenefitItem';
-import { FilterModal } from '../history/components/filterModal';
-import { ChooseCategoryModal } from './components/chooseCategoryModal';
-import { SearchView } from '../explore/components/searchView';
+import { useNavigation, useRoute } from '@react-navigation/native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { DESTINATION_HEADER, FILTER } from '../../../assets/images'
+import { Avatar, Header, Screen, Text, Wallpaper } from '../../components'
+import { color } from '../../theme'
+import { perfectSize } from '../../utils/dimmesion'
+import Marker from '../../../assets/svgs/marker'
+import { SearchView } from '../explore/components/searchView'
+import {filtersConst} from '../../utils/constants'
+import { CategoryItem } from '../explore/components/category-item'
+import Hotel from '../../../assets/svgs/hotel'
+import Lifestyle from '../../../assets/svgs/lifestyle'
+import Travel from '../../../assets/svgs/travel'
+import Restaurant from '../../../assets/svgs/restaurant'
+import ArrowRightBig from '../../../assets/svgs/arrow_right_big'
+import { DestinationsItem } from '../category/components/destinationsItem'
+import { FilterModal } from '../history/components/filterModal'
+import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql'
+import { useLazyQuery } from '@apollo/client'
+import { GET_BENEFITS } from '../../services/api/queries'
+import { CategoryBenefitItem } from '../category/components/categoryBenefitItem'
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
 
-export const CategoryScreen = () => {
+const categoriesConst = [
+    {
+        id: 0,
+        text: 'Hotels',
+        icon: <Hotel color={color.palette.white} />
+    },
+    {
+        id: 1,
+        text: 'Lifestyle',
+        icon: <Lifestyle color={color.palette.white} />
+    },
+    {
+        id: 2,
+        text: 'Travel',
+        icon: <Travel color={color.palette.white} />
+    },
+    {
+        id: 3,
+        text: 'Experiences',
+        icon: <Hotel color={color.palette.white} />
+    },
+    {
+        id: 4,
+        text: 'Restaurants',
+        icon: <Restaurant color={color.palette.white} />
+    },
+    {
+        id: 5,
+        text: 'View All',
+        icon: <ArrowRightBig color={color.palette.white} />
+    },
+]
+
+export const DestinationScreen = () => {
     const route = useRoute()
-    const { category } = route?.params
+    const {destination} = route?.params
     const insets = useSafeAreaInsets()
     const insetStyle = { marginTop: insets.top }
     const navigation = useNavigation()
-    const [currentDestination, setCurrentDestination] = useState(0)
-    const [currentFilter, setCurrentFilter] = useState(0)
 
     const [sort1, setSort1] = useState(0)
     const [sort2, setSort2] = useState(0)
     const [filterCategories, setFilterCategories] = useState([])
     const [showFilterModal, setShowFilterModal] = useState(false)
+    const [currentFilter, setCurrentFilter] = useState(0)
     const toggleFilterModal = () => {
         setShowFilterModal(prevState => !prevState)
       }
 
-    const [showCategoryModal, setShowCategoryModal] = useState(false)
-    const toggleCategoryModal = () => {
-        setShowCategoryModal(prevState => !prevState)
+    const renderItem = ({item}) => {
+        return (
+            <CategoryItem
+                title={item.text}
+                icon={item.icon}
+                onPress={() => {}}
+                style={{marginRight: item.id % 3 === 2 ? 0 : perfectSize(4), maxWidth: perfectSize(106), marginBottom: perfectSize(4)}}
+            />
+        )
     }
 
-    const onChangeCategory = (category) => {
-        navigation.setParams({category})
-        toggleCategoryModal()
+    const renderBenefitItem = ({item}) => {
+        return (
+            <CategoryBenefitItem value={item} />
+        )
     }
 
     const [collection, setCollection] = useState<Benefit[]>([])
@@ -78,18 +121,18 @@ export const CategoryScreen = () => {
         getBenefits({
             variables: {
             page: page || 1,
-            category: category.toLowerCase(),
+            city: destination,
             order: sortOrder,
             },
         })
         },
-        [category, getBenefits]
+        [destination, getBenefits]
     )
 
     useEffect(() => {
         setCollection([])
         fetchBenefits(1)
-    }, [fetchBenefits, category])
+    }, [fetchBenefits, destination])
 
     const fetchMoreBenefits = useCallback(async () => {
         if (!error && !isFetching) {
@@ -97,17 +140,11 @@ export const CategoryScreen = () => {
         }
     }, [error, isFetching, fetchBenefits, metadata.currentPage])
 
-    const renderItem = ({item}) => {
-        return (
-        <CategoryBenefitItem value={item} />
-        )
-      }
-
     const ListHeaderComponent = () => {
         return (
             <>
                 <View style={styles.header}>
-                    <Wallpaper backgroundImage={CATEGORY_HEADER} />
+                    <Wallpaper backgroundImage={DESTINATION_HEADER} />
                     <View style={[styles.headerBack, insetStyle]} >
                         <Header leftIcon='back' headerText='Explore' onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
                         <View style={styles.avatar}>
@@ -115,43 +152,26 @@ export const CategoryScreen = () => {
                         </View>
                     </View>
                     <View style={styles.categoryTitle}>
-                        <Hotel width={26} height={30} />
-                        <TouchableOpacity style={styles.titleView} onPress={toggleCategoryModal} >
-                            <Text text={category} style={styles.categoryTitleText} />
-                            <Image source={CARET_DOWN} style={styles.icon} />
+                        <Marker />
+                        <TouchableOpacity style={styles.titleView} onPress={() => {}} >
+                            <Text text={destination} style={styles.categoryTitleText} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.categoryDescription}>
                         <Text text={'Explore the StayEXEC Hotels & Resorts program and enjoy special offers as an EXEC Member'} style={styles.descriptionText} />
                     </View>
                 </View>
-                <SearchView text={"Where do you want to go?"} />
-                <Text style={styles.sectionTitle} text={"Browse by Destination"}/>
-                <View style={styles.destinationsView}>
-                    {
-                        destinationsConst.map((destination) => (
-                            <DestinationsItem
-                                item={destination} 
-                                currentId={currentDestination} 
-                                onPress={setCurrentDestination}
-                                key={destination.id}
-                            />
-                        ))
-                    }
+                <SearchView text={'What would you like to do?'} />
+                <Text style={styles.sectionTitle} text={"Browse by Category"}/>
+                <View style={styles.categoriesView}>
+                    <FlatList
+                        data={categoriesConst}
+                        numColumns={3}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                    />
                 </View>
-                <View>
-                    <ScrollView 
-                        horizontal
-                        showsHorizontalScrollIndicator={false} 
-                        contentContainerStyle={styles.citiesView}
-                    >
-                        <CityItem text={'Oral'} />
-                        <CityItem text={'Atyrau'} />
-                        <CityItem text={'Aqtau'} />
-                        <CityItem text={'Aqtobe'} />
-                    </ScrollView>
-                </View>
-                <Text style={styles.sectionTitle} text={"Hotel Benefits"}/>
+                <Text style={styles.sectionTitle} text={`${destination} Area Benefits`}/>
                 <View style={styles.filterView}>
                     {
                     filtersConst.map(t => (
@@ -167,10 +187,10 @@ export const CategoryScreen = () => {
     }
 
     return (
-        <Screen style={styles.container} unsafe >
+        <Screen style={styles.container} unsafe>
             <FlatList
                 data={collection}
-                renderItem={renderItem}
+                renderItem={renderBenefitItem}
                 refreshing={isFetching}
                 onEndReachedThreshold={0.5}
                 onEndReached={fetchMoreBenefits}
@@ -187,11 +207,6 @@ export const CategoryScreen = () => {
                 filterCategories={filterCategories}
                 onCategoryPress={setFilterCategories}
             />
-            <ChooseCategoryModal 
-                isVisible={showCategoryModal} 
-                onBackdropPress={toggleCategoryModal} 
-                onChangeCategory={onChangeCategory}    
-            />
         </Screen>
     )
 }
@@ -199,7 +214,8 @@ export const CategoryScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: color.palette.black
+        // backgroundColor: 'yellow'
+        backgroundColor: color.palette.black,
     },
     header: {
         minHeight: perfectSize(260),
@@ -228,10 +244,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    icon: {
-        width: perfectSize(8),
-        height: perfectSize(5),
-    },
     categoryDescription: {
         marginTop: perfectSize(14),
         paddingHorizontal: perfectSize(24),
@@ -246,17 +258,6 @@ const styles = StyleSheet.create({
         lineHeight: perfectSize(26),
         color: color.palette.white,
     },
-    destinationsView: {
-        marginTop: perfectSize(16),
-        flexDirection: 'row',
-        marginLeft: perfectSize(24),
-    },
-    citiesView: {
-        flexDirection: 'row',
-        marginTop: perfectSize(20),
-        marginLeft: perfectSize(24),
-        marginBottom: perfectSize(60)
-    },
     filterView: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -267,5 +268,10 @@ const styles = StyleSheet.create({
     filterIcon: {
         width: perfectSize(40),
         height: perfectSize(40),
+    },
+    categoriesView: {
+        marginHorizontal: perfectSize(24), 
+        marginTop: perfectSize(20), 
+        marginBottom: perfectSize(60)
     }
 })

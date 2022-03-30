@@ -8,7 +8,6 @@ import PagerView from "react-native-pager-view"
 import { color } from "../../theme"
 import { perfectSize } from "../../utils/dimmesion"
 import { SliderItem } from "./components/slider-item"
-import Search from "../../../assets/svgs/search"
 import Hotel from "../../../assets/svgs/hotel"
 import { CategoryItem } from "./components/category-item"
 import Lifestyle from "../../../assets/svgs/lifestyle"
@@ -23,10 +22,11 @@ import { configBenefitsForPreview } from "../../utils/utils"
 import { BenefitItem } from "./components/benefit-item"
 import { BASE_URL } from "../../services/api"
 import { destinationsConst } from "../../utils/constants"
-import { CATEGORY_SCREEN } from "../../navigators/screen-name-constants"
+import { CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
 import { useNavigation } from "@react-navigation/native"
 import { DestinationsItem } from "../category/components/destinationsItem"
 import { CityItem } from "../category/components/cityItem"
+import { SearchView } from "./components/searchView"
 
 export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> = () => {
   const [activeSlide, setActiveSlide] = useState(0)
@@ -47,6 +47,10 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
 
   const navigateToCategoryScreen = (category) => {
     navigation.navigate(CATEGORY_SCREEN, {category})
+  }
+
+  const onCityPress = (destination) => {
+    navigation.navigate(DESTINATION_SCREEN, {destination})
   }
 
   return (
@@ -80,10 +84,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
       <View style={[AVATAR, insetStyle]}>
         <Avatar image={avatarUrl}/>
       </View>
-      <View style={SEARCH_CONTAINER}>
-        <Search/>
-        <Text style={SEARCH_TEXT} text={"Search for cities or benefits"}/>
-      </View>
+      <SearchView text={"Search for cities or benefits"} />
       <Text style={SECTION_TITLE} text={"Browse by Category"}/>
       <View style={CATEGORIES_CONTAINER}>
         <CategoryItem
@@ -140,10 +141,10 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={DESTINATIONS_SCROLL_CONTAINER}>
-          <CityItem text={'Oral'} />
-          <CityItem text={'Atyrau'} />
-          <CityItem text={'Aqtau'} />
-          <CityItem text={'Aqtobe'} />
+          <CityItem text={'Chicago'} onPress={() => onCityPress('Chicago')} />
+          <CityItem text={'New York'} onPress={() => onCityPress('New York')} />
+          <CityItem text={'Paris'} onPress={() => onCityPress('Paris')} />
+          <CityItem text={'Tokyo'} onPress={() => onCityPress('Tokyo')} />
         </ScrollView>
       </View>
       <View style={TITLE_ROW_CONTAINER}>
@@ -193,22 +194,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: perfectSize(24),
 },
-  destinationItem: {
-      marginRight: perfectSize(8),
-      paddingHorizontal: perfectSize(14),
-      paddingVertical: perfectSize(6),
-      borderRadius: 100,
-  },
-  destinationText: {
-      color: color.palette.neutral400
-  }
 })
 
 const ROOT: ViewStyle = {
   paddingBottom: 100,
 }
 const SLIDER_CONTAINER: ViewStyle = {
-  height: perfectSize(355),
+  // height: perfectSize(355),
   overflow: "hidden",
 }
 const AVATAR: ViewStyle = {
@@ -219,8 +211,7 @@ const AVATAR: ViewStyle = {
 const PAGE_INDICATOR_CONTAINER: ViewStyle = {
   flexDirection: "row",
   alignSelf: "center",
-  position: 'absolute',
-  top: perfectSize(260)
+  top: -perfectSize(50)
 }
 const INDICATOR_DOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -236,31 +227,14 @@ const INDICATOR_DOT_ACTIVE: ViewStyle = {
 const SLIDE_CONTAINER: ViewStyle = {
   justifyContent: "center",
 }
-const SEARCH_CONTAINER: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-  backgroundColor: color.palette.white,
-  alignSelf: "center",
-  height: perfectSize(64),
-  borderRadius: perfectSize(32),
-  marginHorizontal: perfectSize(24),
-  paddingHorizontal: perfectSize(24),
-  position: "absolute",
-  top: perfectSize(280)
-}
-const SEARCH_TEXT: TextStyle = {
-  color: color.palette.neutral400,
-  fontSize: perfectSize(18),
-  lineHeight: perfectSize(24),
-  marginLeft: perfectSize(16),
-}
+
 const TITLE_ROW_CONTAINER: ViewStyle = {
   marginTop: perfectSize(60),
   flexDirection: "row",
   justifyContent: "space-between",
 }
 const SECTION_TITLE: TextStyle = {
-  marginTop: perfectSize(30),
+  // marginTop: perfectSize(30),
   marginLeft: perfectSize(24),
   fontSize: perfectSize(20),
   lineHeight: perfectSize(26),
@@ -297,25 +271,6 @@ const MIDDLE_CATEGORY: ViewStyle = {
 const DESTINATION: TextStyle = {
   marginTop: perfectSize(60),
 }
-const DESTINATION_FILTER_CONTAINER: ViewStyle = {
-  marginTop: perfectSize(16),
-  flexDirection: "row",
-  marginLeft: perfectSize(24),
-}
-const DESTINATION_FILTER_ITEM: ViewStyle = {
-  paddingHorizontal: perfectSize(14),
-  paddingVertical: perfectSize(6),
-  borderRadius: perfectSize(15),
-}
-const DESTINATION_FILTER_ITEM_SELECTED: ViewStyle = {
-  backgroundColor: color.palette.primary500,
-}
-const DESTINATION_FILTER_ITEM_TEXT: TextStyle = {
-  color: color.palette.neutral400,
-}
-const DESTINATION_FILTER_ITEM_TEXT_SELECTED: TextStyle = {
-  color: color.palette.white,
-}
 const DESTINATIONS_CONTAINER: ViewStyle = {
   marginTop: perfectSize(20),
 }
@@ -324,26 +279,6 @@ const FOR_YOU_CONTAINER: ViewStyle = {
 }
 const DESTINATIONS_SCROLL_CONTAINER: ViewStyle = {
   paddingHorizontal: perfectSize(24),
-}
-const DESTINATION_ITEM: ViewStyle = {
-  height: perfectSize(180),
-  width: perfectSize(130),
-  marginRight: perfectSize(8),
-  borderRadius: perfectSize(5),
-  overflow: "hidden",
-  alignItems: "center",
-  justifyContent: "flex-end",
-}
-const DESTINATION_IMAGE: ImageStyle = {
-  position: "absolute",
-  height: "100%",
-  width: "100%",
-}
-const DESTINATION_ITEM_TITLE: TextStyle = {
-  color: color.palette.white,
-  fontSize: perfectSize(18),
-  lineHeight: perfectSize(24),
-  marginBottom: perfectSize(16),
 }
 const LINE: ViewStyle = {
   marginTop: perfectSize(30),

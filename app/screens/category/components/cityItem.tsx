@@ -5,9 +5,9 @@ import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const CityItem = (props) => {
-    const {text} = props
+    const {text, onPress} = props
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onPress} >
             <Image style={styles.image} source={{uri: "https://placeimg.com/360/640/any"}}/>
             <Text style={styles.title} text={text}/>
         </TouchableOpacity>

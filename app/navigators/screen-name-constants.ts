@@ -44,3 +44,6 @@ export const MY_ACCOUNT_SCREEN = "myAccount"
 
 // CATEGORY
 export const CATEGORY_SCREEN = "category"
+
+// DESTINATION
+export const DESTINATION_SCREEN = "destination"
