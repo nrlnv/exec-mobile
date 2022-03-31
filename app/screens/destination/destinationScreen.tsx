@@ -1,9 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { DESTINATION_HEADER, FILTER } from '../../../assets/images'
-import { Avatar, Header, Screen, Text, Wallpaper } from '../../components'
+import { Screen, Text, Wallpaper } from '../../components'
 import { color } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
 import Marker from '../../../assets/svgs/marker'
@@ -21,6 +20,8 @@ import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql'
 import { useLazyQuery } from '@apollo/client'
 import { GET_BENEFITS } from '../../services/api/queries'
 import { CategoryBenefitItem } from '../category/components/categoryBenefitItem'
+import { CATEGORY_AND_DESTINATION_SCREEN } from '../../navigators/screen-name-constants'
+import { HeaderwithAvatar } from '../category/components/headerWithAvatar'
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -61,8 +62,6 @@ const categoriesConst = [
 export const DestinationScreen = () => {
     const route = useRoute()
     const {destination} = route?.params
-    const insets = useSafeAreaInsets()
-    const insetStyle = { marginTop: insets.top }
     const navigation = useNavigation()
 
     const [sort1, setSort1] = useState(0)
@@ -72,15 +71,23 @@ export const DestinationScreen = () => {
     const [currentFilter, setCurrentFilter] = useState(0)
     const toggleFilterModal = () => {
         setShowFilterModal(prevState => !prevState)
-      }
+    }
+
+    const onCategoryPress = (category) => {
+        navigation.navigate(CATEGORY_AND_DESTINATION_SCREEN, {category, destination})
+    }
+
+    const categoryItemStyle = (id: number) => {
+        return {marginRight: id % 3 === 2 ? 0 : perfectSize(4), maxWidth: perfectSize(106), marginBottom: perfectSize(4)}
+    }
 
     const renderItem = ({item}) => {
         return (
             <CategoryItem
                 title={item.text}
                 icon={item.icon}
-                onPress={() => {}}
-                style={{marginRight: item.id % 3 === 2 ? 0 : perfectSize(4), maxWidth: perfectSize(106), marginBottom: perfectSize(4)}}
+                onPress={() => onCategoryPress(item.text)}
+                style={categoryItemStyle(item.id)}
             />
         )
     }
@@ -145,12 +152,7 @@ export const DestinationScreen = () => {
             <>
                 <View style={styles.header}>
                     <Wallpaper backgroundImage={DESTINATION_HEADER} />
-                    <View style={[styles.headerBack, insetStyle]} >
-                        <Header leftIcon='back' headerText='Explore' onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
-                        <View style={styles.avatar}>
-                            <Avatar image={"https://i.pravatar.cc/300"}/>
-                        </View>
-                    </View>
+                    <HeaderwithAvatar headerText='Explore' />
                     <View style={styles.categoryTitle}>
                         <Marker />
                         <TouchableOpacity style={styles.titleView} onPress={() => {}} >
@@ -214,20 +216,10 @@ export const DestinationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: 'yellow'
         backgroundColor: color.palette.black,
     },
     header: {
         minHeight: perfectSize(260),
-    },
-    headerBack: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    avatar: {
-        position: "absolute",
-        right: perfectSize(16),
     },
     categoryTitle: {
         flexDirection: 'row',

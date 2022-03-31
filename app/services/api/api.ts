@@ -101,4 +101,4 @@ export class Api {
   }
 }
 
-export const BASE_URL = 'https://goji.execdemo.me'
+export const BASE_URL = 'https://execdemo.me'

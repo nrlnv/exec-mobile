@@ -5,13 +5,13 @@ import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const DestinationsItem = (props) => {
-    const {item, onPress, currentId} = props
+    const {item, onPress, currentId, itemColor = 'transparent', textColor = color.palette.neutral400} = props
 
     const currentDestinationStyle = (id: number) => {
-        return {backgroundColor: id === currentId ? color.palette.primary500 : 'transparent'}
+        return {backgroundColor: id === currentId ? color.palette.primary500 : itemColor}
     }
     const currentDestinationTextStyle = (id: number) => {
-        return {color: id === currentId ? color.palette.white : color.palette.neutral400}
+        return {color: id === currentId ? color.palette.white : textColor}
     } 
 
     return (

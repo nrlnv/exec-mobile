@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Avatar, Header, Screen, Text, Wallpaper } from '../../components';
+import { Screen, Text, Wallpaper } from '../../components';
 import { color } from '../../theme';
 import { CARET_DOWN, CATEGORY_HEADER, FILTER } from '../../../assets/images';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { perfectSize } from '../../utils/dimmesion';
 import Hotel from '../../../assets/svgs/hotel';
@@ -17,15 +16,38 @@ import { CategoryBenefitItem } from './components/categoryBenefitItem';
 import { FilterModal } from '../history/components/filterModal';
 import { ChooseCategoryModal } from './components/chooseCategoryModal';
 import { SearchView } from '../explore/components/searchView';
+import { CATEGORY_AND_DESTINATION_SCREEN } from '../../navigators/screen-name-constants';
+import Lifestyle from '../../../assets/svgs/lifestyle';
+import Travel from '../../../assets/svgs/travel';
+import Experiences from '../../../assets/svgs/experiences';
+import Restaurant from '../../../assets/svgs/restaurant';
+import ArrowRightBig from '../../../assets/svgs/arrow_right_big';
+import { HeaderwithAvatar } from './components/headerWithAvatar';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
+export const titleIcon = (category: string) => {
+    switch (category) {
+        case 'Hotels':
+            return <Hotel width={26} height={30} />
+        case 'Lifestyle':
+            return <Lifestyle width={26} height={30} />
+        case 'Travel':
+            return <Travel width={26} height={30} />
+        case 'Experiences':
+            return <Experiences width={26} height={30} />
+        case 'Restaurants':
+            return <Restaurant width={26} height={30} />
+        case 'View All':
+            return <ArrowRightBig width={26} height={30} />
+        default:
+            return <Hotel width={26} height={30} />;
+    }
+}
 
 export const CategoryScreen = () => {
     const route = useRoute()
     const { category } = route?.params
-    const insets = useSafeAreaInsets()
-    const insetStyle = { marginTop: insets.top }
     const navigation = useNavigation()
     const [currentDestination, setCurrentDestination] = useState(0)
     const [currentFilter, setCurrentFilter] = useState(0)
@@ -101,21 +123,20 @@ export const CategoryScreen = () => {
         return (
         <CategoryBenefitItem value={item} />
         )
-      }
+    }
+
+    const onCityPress = (destination) => {
+        navigation.navigate(CATEGORY_AND_DESTINATION_SCREEN, {category, destination})
+    }
 
     const ListHeaderComponent = () => {
         return (
             <>
                 <View style={styles.header}>
                     <Wallpaper backgroundImage={CATEGORY_HEADER} />
-                    <View style={[styles.headerBack, insetStyle]} >
-                        <Header leftIcon='back' headerText='Explore' onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
-                        <View style={styles.avatar}>
-                            <Avatar image={"https://i.pravatar.cc/300"}/>
-                        </View>
-                    </View>
+                    <HeaderwithAvatar headerText='Explore' />
                     <View style={styles.categoryTitle}>
-                        <Hotel width={26} height={30} />
+                        {titleIcon(category)}
                         <TouchableOpacity style={styles.titleView} onPress={toggleCategoryModal} >
                             <Text text={category} style={styles.categoryTitleText} />
                             <Image source={CARET_DOWN} style={styles.icon} />
@@ -145,13 +166,13 @@ export const CategoryScreen = () => {
                         showsHorizontalScrollIndicator={false} 
                         contentContainerStyle={styles.citiesView}
                     >
-                        <CityItem text={'Oral'} />
-                        <CityItem text={'Atyrau'} />
-                        <CityItem text={'Aqtau'} />
-                        <CityItem text={'Aqtobe'} />
+                        <CityItem text={'Chicago'} onPress={() => onCityPress('Chicago')} />
+                        <CityItem text={'New York'} onPress={() => onCityPress('New York')} />
+                        <CityItem text={'Paris'} onPress={() => onCityPress('Paris')} />
+                        <CityItem text={'Tokyo'} onPress={() => onCityPress('Tokyo')} />
                     </ScrollView>
                 </View>
-                <Text style={styles.sectionTitle} text={"Hotel Benefits"}/>
+                <Text style={styles.sectionTitle} text={`${category} Benefits`}/>
                 <View style={styles.filterView}>
                     {
                     filtersConst.map(t => (
@@ -203,15 +224,6 @@ const styles = StyleSheet.create({
     },
     header: {
         minHeight: perfectSize(260),
-    },
-    headerBack: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    avatar: {
-        position: "absolute",
-        right: perfectSize(16),
     },
     categoryTitle: {
         flexDirection: 'row',

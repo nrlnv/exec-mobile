@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Modal from 'react-native-modal'
-import { CLOSE, FILTER_MODAL } from '../../../../assets/images';
+import { FILTER_MODAL } from '../../../../assets/images';
 import { Button, Text, Wallpaper } from '../../../components';
 import { color } from '../../../theme';
 import { filterCategoryConst, sort1const, sort2const } from '../../../utils/constants';
 import { perfectSize } from '../../../utils/dimmesion';
 import { FilterCategoryItem } from './filterCategoryItem';
+import { ModalHeader } from './modalHeader';
 
 export const FilterModal = (props) => {
     const {
@@ -35,12 +36,7 @@ export const FilterModal = (props) => {
         <Modal isVisible={isVisible} onBackdropPress={onBackdropPress} >
             <View style={styles.container}>
                 <Wallpaper backgroundImage={FILTER_MODAL} />
-                <View style={styles.header} >
-                    <Text text={'Sort By'} style={styles.sortyByText} />
-                    <TouchableOpacity onPress={onBackdropPress}>
-                        <Image source={CLOSE} style={styles.icon} />
-                    </TouchableOpacity>
-                </View>
+                <ModalHeader text={'Sort By'} onBackdropPress={onBackdropPress} />
                 <View style={styles.sortView}>
                     {
                         sort1const.map(s => (
@@ -97,10 +93,6 @@ const styles = StyleSheet.create({
         fontSize: perfectSize(20),
         lineHeight: perfectSize(26),
         color: color.palette.neutral900
-    },
-    icon: {
-        width: perfectSize(40),
-        height: perfectSize(40),
     },
     sortView: {
         borderRadius: 100,

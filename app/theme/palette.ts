@@ -13,6 +13,7 @@ export const palette = {
   codGray2: "#1A1919",
   doveGray: "#666666",
   neutral100: '#F5F5F5',
+  neutral200: '#EEEEEE',
   neutral300: '#E0E0E0',
   neutral400: "#999999",
   neutral500: "#7E7E7E",

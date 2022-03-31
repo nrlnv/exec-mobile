@@ -47,3 +47,6 @@ export const CATEGORY_SCREEN = "category"
 
 // DESTINATION
 export const DESTINATION_SCREEN = "destination"
+
+// CATEGORY AND DESTINATION
+export const CATEGORY_AND_DESTINATION_SCREEN = "categoryAndDestination"
