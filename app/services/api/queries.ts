@@ -37,6 +37,8 @@ export const GET_USER_FAVORITE_BENEFITS = gql`
         region
         slug
         otherRateOffer
+        favorited
+        redeemed
         category {
           name
           slug
@@ -65,6 +67,8 @@ export const GET_USER_REDEMPTIONS = gql`
           images {
             thumbnail
           }
+          favorited
+          redeemed
         }
       }
       metadata {
@@ -377,6 +381,8 @@ export const GET_POPULAR_BENEFITS = gql`
         country
         description
         featured
+        favorited
+        redeemed
         images {
           medium
           thumbnail
@@ -411,6 +417,8 @@ export const GET_BENEFITS_FOR_YOU = gql`
         benefitSummary
         description
         featured
+        favorited
+        redeemed
         rates {
           category
           execRate

@@ -34,13 +34,13 @@ export type NavigatorParamList = {
   history: undefined
   favorites: undefined
   myAccount: undefined
+  card: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator<NavigatorParamList>()
 
 const AppStack = () => {
-  const loggedOut = false;
   const token = useAppSelector(selectToken)
   const screenOptions = useMemo<StackNavigationOptions>(
     () => ({

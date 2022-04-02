@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { Image, Pressable, StyleSheet, TouchableOpacity, View } from "react-native"
-import { FAVORITE } from "../../../../assets/images"
+import { Image, Pressable, StyleSheet, View } from "react-native"
+import { FAVORITE, REDEEMED } from "../../../../assets/images"
 import { Text } from "../../../components"
 import { BENEFIT_DETAILS_SCREEN } from "../../../navigators/screen-name-constants"
 import { BASE_URL } from "../../../services/api"
@@ -28,9 +28,8 @@ export const BenefitItem = (props) => {
             <View style={styles.categoryView}>
                 <Label text={value.category} />
                 <View style={styles.iconsView}>
-                    <TouchableOpacity style={{}}>
-                        <Image source={FAVORITE} style={styles.icon} />
-                    </TouchableOpacity>
+                    {value.redeemed && <Image source={REDEEMED} style={styles.icon} />}
+                    {value.favorited && <Image source={FAVORITE} style={styles.icon} />}
                 </View>
             </View>
             <Text style={styles.title} text={value.name}/>
@@ -43,7 +42,7 @@ export const BenefitItem = (props) => {
     container: {
         width: perfectSize(220),
         marginRight: perfectSize(8),
-        overflow: "hidden",
+        // overflow: "hidden",
     },
     image: {
         height: perfectSize(150),
@@ -54,16 +53,17 @@ export const BenefitItem = (props) => {
         marginTop: perfectSize(-12.5),
         flexDirection: "row",
         justifyContent: "space-between",
-        marginRight: perfectSize(5),
+        // marginRight: perfectSize(5),
         marginHorizontal: perfectSize(16)
     },
     iconsView: {
         flexDirection: "row",
-        marginRight: perfectSize(16),
+        // marginRight: perfectSize(16),
     },
     icon: {
         width: perfectSize(21),
         height: perfectSize(21),
+        marginLeft: perfectSize(10)
     },
     title: {
         marginTop: perfectSize(13),

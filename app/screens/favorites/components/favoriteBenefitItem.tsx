@@ -1,34 +1,50 @@
+import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { FAVORITE, REMOVE } from '../../../../assets/images';
+import { FAVORITE, REDEEMED, REMOVE } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
 import { BASE_URL } from '../../../services/api';
+import { ADD_FAVORITE_MUTATION } from '../../../services/api/mutations';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { Label } from '../../benefit-details/components/label';
 
 export const FavoriteBenefitItem = (props) => {
-    const { value } = props
+    const { value, removeFromFavorite } = props
     const navigation = useNavigation()
 
     const onBenefitPress = () => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.slug})
     }
 
-    const renderRightActions = (progress, dragX) => {
+    const renderRightActions = () => {
         return (
-          <TouchableOpacity
-            style={styles.deleteView}>
+          <TouchableOpacity style={styles.deleteView} onPress={onRemovePress} >
                 <Image source={REMOVE} style={styles.icon} />
                 <Text text={'Remove'} style={styles.removeText} />
           </TouchableOpacity>
         );
-      };
+    };
 
     const image = value.images[0] ? BASE_URL + value.images[0] : "https://placeimg.com/360/640/any"
+
+    const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
+
+    const onRemovePress = async () => {
+        try {
+            await addFavorite({
+                variables: {
+                benefitSlug: value.slug,
+                },
+            })
+            removeFromFavorite(value.slug)
+        } catch (e) {
+            console.error(e)
+        }
+    }
 
     return (
         <Swipeable renderRightActions={renderRightActions}>
@@ -37,9 +53,8 @@ export const FavoriteBenefitItem = (props) => {
                 <View style={styles.categoryView}>
                     <Label text={value.category} />
                     <View style={styles.iconsView}>
-                        <TouchableOpacity style={{}}>
-                            <Image source={FAVORITE} style={styles.icon} />
-                        </TouchableOpacity>
+                        {value.redeemed && <Image source={REDEEMED} style={styles.icon} />}
+                        {value.favorited && <Image source={FAVORITE} style={styles.icon} />}
                     </View>
                 </View>
                 <Text style={styles.title} text={value.name}/>
@@ -71,6 +86,7 @@ const styles = StyleSheet.create({
     icon: {
         width: perfectSize(21),
         height: perfectSize(21),
+        marginLeft: perfectSize(10)
     },
     deleteView: {
         backgroundColor: color.palette.error500,

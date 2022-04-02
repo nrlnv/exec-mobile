@@ -91,7 +91,7 @@ export const CategoryAndDestinationScreen = () => {
 
     const renderItem = ({item}) => {
         return (
-        <CategoryBenefitItem value={item} />
+            <CategoryBenefitItem value={item} />
         )
     }
 

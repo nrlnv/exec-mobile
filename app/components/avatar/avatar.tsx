@@ -4,6 +4,9 @@ import { color } from "../../theme"
 import { perfectSize } from "../../utils/dimmesion"
 import { useNavigation } from "@react-navigation/native"
 import { MY_ACCOUNT_SCREEN } from "../../navigators/screen-name-constants"
+import { BASE_URL } from "../../services/api"
+import { useAppSelector } from "../../hooks/hooks"
+import { selectUser } from "../../services/redux/slices/authSlice"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -18,27 +21,23 @@ const IMAGE: ImageStyle = {
 }
 
 export interface AvatarProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
   style?: StyleProp<ViewStyle>
   width?: number,
   height?: number,
-  image?: string
 }
 
-/**
- * Describe your component here
- */
 export const Avatar = (props: AvatarProps) => {
-  const { style, image, width, height } = props
+  const { style, width, height } = props
   const navigation = useNavigation()
+  const user = useAppSelector(selectUser)
+  const {photo = {}} = user || {}
+  const avatarUrl = BASE_URL + photo.thumbnail
   const styles = Object.assign({}, CONTAINER, style)
   const imageStyle = Object.assign({}, IMAGE, {width: perfectSize(width || 40), height: perfectSize(height || 40)})
 
   return (
     <Pressable style={styles} onPress={() => navigation.navigate(MY_ACCOUNT_SCREEN)}>
-      <Image source={{uri: image}} style={imageStyle}/>
+      <Image source={{uri: avatarUrl}} style={imageStyle}/>
     </Pressable>
   )
 }

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { FAVORITE } from '../../../../assets/images';
+import { FAVORITE, REDEEMED } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
 import { BASE_URL } from '../../../services/api';
@@ -25,9 +25,8 @@ export const CategoryBenefitItem = (props) => {
             <View style={styles.categoryView}>
                 <Label text={value.category.name} />
                 <View style={styles.iconsView}>
-                    <TouchableOpacity style={{}}>
-                        <Image source={FAVORITE} style={styles.icon} />
-                    </TouchableOpacity>
+                    {value.redeemed && <Image source={REDEEMED} style={styles.icon} />}
+                    {value.favorited && <Image source={FAVORITE} style={styles.icon} />}
                 </View>
             </View>
             <Text style={styles.title} text={value.name}/>
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
     icon: {
         width: perfectSize(21),
         height: perfectSize(21),
+        marginLeft: perfectSize(10),
     },
     title: {
         marginTop: perfectSize(13),

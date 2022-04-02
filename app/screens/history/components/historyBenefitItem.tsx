@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
-import { FAVORITE, REMOVE } from '../../../../assets/images';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { FAVORITE, REDEEMED } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
 import { BASE_URL } from '../../../services/api';
@@ -18,34 +17,21 @@ export const HistoryBenefitItem = (props) => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.benefit.slug})
     }
 
-    const renderRightActions = (progress, dragX) => {
-        return (
-          <TouchableOpacity
-            style={styles.deleteView}>
-                <Image source={REMOVE} style={styles.icon} />
-                <Text text={'Remove'} style={styles.removeText} />
-          </TouchableOpacity>
-        );
-      };
-
     const image = value.benefit.images[0] ? BASE_URL + value.benefit.images[0].thumbnail : "https://placeimg.com/360/640/any"
 
     return (
-        <Swipeable renderRightActions={renderRightActions}>
-            <Pressable style={styles.container} onPress={onBenefitPress} >
-                <Image source={{uri : image}} style={styles.image} />
-                <View style={styles.categoryView}>
-                    <Label text={value.benefit.category.name} />
-                    <View style={styles.iconsView}>
-                        <TouchableOpacity style={{}}>
-                            <Image source={FAVORITE} style={styles.icon} />
-                        </TouchableOpacity>
-                    </View>
+        <Pressable style={styles.container} onPress={onBenefitPress} >
+            <Image source={{uri : image}} style={styles.image} />
+            <View style={styles.categoryView}>
+                <Label text={value.benefit.category.name} />
+                <View style={styles.iconsView}>
+                    {value.benefit.redeemed && <Image source={REDEEMED} style={styles.icon} />}
+                    {value.benefit.favorited && <Image source={FAVORITE} style={styles.icon} />}
                 </View>
-                <Text style={styles.title} text={value.benefit.name}/>
-                <Text style={styles.description} text={value.otherRateOffer}/>
-            </Pressable>
-        </Swipeable>
+            </View>
+            <Text style={styles.title} text={value.benefit.name}/>
+            <Text style={styles.description} text={value.otherRateOffer}/>
+        </Pressable>
     )
 }
 
@@ -70,18 +56,7 @@ const styles = StyleSheet.create({
     icon: {
         width: perfectSize(21),
         height: perfectSize(21),
-    },
-    deleteView: {
-        backgroundColor: color.palette.error500,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: perfectSize(17),
-        marginLeft: perfectSize(1.73),
-        borderRadius: perfectSize(5),
-        marginBottom: perfectSize(12.5)
-    },
-    removeText: {
-        marginTop: perfectSize(13)
+        marginLeft: perfectSize(10)
     },
     title: {
         marginTop: perfectSize(13),

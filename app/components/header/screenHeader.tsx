@@ -11,13 +11,12 @@ export const ScreenHeader = (props) => {
     const insetStylePadding = { paddingTop: insets.top }
     const insetStyle = { marginTop: insets.top }
 
-
     return (
         <View style={styles.header}>
             <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
             <Text style={[styles.headerTitle, insetStylePadding]} text={title} />
             <View style={[styles.avatar, insetStyle]}>
-                <Avatar image={"https://i.pravatar.cc/300"}/>
+                <Avatar />
             </View>
         </View>
     )

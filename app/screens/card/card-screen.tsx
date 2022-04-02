@@ -1,17 +1,15 @@
-import React, { FC, useEffect } from "react"
+import React, { FC } from "react"
 import { Image, ImageStyle, Pressable, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DigitalCardContainer, Screen, Text, Wallpaper } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 import { color } from "../../theme"
 import { APPLE_WALLET, CARD_BG, LOGO_WITH_NAME } from "../../../assets/images"
 import { perfectSize } from "../../utils/dimmesion"
-import { useLazyQuery } from "@apollo/client"
-import { GET_CURRENT_USER } from "../../services/api/queries"
 import moment from "moment"
 import { BASE_URL } from "../../services/api"
+import { useAppSelector } from "../../hooks/hooks"
+import { selectUser } from "../../services/redux/slices/authSlice"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -64,31 +62,11 @@ const APPLE_WALLET_IMAGE: ImageStyle = {
   marginTop: perfectSize(34)
 }
 
-// STOP! READ ME FIRST!
-// To fix the TS error below, you'll need to add the following things in your navigation config:
-// - Add `card: undefined` to NavigatorParamList
-// - Import your screen, and add it to the stack:
-//     `<Stack.Screen name="card" component={CardScreen} />`
-// Hint: Look for the 🔥!
-
-// REMOVE ME! ⬇️ This TS ignore will not be necessary after you've added the correct navigator param type
-// @ts-ignore
 export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const user = useAppSelector(selectUser)
 
-  const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
-
-  useEffect(() => {
-    ;(async () => {
-      await getCurrentUser()
-    })()
-  }, [getCurrentUser])
-
-  const {firstName = '', lastName = '', membershipId = '', createdAt = '', companyName = '', photo = {}} = userData?.currentUser || {}
+  const {firstName = '', lastName = '', membershipId = '', createdAt = '', companyName = '', photo = {}} = user || {}
 
   const memberId = membershipId.slice(0,4) + ' ' + membershipId.slice(4,8) + ' ' + membershipId.slice(8, 12)
 

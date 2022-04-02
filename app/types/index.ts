@@ -51,5 +51,7 @@ export type BenefitPreviewDTO = Pick<
   shortDescription?: Maybe<string>
   longDescription?: Maybe<string>
   category?: Maybe<string>
+  favorited?: boolean
+  redeemed?: boolean
 }
 

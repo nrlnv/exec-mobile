@@ -13,6 +13,8 @@ export const getBenefitPreviewData = (benefit: Benefit): BenefitPreviewDTO => ({
     benefitSummary: benefit?.benefitSummary,
     otherRateOffer: benefit?.otherRateOffer,
     rates: benefit?.rates,
+    favorited: benefit?.favorited,
+    redeemed: benefit?.redeemed,
   })
 
 export const configBenefitsForPreview = (data: Benefit[]): BenefitPreviewDTO[] => {

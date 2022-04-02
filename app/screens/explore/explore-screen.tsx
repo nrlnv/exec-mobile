@@ -1,5 +1,5 @@
-import React, { FC, useState } from "react"
-import { ImageStyle, ScrollView, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { ScrollView, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { Avatar, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators/main-tabs/explore-navigator"
@@ -15,20 +15,21 @@ import Travel from "../../../assets/svgs/travel"
 import Restaurant from "../../../assets/svgs/restaurant"
 import Experiences from "../../../assets/svgs/experiences"
 import ArrowRightBig from "../../../assets/svgs/arrow_right_big"
-import ArrowRight from "../../../assets/svgs/arrow_right"
-import { useQuery } from "@apollo/client"
+import { useLazyQuery, useQuery } from "@apollo/client"
 import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS } from "../../services/api/queries"
 import { configBenefitsForPreview } from "../../utils/utils"
 import { BenefitItem } from "./components/benefit-item"
-import { BASE_URL } from "../../services/api"
 import { destinationsConst } from "../../utils/constants"
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
 import { useNavigation } from "@react-navigation/native"
 import { DestinationsItem } from "../category/components/destinationsItem"
 import { CityItem } from "../category/components/cityItem"
 import { SearchView } from "./components/searchView"
+import { setUser } from "../../services/redux/slices/authSlice"
+import { useAppDispatch } from "../../hooks/hooks"
 
 export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> = () => {
+  const dispatch = useAppDispatch()
   const [activeSlide, setActiveSlide] = useState(0)
   const insets = useSafeAreaInsets()
   const insetStyle = { marginTop: insets.top }
@@ -37,13 +38,10 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const { data: popularBenefits } = useQuery(GET_POPULAR_BENEFITS)
   const { data: benefitsForYou } = useQuery(GET_BENEFITS_FOR_YOU)
   const { data: heroBenefitsData} = useQuery(GET_HOMEPAGE_HERO_BENEFITS)
-  const { data: userData } = useQuery(GET_CURRENT_USER)
+
+  const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
   const [currentDestination, setCurrentDestination] = useState(0)
-
-  const {photo = {}} = userData?.currentUser || {}
-
-  const avatarUrl = BASE_URL + photo.thumbnail
 
   const navigateToCategoryScreen = (category) => {
     navigation.navigate(CATEGORY_SCREEN, {category})
@@ -52,6 +50,17 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const onCityPress = (destination) => {
     navigation.navigate(DESTINATION_SCREEN, {destination})
   }
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        await getCurrentUser()
+        dispatch(setUser(userData.currentUser))
+      } catch (error) {
+        console.log(error);
+      }
+    })()
+  }, [userData])
 
   return (
     <Screen style={ROOT} preset="scroll" unsafe>
@@ -82,7 +91,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
         </View>
       </View>
       <View style={[AVATAR, insetStyle]}>
-        <Avatar image={avatarUrl}/>
+        <Avatar />
       </View>
       <SearchView text={"Search for cities or benefits"} />
       <Text style={SECTION_TITLE} text={"Browse by Category"}/>
@@ -149,10 +158,6 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
       </View>
       <View style={TITLE_ROW_CONTAINER}>
         <Text style={TITLE_ROW_TEXT} text={"For You"}/>
-        <View style={MORE_CONTAINER}>
-          <Text style={SECTION_MORE} text={"more"}/>
-          <ArrowRight color={color.palette.neutral400}/>
-        </View>
       </View>
       <View style={FOR_YOU_CONTAINER}>
         <ScrollView
@@ -167,10 +172,6 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
       <View style={LINE}/>
       <View style={[TITLE_ROW_CONTAINER, POPULAR_ROW]}>
         <Text style={TITLE_ROW_TEXT} text={"Popular"}/>
-        <View style={MORE_CONTAINER}>
-          <Text style={SECTION_MORE} text={"more"}/>
-          <ArrowRight color={color.palette.neutral400}/>
-        </View>
       </View>
       <View style={FOR_YOU_CONTAINER}>
         <ScrollView
@@ -200,7 +201,6 @@ const ROOT: ViewStyle = {
   paddingBottom: 100,
 }
 const SLIDER_CONTAINER: ViewStyle = {
-  // height: perfectSize(355),
   overflow: "hidden",
 }
 const AVATAR: ViewStyle = {
@@ -234,7 +234,6 @@ const TITLE_ROW_CONTAINER: ViewStyle = {
   justifyContent: "space-between",
 }
 const SECTION_TITLE: TextStyle = {
-  // marginTop: perfectSize(30),
   marginLeft: perfectSize(24),
   fontSize: perfectSize(20),
   lineHeight: perfectSize(26),
@@ -245,15 +244,6 @@ const TITLE_ROW_TEXT: TextStyle = {
   fontSize: perfectSize(20),
   lineHeight: perfectSize(26),
   color: color.palette.white,
-}
-const MORE_CONTAINER: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-  marginRight: perfectSize(20),
-}
-const SECTION_MORE: TextStyle = {
-  color: color.palette.neutral400,
-  marginRight: perfectSize(8),
 }
 const CATEGORIES_CONTAINER: ViewStyle = {
   flexDirection: "row",

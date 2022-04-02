@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react"
+import React, { FC } from "react"
 import { View, StyleSheet, Image } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
@@ -7,31 +7,26 @@ import { color } from "../../theme"
 import { HISTORY_HEADER, PROFILE_DOWN, PROFILE_UP } from "../../../assets/images"
 import { perfectSize } from "../../utils/dimmesion"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { useLazyQuery } from "@apollo/client"
-import { GET_CURRENT_USER } from "../../services/api/queries"
 import { accountItems } from "../../utils/constants"
 import { AccountItem } from "./components/accountItem"
-
+import { useAppSelector } from "../../hooks/hooks"
+import { selectUser } from "../../services/redux/slices/authSlice"
+import { BASE_URL } from "../../services/api"
 
 export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount">> = () => {
   const insets = useSafeAreaInsets()
   const insetStyle = { paddingTop: insets.top }
-  const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
+  const user = useAppSelector(selectUser)
 
-  useEffect(() => {
-    ;(async () => {
-      await getCurrentUser()
-    })()
-  }, [getCurrentUser])
+  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0,  redemptionsCount = 0, companyName = '', photo = {}} = user || {}
 
-  console.log(userData)
+  const avatarUrl = BASE_URL + photo.thumbnail
 
-  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0,  redemptionsCount = 0, companyName = ''} = userData?.currentUser || {}
   return (
     <Screen style={styles.container} preset="scroll" unsafe>
       <View style={[styles.header, insetStyle]} >
         <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
-        <Image source={{uri: 'https://i.pravatar.cc/300'}} style={styles.avatar} />
+        <Image source={{uri: avatarUrl}} style={styles.avatar} />
         <View style={styles.nameView} >
           <Text text={`${firstName} ${lastName}`} style={styles.nameText} />
           <Text text={`${companyName}company name`} style={styles.companyText} />

@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, DETAILS, LOCATION, PRICING, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
@@ -16,6 +16,7 @@ import { RedeemModal } from './components/redeemModal'
 import { Label } from './components/label'
 import PagerView from 'react-native-pager-view'
 import { SquareButton } from './components/squareButton'
+import { ADD_FAVORITE_MUTATION } from '../../services/api/mutations'
 
 export const BenefitDetails: React.FC = () => {
     const insets = useSafeAreaInsets()
@@ -43,11 +44,22 @@ export const BenefitDetails: React.FC = () => {
     const [activeSlide, setActiveSlide] = useState(0)
     const [isFavourited, setIsFavourited] = useState(false)
 
-
     const toggleRedeemModal = () => setShowRedeemModal(prevState => !prevState)
 
-    const onFavouritePress = () => {
+    const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
+
+    const onFavouritePress = async () => {
         setIsFavourited(prevState => !prevState)
+        try {
+            await addFavorite({
+                variables: {
+                benefitSlug: slug,
+                },
+            })
+        } catch (e) {
+            console.error(e)
+            setIsFavourited(prevState => !prevState)
+        }
     }
 
     const onWebsitePress = () => {
@@ -56,13 +68,19 @@ export const BenefitDetails: React.FC = () => {
         }
     }
 
+    useEffect(() => {
+        if (benefit) {
+            setIsFavourited(benefit.favorited)
+        }
+    }, [benefit])
+
     return (
         <Screen style={{}} preset="scroll" unsafe>
             <View style={[styles.container, insetStylePadding]}>
                 <View style={styles.headerBack} >
                     <Header leftIcon='back' headerText='Explore' onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
                     <View style={[styles.avatar, insetStyle]}>
-                        <Avatar image={"https://i.pravatar.cc/300"}/>
+                        <Avatar />
                     </View>
                 </View>
                 <View>
@@ -258,7 +276,6 @@ const styles = StyleSheet.create({
         color: color.palette.black, 
         lineHeight: 24, 
         marginBottom: perfectSize(5), 
-        // marginTop: perfectSize(28),
         textAlign: 'justify',
     },
     pricingText2: {

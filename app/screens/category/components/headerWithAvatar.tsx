@@ -14,7 +14,7 @@ export const HeaderwithAvatar = (props) => {
         <View style={[styles.headerBack, insetStyle]} >
             <Header leftIcon='back' headerText={headerText} onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
             <View style={styles.avatar}>
-                <Avatar image={"https://i.pravatar.cc/300"}/>
+                <Avatar />
             </View>
         </View>
     )
