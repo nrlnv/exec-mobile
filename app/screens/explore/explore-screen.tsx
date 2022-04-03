@@ -12,7 +12,6 @@ import Hotel from "../../../assets/svgs/hotel"
 import { CategoryItem } from "./components/category-item"
 import Lifestyle from "../../../assets/svgs/lifestyle"
 import Travel from "../../../assets/svgs/travel"
-import Restaurant from "../../../assets/svgs/restaurant"
 import Experiences from "../../../assets/svgs/experiences"
 import ArrowRightBig from "../../../assets/svgs/arrow_right_big"
 import { useLazyQuery, useQuery } from "@apollo/client"
@@ -27,6 +26,7 @@ import { CityItem } from "../category/components/cityItem"
 import { SearchView } from "./components/searchView"
 import { setUser } from "../../services/redux/slices/authSlice"
 import { useAppDispatch } from "../../hooks/hooks"
+import Business from "../../../assets/svgs/business"
 
 export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> = () => {
   const dispatch = useAppDispatch()
@@ -43,11 +43,11 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
 
   const [currentDestination, setCurrentDestination] = useState(0)
 
-  const navigateToCategoryScreen = (category) => {
+  const navigateToCategoryScreen = (category: string) => {
     navigation.navigate(CATEGORY_SCREEN, {category})
   }
 
-  const onCityPress = (destination) => {
+  const onCityPress = (destination: string) => {
     navigation.navigate(DESTINATION_SCREEN, {destination})
   }
 
@@ -99,7 +99,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
         <CategoryItem
           title={"Hotel"}
           icon={<Hotel color={color.palette.white}/>}
-          onPress={() => navigateToCategoryScreen('Hotels')}
+          onPress={() => navigateToCategoryScreen('Hotel')}
         />
         <CategoryItem
           style={MIDDLE_CATEGORY}
@@ -121,14 +121,15 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
         />
         <CategoryItem
           style={MIDDLE_CATEGORY}
-          title={"Restaurants"}
-          icon={<Restaurant color={color.palette.white}/>}
-          onPress={() => navigateToCategoryScreen('Restaurants')}
+          title={"Business"}
+          icon={<Business color={color.palette.white}/>}
+          onPress={() => navigateToCategoryScreen('Business')}
 
         />
         <CategoryItem
           title={"View All"}
           icon={<ArrowRightBig color={color.palette.white}/>}
+          onPress={() => navigateToCategoryScreen('All Benefits')}
         />
       </View>
       

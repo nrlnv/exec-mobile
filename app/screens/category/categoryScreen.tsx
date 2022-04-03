@@ -20,9 +20,9 @@ import { CATEGORY_AND_DESTINATION_SCREEN } from '../../navigators/screen-name-co
 import Lifestyle from '../../../assets/svgs/lifestyle';
 import Travel from '../../../assets/svgs/travel';
 import Experiences from '../../../assets/svgs/experiences';
-import Restaurant from '../../../assets/svgs/restaurant';
 import ArrowRightBig from '../../../assets/svgs/arrow_right_big';
 import { HeaderwithAvatar } from './components/headerWithAvatar';
+import Business from '../../../assets/svgs/business';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -36,8 +36,8 @@ export const titleIcon = (category: string) => {
             return <Travel width={26} height={30} />
         case 'Experiences':
             return <Experiences width={26} height={30} />
-        case 'Restaurants':
-            return <Restaurant width={26} height={30} />
+        case 'Business':
+            return <Business width={26} height={30} />
         case 'View All':
             return <ArrowRightBig width={26} height={30} />
         default:
@@ -100,7 +100,7 @@ export const CategoryScreen = () => {
         getBenefits({
             variables: {
             page: page || 1,
-            category: category.toLowerCase(),
+            category: category === 'All Benefits' ? null : category.toLowerCase(),
             order: sortOrder,
             },
         })

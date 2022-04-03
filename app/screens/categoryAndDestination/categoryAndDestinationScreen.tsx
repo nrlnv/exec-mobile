@@ -69,7 +69,7 @@ export const CategoryAndDestinationScreen = () => {
         getBenefits({
             variables: {
             page: page || 1,
-            category: category.toLowerCase(),
+            category: category === 'All Benefits' ? null : category.toLowerCase(),
             city: destination,
             order: sortOrder,
             },
