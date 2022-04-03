@@ -55,3 +55,9 @@ export type BenefitPreviewDTO = Pick<
   redeemed?: boolean
 }
 
+export type RootStackParamList = {
+  CategoryScreen: { category: string };
+  CategoryAndDestinationScreen: { category: string, destination: string };
+  DestinationScreen: {destination: string};
+  BenefitDetails: {slug: string}
+};

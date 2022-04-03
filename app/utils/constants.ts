@@ -1,6 +1,5 @@
 import { ADVENTURES, BUSINESS, EXPERIENCES, HOTELS, INVITE, LIFESTYLE, LOG_OUT, PASSWORD, PROFILE, RELAX, RESTAURANTS, SUB_ACCOUNT, SUPPORT, TRAVEL } from "../../assets/images"
 import { color } from "../theme"
-
 export const timeConst = [
     {
       id: 0,
@@ -123,33 +122,6 @@ export const timeConst = [
     },
   ]
 
-  export const exploreCategoryConst = [
-    {
-        id: 0,
-        text: 'Hotels',
-        icon: HOTELS
-    },
-    {
-        id: 1,
-        text: 'Lifestyle',
-        icon: LIFESTYLE
-    },
-    {
-        id: 2,
-        text: 'Travel',
-        icon: TRAVEL
-    },
-    {
-        id: 3,
-        text: 'Experiences',
-        icon: EXPERIENCES
-    },
-    {
-        id: 4,
-        text: 'Restaurants',
-        icon: RESTAURANTS
-    },
-  ]
 
   export const destinationsConst = [
       {

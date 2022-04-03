@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -17,13 +17,16 @@ import { Label } from './components/label'
 import PagerView from 'react-native-pager-view'
 import { SquareButton } from './components/squareButton'
 import { ADD_FAVORITE_MUTATION } from '../../services/api/mutations'
+import { RootStackParamList } from '../../types'
+
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
 export const BenefitDetails: React.FC = () => {
     const insets = useSafeAreaInsets()
     const insetStylePadding = { paddingTop: insets.top }
     const insetStyle = { marginTop: insets.top }
 
-    const route = useRoute()
+    const route = useRoute<ProfileScreenRouteProp>()
     const navigation = useNavigation()
     const { width } = useWindowDimensions();
     const { slug } = route?.params

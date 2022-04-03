@@ -1,7 +1,7 @@
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { DESTINATION_HEADER, FILTER } from '../../../assets/images'
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { DESTINATION_HEADER } from '../../../assets/images'
 import { Screen, Text, Wallpaper } from '../../components'
 import { color } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
@@ -12,16 +12,16 @@ import { CategoryItem } from '../explore/components/category-item'
 import Hotel from '../../../assets/svgs/hotel'
 import Lifestyle from '../../../assets/svgs/lifestyle'
 import Travel from '../../../assets/svgs/travel'
-import Restaurant from '../../../assets/svgs/restaurant'
 import ArrowRightBig from '../../../assets/svgs/arrow_right_big'
 import { DestinationsItem } from '../category/components/destinationsItem'
-import { FilterModal } from '../history/components/filterModal'
 import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql'
 import { useLazyQuery } from '@apollo/client'
 import { GET_BENEFITS } from '../../services/api/queries'
 import { CategoryBenefitItem } from '../category/components/categoryBenefitItem'
 import { CATEGORY_AND_DESTINATION_SCREEN } from '../../navigators/screen-name-constants'
 import { HeaderwithAvatar } from '../category/components/headerWithAvatar'
+import Business from '../../../assets/svgs/business'
+import { RootStackParamList } from '../../types'
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -49,8 +49,8 @@ const categoriesConst = [
     },
     {
         id: 4,
-        text: 'Restaurants',
-        icon: <Restaurant color={color.palette.white} />
+        text: 'Business',
+        icon: <Business color={color.palette.white} />
     },
     {
         id: 5,
@@ -59,21 +59,16 @@ const categoriesConst = [
     },
 ]
 
+type ScreenRouteProp = RouteProp<RootStackParamList, 'DestinationScreen'>;
+
 export const DestinationScreen = () => {
-    const route = useRoute()
+    const route = useRoute<ScreenRouteProp>()
     const {destination} = route?.params
     const navigation = useNavigation()
 
-    const [sort1, setSort1] = useState(0)
-    const [sort2, setSort2] = useState(0)
-    const [filterCategories, setFilterCategories] = useState([])
-    const [showFilterModal, setShowFilterModal] = useState(false)
     const [currentFilter, setCurrentFilter] = useState(0)
-    const toggleFilterModal = () => {
-        setShowFilterModal(prevState => !prevState)
-    }
 
-    const onCategoryPress = (category) => {
+    const onCategoryPress = (category: string) => {
         navigation.navigate(CATEGORY_AND_DESTINATION_SCREEN, {category, destination})
     }
 
@@ -86,7 +81,13 @@ export const DestinationScreen = () => {
             <CategoryItem
                 title={item.text}
                 icon={item.icon}
-                onPress={() => onCategoryPress(item.text)}
+                onPress={() => {
+                    if (item.id === 5) {
+                        onCategoryPress('All Benefits')
+                    } else {
+                        onCategoryPress(item.text)
+                    }
+                }}
                 style={categoryItemStyle(item.id)}
             />
         )
@@ -180,9 +181,6 @@ export const DestinationScreen = () => {
                         <DestinationsItem item={t} key={t.id} currentId={currentFilter} onPress={setCurrentFilter} />
                     ))
                     }
-                    <TouchableOpacity onPress={toggleFilterModal} >
-                        <Image source={FILTER} style={styles.filterIcon} />
-                    </TouchableOpacity>
                 </View>
             </>
         )
@@ -198,16 +196,6 @@ export const DestinationScreen = () => {
                 onEndReached={fetchMoreBenefits}
                 keyExtractor={item => item.id}
                 ListHeaderComponent={ListHeaderComponent}
-            />
-            <FilterModal 
-                isVisible={showFilterModal} 
-                onBackdropPress={toggleFilterModal} 
-                sort1={sort1}
-                onSort1Press={setSort1} 
-                sort2={sort2}
-                onSort2Press={setSort2}
-                filterCategories={filterCategories}
-                onCategoryPress={setFilterCategories}
             />
         </Screen>
     )
@@ -256,10 +244,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginVertical: perfectSize(25),
         marginHorizontal: perfectSize(24)
-    },
-    filterIcon: {
-        width: perfectSize(40),
-        height: perfectSize(40),
     },
     categoriesView: {
         marginHorizontal: perfectSize(24), 

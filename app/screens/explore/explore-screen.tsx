@@ -15,9 +15,8 @@ import Travel from "../../../assets/svgs/travel"
 import Experiences from "../../../assets/svgs/experiences"
 import ArrowRightBig from "../../../assets/svgs/arrow_right_big"
 import { useLazyQuery, useQuery } from "@apollo/client"
-import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS } from "../../services/api/queries"
+import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS, GET_BENEFITS } from "../../services/api/queries"
 import { configBenefitsForPreview } from "../../utils/utils"
-import { BenefitItem } from "./components/benefit-item"
 import { destinationsConst } from "../../utils/constants"
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
 import { useNavigation } from "@react-navigation/native"
@@ -27,6 +26,7 @@ import { SearchView } from "./components/searchView"
 import { setUser } from "../../services/redux/slices/authSlice"
 import { useAppDispatch } from "../../hooks/hooks"
 import Business from "../../../assets/svgs/business"
+import { BenefitsSlider } from "./components/benefitsSlider"
 
 export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> = () => {
   const dispatch = useAppDispatch()
@@ -38,13 +38,33 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const { data: popularBenefits } = useQuery(GET_POPULAR_BENEFITS)
   const { data: benefitsForYou } = useQuery(GET_BENEFITS_FOR_YOU)
   const { data: heroBenefitsData} = useQuery(GET_HOMEPAGE_HERO_BENEFITS)
+  const { data: popularHotels} = useQuery(GET_BENEFITS, {variables: {
+    category: 'hotels',
+    scope: 'featured'
+  }})
+  const { data: popularLifestyle} = useQuery(GET_BENEFITS, {variables: {
+    category: 'lifestyle',
+    scope: 'featured'
+  }})
+  const { data: popularTravel} = useQuery(GET_BENEFITS, {variables: {
+    category: 'travel',
+    scope: 'featured'
+  }})
+  const { data: popularExperiences} = useQuery(GET_BENEFITS, {variables: {
+    category: 'experiences',
+    scope: 'featured'
+  }})
+  const { data: popularBusiness} = useQuery(GET_BENEFITS, {variables: {
+    category: 'business',
+    scope: 'featured'
+  }})
 
   const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
   const [currentDestination, setCurrentDestination] = useState(0)
 
   const navigateToCategoryScreen = (category: string) => {
-    navigation.navigate(CATEGORY_SCREEN, {category})
+  navigation.navigate(CATEGORY_SCREEN, {category})
   }
 
   const onCityPress = (destination: string) => {
@@ -63,8 +83,8 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   }, [userData])
 
   return (
-    <Screen style={ROOT} preset="scroll" unsafe>
-      <View style={SLIDER_CONTAINER}>
+    <Screen style={styles.container} preset="scroll" unsafe>
+      <View style={styles.sliderContainer}>
         <PagerView
           style={{height: perfectSize(300)}}
           initialPage={0}
@@ -74,7 +94,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
         >
           {
             configBenefitsForPreview(heroBenefitsData?.getHomepageHeroBenefits?.collection).map((benefit, index) => (
-              <View key={index} style={SLIDE_CONTAINER}>
+              <View key={index} style={styles.slideContainer}>
                 <SliderItem
                   benefit={benefit}
                 />
@@ -82,24 +102,24 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
             ))
           }
         </PagerView>
-        <View style={PAGE_INDICATOR_CONTAINER}>
+        <View style={styles.pageIndicatorContainer}>
           {
             configBenefitsForPreview(heroBenefitsData?.getHomepageHeroBenefits?.collection).map((benefit, index) => (
-              <View key={index} style={[INDICATOR_DOT, activeSlide === index && INDICATOR_DOT_ACTIVE]}/>
+              <View key={index} style={[styles.indicatorDot, activeSlide === index && styles.indicatorDotActive]}/>
             ))
           }
         </View>
       </View>
-      <View style={[AVATAR, insetStyle]}>
+      <View style={[styles.avatar, insetStyle]}>
         <Avatar />
       </View>
       <SearchView text={"Search for cities or benefits"} />
       <Text style={SECTION_TITLE} text={"Browse by Category"}/>
       <View style={CATEGORIES_CONTAINER}>
         <CategoryItem
-          title={"Hotel"}
+          title={"Hotels"}
           icon={<Hotel color={color.palette.white}/>}
-          onPress={() => navigateToCategoryScreen('Hotel')}
+          onPress={() => navigateToCategoryScreen('Hotels')}
         />
         <CategoryItem
           style={MIDDLE_CATEGORY}
@@ -132,7 +152,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
           onPress={() => navigateToCategoryScreen('All Benefits')}
         />
       </View>
-      
+
       <Text style={[SECTION_TITLE, DESTINATION]} text={"Browse by Destination"}/>
       <View style={styles.destinationsView}>
                 {
@@ -157,35 +177,34 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
           <CityItem text={'Tokyo'} onPress={() => onCityPress('Tokyo')} />
         </ScrollView>
       </View>
-      <View style={TITLE_ROW_CONTAINER}>
-        <Text style={TITLE_ROW_TEXT} text={"For You"}/>
-      </View>
-      <View style={FOR_YOU_CONTAINER}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={DESTINATIONS_SCROLL_CONTAINER}>
-            {configBenefitsForPreview(benefitsForYou?.getBenefitsForYou?.collection).map((value, index) => (
-              <BenefitItem value={value} key={index} />
-            ))}
-        </ScrollView>
-      </View>
-      <View style={LINE}/>
-      <View style={[TITLE_ROW_CONTAINER, POPULAR_ROW]}>
-        <Text style={TITLE_ROW_TEXT} text={"Popular"}/>
-      </View>
-      <View style={FOR_YOU_CONTAINER}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={DESTINATIONS_SCROLL_CONTAINER}>
-          {
-            configBenefitsForPreview(popularBenefits?.getPopularBenefits?.collection).map((value, index) => (
-              <BenefitItem value={value} key={index} />
-            ))
-          }
-        </ScrollView>
-      </View>
+      <BenefitsSlider benefits={benefitsForYou?.getBenefitsForYou?.collection} text={'For You'} moreButton={false} />
+      <BenefitsSlider benefits={popularBenefits?.getPopularBenefits?.collection} text={'Popular'} moreButton={false} />
+      <BenefitsSlider 
+        benefits={popularHotels?.benefits?.collection} 
+        text={'Popular in Hotels'} 
+        onMorePress={() => navigateToCategoryScreen('Hotel')}
+      />
+      <BenefitsSlider 
+        benefits={popularLifestyle?.benefits?.collection} 
+        text={'Popular in Lifestyle'} 
+        onMorePress={() => navigateToCategoryScreen('Lifestyle')}
+      />
+      <BenefitsSlider 
+        benefits={popularTravel?.benefits?.collection} 
+        text={'Popular in Travel'} 
+        onMorePress={() => navigateToCategoryScreen('Travel')}
+      />
+      <BenefitsSlider 
+        benefits={popularExperiences?.benefits?.collection} 
+        text={'Popular in Experiences'} 
+        onMorePress={() => navigateToCategoryScreen('Experiences')}
+      />
+      <BenefitsSlider 
+        benefits={popularBusiness?.benefits?.collection} 
+        text={'Popular in Business'} 
+        onMorePress={() => navigateToCategoryScreen('Business')}
+      />
+
     </Screen>
   )
 }
@@ -195,52 +214,39 @@ const styles = StyleSheet.create({
     marginTop: perfectSize(16),
     flexDirection: 'row',
     marginLeft: perfectSize(24),
-},
+  },
+  container: {
+    paddingBottom: 100,
+  },
+  sliderContainer: {
+    overflow: "hidden",
+  },
+  avatar: {
+    position: "absolute",
+    top: 5,
+    right: perfectSize(14),
+  },
+  pageIndicatorContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    top: -perfectSize(50)
+  },
+  indicatorDot: {
+    backgroundColor: color.palette.white,
+    height: perfectSize(6),
+    width: perfectSize(6),
+    marginHorizontal: perfectSize(9),
+    borderRadius: perfectSize(3),
+    opacity: 0.5,
+  },
+  indicatorDotActive: {
+    opacity: 1,
+  },
+  slideContainer: {
+    justifyContent: "center",
+  },
 })
-
-const ROOT: ViewStyle = {
-  paddingBottom: 100,
-}
-const SLIDER_CONTAINER: ViewStyle = {
-  overflow: "hidden",
-}
-const AVATAR: ViewStyle = {
-  position: "absolute",
-  top: 5,
-  right: perfectSize(14),
-}
-const PAGE_INDICATOR_CONTAINER: ViewStyle = {
-  flexDirection: "row",
-  alignSelf: "center",
-  top: -perfectSize(50)
-}
-const INDICATOR_DOT: ViewStyle = {
-  backgroundColor: color.palette.white,
-  height: perfectSize(6),
-  width: perfectSize(6),
-  marginHorizontal: perfectSize(9),
-  borderRadius: perfectSize(3),
-  opacity: 0.5,
-}
-const INDICATOR_DOT_ACTIVE: ViewStyle = {
-  opacity: 1,
-}
-const SLIDE_CONTAINER: ViewStyle = {
-  justifyContent: "center",
-}
-
-const TITLE_ROW_CONTAINER: ViewStyle = {
-  marginTop: perfectSize(60),
-  flexDirection: "row",
-  justifyContent: "space-between",
-}
 const SECTION_TITLE: TextStyle = {
-  marginLeft: perfectSize(24),
-  fontSize: perfectSize(20),
-  lineHeight: perfectSize(26),
-  color: color.palette.white,
-}
-const TITLE_ROW_TEXT: TextStyle = {
   marginLeft: perfectSize(24),
   fontSize: perfectSize(20),
   lineHeight: perfectSize(26),
@@ -265,18 +271,6 @@ const DESTINATION: TextStyle = {
 const DESTINATIONS_CONTAINER: ViewStyle = {
   marginTop: perfectSize(20),
 }
-const FOR_YOU_CONTAINER: ViewStyle = {
-  marginTop: perfectSize(20),
-}
 const DESTINATIONS_SCROLL_CONTAINER: ViewStyle = {
   paddingHorizontal: perfectSize(24),
-}
-const LINE: ViewStyle = {
-  marginTop: perfectSize(30),
-  height: perfectSize(1),
-  alignSelf: "stretch",
-  backgroundColor: color.palette.mineShaft2,
-}
-const POPULAR_ROW: ViewStyle = {
-  marginTop: perfectSize(30),
 }

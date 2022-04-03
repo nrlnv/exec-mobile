@@ -3,7 +3,7 @@ import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 
 import { Screen, Text, Wallpaper } from '../../components';
 import { color } from '../../theme';
 import { CARET_DOWN, CATEGORY_HEADER, FILTER } from '../../../assets/images';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { perfectSize } from '../../utils/dimmesion';
 import Hotel from '../../../assets/svgs/hotel';
 import { destinationsConst, filtersConst } from '../../utils/constants';
@@ -23,6 +23,7 @@ import Experiences from '../../../assets/svgs/experiences';
 import ArrowRightBig from '../../../assets/svgs/arrow_right_big';
 import { HeaderwithAvatar } from './components/headerWithAvatar';
 import Business from '../../../assets/svgs/business';
+import { RootStackParamList } from '../../types';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -44,21 +45,21 @@ export const titleIcon = (category: string) => {
             return <Hotel width={26} height={30} />;
     }
 }
+  
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'CategoryScreen'>;
 
 export const CategoryScreen = () => {
-    const route = useRoute()
+    const route = useRoute<ProfileScreenRouteProp>()
     const { category } = route?.params
     const navigation = useNavigation()
     const [currentDestination, setCurrentDestination] = useState(0)
     const [currentFilter, setCurrentFilter] = useState(0)
 
-    const [sort1, setSort1] = useState(0)
-    const [sort2, setSort2] = useState(0)
-    const [filterCategories, setFilterCategories] = useState([])
-    const [showFilterModal, setShowFilterModal] = useState(false)
-    const toggleFilterModal = () => {
-        setShowFilterModal(prevState => !prevState)
-      }
+    // const [sort1, setSort1] = useState(0)
+    // const [sort2, setSort2] = useState(0)
+    // const [filterCategories, setFilterCategories] = useState([])
+    // const [showFilterModal, setShowFilterModal] = useState(false)
+    // const toggleFilterModal = () => setShowFilterModal(prevState => !prevState)
 
     const [showCategoryModal, setShowCategoryModal] = useState(false)
     const toggleCategoryModal = () => {
@@ -96,14 +97,14 @@ export const CategoryScreen = () => {
 
     const fetchBenefits = useCallback(
         (page: number) => {
-        setIsFetching(true)
-        getBenefits({
-            variables: {
-            page: page || 1,
-            category: category === 'All Benefits' ? null : category.toLowerCase(),
-            order: sortOrder,
-            },
-        })
+            setIsFetching(true)
+            getBenefits({
+                variables: {
+                    page: page || 1,
+                    category: category === 'All Benefits' ? null : category.toLowerCase(),
+                    order: sortOrder,
+                },
+            })
         },
         [category, getBenefits]
     )
@@ -179,9 +180,9 @@ export const CategoryScreen = () => {
                         <DestinationsItem item={t} key={t.id} currentId={currentFilter} onPress={setCurrentFilter} />
                     ))
                     }
-                    <TouchableOpacity onPress={toggleFilterModal} >
+                    {/* <TouchableOpacity onPress={toggleFilterModal} >
                         <Image source={FILTER} style={styles.filterIcon} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </>
         )
@@ -198,7 +199,7 @@ export const CategoryScreen = () => {
                 keyExtractor={item => item.id}
                 ListHeaderComponent={ListHeaderComponent}
             />
-            <FilterModal 
+            {/* <FilterModal 
                 isVisible={showFilterModal} 
                 onBackdropPress={toggleFilterModal} 
                 sort1={sort1}
@@ -207,7 +208,7 @@ export const CategoryScreen = () => {
                 onSort2Press={setSort2}
                 filterCategories={filterCategories}
                 onCategoryPress={setFilterCategories}
-            />
+            /> */}
             <ChooseCategoryModal 
                 isVisible={showCategoryModal} 
                 onBackdropPress={toggleCategoryModal} 

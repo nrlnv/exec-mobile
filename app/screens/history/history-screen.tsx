@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react"
-import { FlatList, StyleSheet, TouchableOpacity, View, Image } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text } from "../../components"
@@ -11,8 +11,6 @@ import { GET_USER_REDEMPTIONS } from "../../services/api/queries"
 import { ScreenHeader } from "../../components/header/screenHeader"
 import { HistoryBenefitItem } from "./components/historyBenefitItem"
 import { TimeItem } from "./components/timeItem"
-import { FILTER } from "../../../assets/images"
-import { FilterModal } from "./components/filterModal"
 import { timeConst } from "../../utils/constants"
 
 export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> = () => {
@@ -25,10 +23,6 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
   })
   const [isFetching, setIsFetching] = useState(false)
   const [time, setTime] = useState(0)
-  const [sort1, setSort1] = useState(0)
-  const [sort2, setSort2] = useState(0)
-  const [filterCategories, setFilterCategories] = useState([])
-  const [showFilterModal, setShowFilterModal] = useState(false)
 
   const handleFetchMoreCompleted = () => {
     if (data) {
@@ -82,10 +76,6 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
     }
   }
 
-  const toggleFilterModal = () => {
-    setShowFilterModal(prevState => !prevState)
-  }
-
   return (
     <Screen style={styles.container} preset="fixed" unsafe>
       <ScreenHeader title={"History"} />
@@ -97,9 +87,6 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
             <TimeItem item={t} key={t.id} time={time} onPress={setTime} />
           ))
         }
-        <TouchableOpacity onPress={toggleFilterModal} >
-          <Image source={FILTER} style={styles.icon} />
-        </TouchableOpacity>
       </View>
       {
         !!metadata?.totalCount && (
@@ -114,16 +101,6 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
           />
         )
       }
-      <FilterModal 
-        isVisible={showFilterModal} 
-        onBackdropPress={toggleFilterModal} 
-        sort1={sort1}
-        onSort1Press={setSort1} 
-        sort2={sort2}
-        onSort2Press={setSort2}
-        filterCategories={filterCategories}
-        onCategoryPress={setFilterCategories}
-      />
     </Screen>
   )
 }
@@ -148,8 +125,4 @@ const styles = StyleSheet.create({
      marginHorizontal: perfectSize(24),
      marginBottom: perfectSize(25)
    },
-   icon: {
-     width: perfectSize(40),
-     height: perfectSize(40),
-   }
 })
