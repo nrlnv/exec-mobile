@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
 import Modal from 'react-native-modal';
 import { CHECK_MARK_BLACK, CLOSE, COPY, LOGO_WITH_NAME, REDEEM_MODAL_BG, SHARE } from '../../../../assets/images';
 import { Button, Text, Wallpaper } from '../../../components';
@@ -10,49 +10,52 @@ import { Label } from './label';
 import { SquareButton } from './squareButton';
 import { REDEEM_MUTATION } from '../../../services/api/mutations';
 import { useMutation } from '@apollo/client';
-import { Redemption } from '../../../types/generatedGql';
 import { useNavigation } from '@react-navigation/native';
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../../navigators/screen-name-constants';
 
-export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
+export const RedeemModal = (props) => {
+    const {isVisible, onBackdropPress, benefit, redemption, setRedemption} = props
     const navigation = useNavigation()
     const [isRedeemed, setIsRedeemed] = useState(false)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
-    const [copyText, setCopyText] = useState('')
-    const [redemption, setRedemption] = useState<Partial<Redemption>>({})
+    const [redeemButtonText, setRedeemButtonText] = useState('REVEAL LINK')
 
     const title = isRedeemed ? 'Redeemed!' : 'How to Redeem'
 
-    const redeemButtonText = isRedeemed ? 'RHGEXEC' : 'REVEAL LINK'
-
     const [redeem] = useMutation(REDEEM_MUTATION)
 
-
     const onRevealPress = async () => {
-        // setIsRedeemed(prevState => !prevState)
-        let response
-        try {
-            response = await redeem({
-                variables: {
-                benefitSlug: benefit.slug,
-                },
-            })
-            setRedemption(response.data.redeemBenefit.redemption)
-        // toggleCodeReveal()
-        } catch (e) {
-            console.error(e)
+        if (isRedeemed) {
+            onBackdropPress()
+        } else {
+            let response
+            try {
+                response = await redeem({
+                    variables: {
+                    benefitSlug: benefit.slug,
+                    },
+                })
+                setRedemption(response.data.redeemBenefit.redemption)
+                setRedeemButtonText(response.data.redeemBenefit.redemption.redemptionCode)
+                setIsRedeemed(true)
+            } catch (e) {
+                console.error(e)
+            }
         }
     }
 
     const onCopyPress = () => {
         setShowCopiedModal(true)
-        setCopyText('hello world')
         setTimeout(() => {
             setShowCopiedModal(false)
         }, 500);
     }
 
-    const onSharePress = () => {
+    const onOpenLinkPress = async () => {
+        await Linking.canOpenURL(redemption?.redemptionLink)
+            .then(async () => {
+                await Linking.openURL(redemption?.redemptionLink)
+            })
         onBackdropPress()
     }
 
@@ -108,14 +111,14 @@ export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
                             isRedeemed ? (
                                 <View style={styles.flexD}>
                                     <SquareButton icon={COPY} filled onPress={onCopyPress} />
-                                    <SquareButton icon={SHARE} filled onPress={onSharePress} />
+                                    <SquareButton icon={SHARE} filled onPress={onOpenLinkPress} />
                                 </View>
                             ) : null
                         }
                     </View>
                     
                 </View>
-                <CopiedModal isVisible={showCopiedModal} text={copyText} />
+                <CopiedModal isVisible={showCopiedModal} text={redeemButtonText} />
             </View>
         </Modal>
     );
@@ -132,9 +135,10 @@ const styles = StyleSheet.create({
         bottom: -20
     },
     closeButton: {
-        position: 'absolute',
-        right: perfectSize(14),
-        top: perfectSize(14),
+        // position: 'absolute',
+        marginRight: perfectSize(14),
+        marginTop: perfectSize(14),
+        alignSelf: 'flex-end',
         width: perfectSize(40),
         height: perfectSize(40),
     },
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
     cityView: {
         flexDirection: 'row', 
         justifyContent: 'center',
-        marginTop: perfectSize(26)
+        marginTop: perfectSize(12)
     },
     benefitNameText: { 
         textAlign: 'center', 

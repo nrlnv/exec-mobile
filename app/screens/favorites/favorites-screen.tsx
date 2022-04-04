@@ -14,9 +14,8 @@ import { perfectSize } from "../../utils/dimmesion"
 export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites">> = () => {
 
   const [userFavorites, setUserFavorites] = useState([])
-  const [refreshing, setRefreshing] = useState(false)
 
-  const [getUserFavoriteBenefits, {data: userFavoriteBenefitsData}] = useLazyQuery(GET_USER_FAVORITE_BENEFITS)
+  const [getUserFavoriteBenefits, {data: userFavoriteBenefitsData, loading}] = useLazyQuery(GET_USER_FAVORITE_BENEFITS)
 
   const renderItem = ({item}) => {
     return (
@@ -25,14 +24,12 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
   }
 
   const fetchBenefits = async () => {
-    setRefreshing(true)
     try {
       await getUserFavoriteBenefits()
       setUserFavorites(userFavoriteBenefitsData?.getUserFavoriteBenefits?.collection)
     } catch (error) {
       console.log(error);
     }
-    setRefreshing(false)
   }
 
   useEffect(() => {
@@ -63,7 +60,7 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
         keyExtractor={item => item.slug}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={loading}
             onRefresh={fetchBenefits}
             tintColor="#fff"
           />

@@ -3,7 +3,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { CHECK_MARK, DETAILS, LOCATION, PRICING, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
+import { CHECK_MARK, COPY_FILLED, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
 import { GET_BENEFIT } from '../../services/api/queries'
@@ -19,6 +19,8 @@ import { SquareButton } from './components/squareButton'
 import { ADD_FAVORITE_MUTATION } from '../../services/api/mutations'
 import { RootStackParamList } from '../../types'
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../navigators/screen-name-constants'
+import { Redemption } from '../../types/generatedGql'
+import { CopiedModal } from './components/copiedModal'
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
@@ -47,6 +49,9 @@ export const BenefitDetails: React.FC = () => {
     const [showRedeemModal, setShowRedeemModal] = useState(false)
     const [activeSlide, setActiveSlide] = useState(0)
     const [isFavourited, setIsFavourited] = useState(false)
+    const [showCopiedModal, setShowCopiedModal] = useState(false)
+
+    const [redemption, setRedemption] = useState<Partial<Redemption>>({})
 
     const toggleRedeemModal = () => setShowRedeemModal(prevState => !prevState)
 
@@ -78,6 +83,20 @@ export const BenefitDetails: React.FC = () => {
         } else if (type === 'city') {
             navigation.navigate(DESTINATION_SCREEN, {destination: text})
         }
+    }
+
+    const onCopyPress = () => {
+        setShowCopiedModal(true)
+        setTimeout(() => {
+            setShowCopiedModal(false)
+        }, 500);
+    }
+
+    const onOpenLinkPress = async () => {
+        await Linking.canOpenURL(redemption?.redemptionLink)
+            .then(async () => {
+                await Linking.openURL(redemption?.redemptionLink)
+            })
     }
 
     useEffect(() => {
@@ -140,10 +159,26 @@ export const BenefitDetails: React.FC = () => {
                                     <View style={styles.flexD}>
                                         <Button  style={styles.redeemButton} onPress={toggleRedeemModal} >
                                             <View style={styles.flexD}>
-                                                {/* <Image source={CHECK_MARK} style={styles.squareIcon} /> */}
-                                                <Text text={'REDEEM'} style={styles.redeemText} />
+                                                {redemption?.redemptionCode ? (
+                                                    <Image source={CHECK_MARK} style={styles.squareIcon} />
+                                                    ) : null}
+                                                <Text text={redemption?.redemptionCode || 'REDEEM'} style={styles.redeemText} />
                                             </View>
                                         </Button>
+                                        {
+                                            Object.keys(redemption).length > 0 && (
+                                                <>
+                                                    <SquareButton 
+                                                        icon={COPY_FILLED} 
+                                                        onPress={onCopyPress}
+                                                    />
+                                                    <SquareButton 
+                                                        icon={SHARE_FILLED} 
+                                                        onPress={onOpenLinkPress}
+                                                    />
+                                                </>
+                                            )
+                                        }
                                         <SquareButton 
                                             icon={isFavourited ? STAR : STAR_FILLED} 
                                             filled={isFavourited} 
@@ -218,7 +253,14 @@ export const BenefitDetails: React.FC = () => {
                                 <View style={styles.similarBenefitsView}>
                                     <Text style={styles.similarBenefitsText} text={'Similar Benefits You May Like'} />
                                 </View>
-                                <RedeemModal isVisible={showRedeemModal} onBackdropPress={toggleRedeemModal} benefit={benefit} />
+                                <RedeemModal 
+                                    isVisible={showRedeemModal} 
+                                    onBackdropPress={toggleRedeemModal} 
+                                    benefit={benefit}
+                                    redemption={redemption}
+                                    setRedemption={setRedemption}    
+                                />
+                                <CopiedModal isVisible={showCopiedModal} text={redemption?.redemptionCode || ''} />
                             </>
                         ) : null
                     }

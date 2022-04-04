@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react"
-import { FlatList, StyleSheet, View } from "react-native"
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text } from "../../components"
@@ -108,8 +108,17 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
             refreshing={isFetching}
             onEndReachedThreshold={0.5}
             onEndReached={onEndReached}
-            keyExtractor={item => item.benefit.slug}
+            keyExtractor={item => item.createdAt}
             contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={() => {
+                  fetchRedemptions(1)
+                }}
+                tintColor="#fff"
+              />
+            }
           />
         )
       }
