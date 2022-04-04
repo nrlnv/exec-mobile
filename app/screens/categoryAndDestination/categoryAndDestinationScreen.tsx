@@ -6,7 +6,7 @@ import Marker from '../../../assets/svgs/marker';
 import { Screen, Text, Wallpaper } from '../../components';
 import { color } from '../../theme';
 import { perfectSize } from '../../utils/dimmesion';
-import { titleIcon } from '../category/categoryScreen';
+import { filterHandler, titleIcon } from '../category/categoryScreen';
 import { HeaderwithAvatar } from '../category/components/headerWithAvatar';
 import ArrowDown from '../../../assets/svgs/arrowDown'
 import { filtersConst } from '../../utils/constants';
@@ -69,10 +69,11 @@ export const CategoryAndDestinationScreen = () => {
             category: category === 'All Benefits' ? null : category.toLowerCase(),
             city: destination,
             order: sortOrder,
+            scope: filterHandler(currentFilter)
             },
         })
         },
-        [category, destination, getBenefits]
+        [category, destination, getBenefits, currentFilter]
     )
 
     useEffect(() => {

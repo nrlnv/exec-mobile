@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import { DESTINATION_HEADER } from '../../../assets/images'
 import { Screen, Text, Wallpaper } from '../../components'
 import { color } from '../../theme'
@@ -22,6 +22,7 @@ import { CATEGORY_AND_DESTINATION_SCREEN } from '../../navigators/screen-name-co
 import { HeaderwithAvatar } from '../category/components/headerWithAvatar'
 import Business from '../../../assets/svgs/business'
 import { RootStackParamList } from '../../types'
+import { filterHandler } from '../category/categoryScreen'
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -131,10 +132,11 @@ export const DestinationScreen = () => {
             page: page || 1,
             city: destination,
             order: sortOrder,
+            scope: filterHandler(currentFilter),
             },
         })
         },
-        [destination, getBenefits]
+        [destination, getBenefits, currentFilter]
     )
 
     useEffect(() => {
@@ -156,9 +158,9 @@ export const DestinationScreen = () => {
                     <HeaderwithAvatar headerText='Explore' />
                     <View style={styles.categoryTitle}>
                         <Marker />
-                        <TouchableOpacity style={styles.titleView} onPress={() => {}} >
+                        <View style={styles.titleView} >
                             <Text text={destination} style={styles.categoryTitleText} />
-                        </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={styles.categoryDescription}>
                         <Text text={'Explore the StayEXEC Hotels & Resorts program and enjoy special offers as an EXEC Member'} style={styles.descriptionText} />

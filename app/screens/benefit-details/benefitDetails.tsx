@@ -18,6 +18,7 @@ import PagerView from 'react-native-pager-view'
 import { SquareButton } from './components/squareButton'
 import { ADD_FAVORITE_MUTATION } from '../../services/api/mutations'
 import { RootStackParamList } from '../../types'
+import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../navigators/screen-name-constants'
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
@@ -71,6 +72,14 @@ export const BenefitDetails: React.FC = () => {
         }
     }
 
+    const onLabelPress = (type: string, text: string) => {
+        if (type === 'category') {
+            navigation.navigate(CATEGORY_SCREEN, {category: text})
+        } else if (type === 'city') {
+            navigation.navigate(DESTINATION_SCREEN, {destination: text})
+        }
+    }
+
     useEffect(() => {
         if (benefit) {
             setIsFavourited(benefit.favorited)
@@ -93,9 +102,9 @@ export const BenefitDetails: React.FC = () => {
                                 <View style={styles.headerView}>
                                     <View style={styles.cityView}>
                                         {benefit.city ? (
-                                            <Label text={benefit.city} />
+                                            <Label text={benefit.city} onLabelPress={() => onLabelPress('city', benefit.city)} />
                                         ) : null}
-                                        <Label text={benefit.category.name} />
+                                        <Label text={benefit.category.name} onLabelPress={() => onLabelPress('category', benefit.category.name)} />
                                     </View>
                                     
                                     <Text preset='header' text={benefit.name} style={{marginBottom: perfectSize(8)}} />

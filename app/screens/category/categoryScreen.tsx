@@ -45,6 +45,17 @@ export const titleIcon = (category: string) => {
             return <Hotel width={26} height={30} />;
     }
 }
+
+export const filterHandler = (id: number) => {
+    switch (id) {
+        case 1:
+            return 'popular'
+        case 2:
+            return 'featured'
+        default:
+            return null;
+    }
+}
   
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'CategoryScreen'>;
 
@@ -103,10 +114,11 @@ export const CategoryScreen = () => {
                     page: page || 1,
                     category: category === 'All Benefits' ? null : category.toLowerCase(),
                     order: sortOrder,
+                    scope: filterHandler(currentFilter)
                 },
             })
         },
-        [category, getBenefits]
+        [category, getBenefits, currentFilter]
     )
 
     useEffect(() => {

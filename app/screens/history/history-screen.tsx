@@ -13,6 +13,17 @@ import { HistoryBenefitItem } from "./components/historyBenefitItem"
 import { TimeItem } from "./components/timeItem"
 import { timeConst } from "../../utils/constants"
 
+const timeHandler = (id: number) => {
+  switch (id) {
+    case 1:
+      return 'last_year'
+    case 2:
+      return 'all'
+    default:
+      return 'this_year';
+  }
+}
+
 export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> = () => {
 
   const [collection, setCollection] = useState<Redemption[]>([])
@@ -46,10 +57,11 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
         variables: {
           page: page || 1,
           limit: 10,
+          period: timeHandler(time)
         },
       })
     },
-    [getRedemptions]
+    [getRedemptions, time]
   )
 
   useEffect(() => {

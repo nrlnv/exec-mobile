@@ -8,19 +8,40 @@ import { perfectSize } from '../../../utils/dimmesion';
 import { CopiedModal } from './copiedModal';
 import { Label } from './label';
 import { SquareButton } from './squareButton';
-import Clipboard from '@react-native-clipboard/clipboard';
+import { REDEEM_MUTATION } from '../../../services/api/mutations';
+import { useMutation } from '@apollo/client';
+import { Redemption } from '../../../types/generatedGql';
+import { useNavigation } from '@react-navigation/native';
+import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../../navigators/screen-name-constants';
 
 export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
+    const navigation = useNavigation()
     const [isRedeemed, setIsRedeemed] = useState(false)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
     const [copyText, setCopyText] = useState('')
+    const [redemption, setRedemption] = useState<Partial<Redemption>>({})
 
     const title = isRedeemed ? 'Redeemed!' : 'How to Redeem'
 
     const redeemButtonText = isRedeemed ? 'RHGEXEC' : 'REVEAL LINK'
 
-    const onRevealPress = () => {
-        setIsRedeemed(prevState => !prevState)
+    const [redeem] = useMutation(REDEEM_MUTATION)
+
+
+    const onRevealPress = async () => {
+        // setIsRedeemed(prevState => !prevState)
+        let response
+        try {
+            response = await redeem({
+                variables: {
+                benefitSlug: benefit.slug,
+                },
+            })
+            setRedemption(response.data.redeemBenefit.redemption)
+        // toggleCodeReveal()
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     const onCopyPress = () => {
@@ -35,6 +56,15 @@ export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
         onBackdropPress()
     }
 
+    const onLabelPress = (type: string, text: string) => {
+        if (type === 'category') {
+            navigation.navigate(CATEGORY_SCREEN, {category: text})
+        } else if (type === 'city') {
+            navigation.navigate(DESTINATION_SCREEN, {destination: text})
+        }
+        onBackdropPress()
+    }
+
     const redeemedStyle = {backgroundColor: isRedeemed ? color.palette.white : color.palette.primary500}
     const redeemedTextStyle = {color: isRedeemed ? color.palette.black : color.palette.white, fontWeight: 'bold'}
 
@@ -46,10 +76,10 @@ export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
                     <Image style={styles.closeIcon} source={CLOSE} />
                 </TouchableOpacity>
                 <View style={styles.cityView}>
-                    {benefit.city && (
-                        <Label text={benefit.city} />
-                    )}
-                    <Label text={benefit.category.name} />
+                    {benefit.city ? (
+                        <Label text={benefit.city} onLabelPress={() => onLabelPress('city', benefit.city)} />
+                    ) : null}
+                    <Label text={benefit.category.name} onLabelPress={() => onLabelPress('category', benefit.category.name)} />
                 </View>
                 <Text preset='header' text={benefit.name} style={styles.benefitNameText} />
                 {benefit.address1 && benefit.city && benefit.country ? (
@@ -66,21 +96,21 @@ export const RedeemModal = ({isVisible, onBackdropPress, benefit}) => {
                         <Button style={[styles.revealLinkButton, redeemedStyle]} onPress={onRevealPress} >
                             <View style={styles.flexD}>
                                 {
-                                    isRedeemed && (
+                                    isRedeemed ? (
                                         <Image source={CHECK_MARK_BLACK} style={styles.checkMarkIcon}/>
-                                    )
+                                    ) : null
                                 }
                                 <Text text={redeemButtonText} style={redeemedTextStyle} />
 
                             </View>
                         </Button>
                         {
-                            isRedeemed && (
+                            isRedeemed ? (
                                 <View style={styles.flexD}>
                                     <SquareButton icon={COPY} filled onPress={onCopyPress} />
                                     <SquareButton icon={SHARE} filled onPress={onSharePress} />
                                 </View>
-                            )
+                            ) : null
                         }
                     </View>
                     

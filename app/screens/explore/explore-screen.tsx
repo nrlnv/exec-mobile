@@ -75,7 +75,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
     ;(async () => {
       try {
         await getCurrentUser()
-        dispatch(setUser(userData.currentUser))
+        dispatch(setUser(userData?.currentUser))
       } catch (error) {
         console.log(error);
       }

@@ -53,8 +53,8 @@ export const GET_USER_FAVORITE_BENEFITS = gql`
 `
 
 export const GET_USER_REDEMPTIONS = gql`
-  query GetUserRedemptions($limit: Int, $page: Int) {
-    getUserRedemptions(limit: $limit, page: $page) {
+  query GetUserRedemptions($limit: Int, $page: Int, $period: String) {
+    getUserRedemptions(limit: $limit, page: $page, period: $period) {
       collection {
         createdAt
         withinThisYear
