@@ -1,17 +1,21 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ARROW_RIGHT_WHITE } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
+import { EDIT_PROFILE_SCREEN } from '../../../navigators/screen-name-constants';
 import { setToken } from '../../../services/redux/slices/authSlice';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const AccountItem = ({item}) => {
     const dispatch = useAppDispatch()
-
+    const navigation = useNavigation()
     const onPress = () => {
         if (id === 5) {
             dispatch(setToken({}))
+        } else if (id === 0) {
+            navigation.navigate(EDIT_PROFILE_SCREEN, {item})
         }
     }
 

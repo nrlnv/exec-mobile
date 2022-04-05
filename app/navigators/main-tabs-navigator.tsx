@@ -9,7 +9,7 @@ import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 
-import { BENEFIT_DETAILS_SCREEN, CARD_TAB, CATEGORY_AND_DESTINATION_SCREEN, CATEGORY_SCREEN, DESTINATION_SCREEN, EXPLORE_TAB, FAVORITES_TAB, HISTORY_TAB, MY_ACCOUNT_SCREEN } from "./screen-name-constants"
+import { BENEFIT_DETAILS_SCREEN, CARD_TAB, CATEGORY_AND_DESTINATION_SCREEN, CATEGORY_SCREEN, DESTINATION_SCREEN, EDIT_PROFILE_SCREEN, EXPLORE_TAB, FAVORITES_TAB, HISTORY_TAB, MY_ACCOUNT_SCREEN } from "./screen-name-constants"
 import { ExploreStack } from "./main-tabs/explore-navigator"
 import { CardStack } from "./main-tabs/card-navigator"
 import { HistoryStack } from "./main-tabs/history-navigator"
@@ -23,6 +23,7 @@ import { BenefitDetails, MyAccountScreen } from "../screens"
 import { CategoryScreen } from "../screens/category/categoryScreen"
 import { DestinationScreen } from "../screens/destination/destinationScreen"
 import { CategoryAndDestinationScreen } from "../screens/categoryAndDestination/categoryAndDestinationScreen"
+import { EditProfileScreen } from "../screens/my-account/components/editProfileScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -107,6 +108,7 @@ export type PrimaryStackParamList = {
   category: undefined
   destination: undefined
   categoryAndDestination: undefined
+  editProfileScreen: undefined
 }
 const Stack = createStackNavigator<PrimaryStackParamList>()
 
@@ -124,6 +126,8 @@ export const MainTabsStackNavigator = () => {
       <Stack.Screen name={CATEGORY_SCREEN} component={CategoryScreen} />
       <Stack.Screen name={DESTINATION_SCREEN} component={DestinationScreen} />
       <Stack.Screen name={CATEGORY_AND_DESTINATION_SCREEN} component={CategoryAndDestinationScreen} />
+      <Stack.Screen name={EDIT_PROFILE_SCREEN} component={EditProfileScreen} />
+
     </Stack.Navigator>
   )
 }
