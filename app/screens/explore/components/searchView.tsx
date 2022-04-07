@@ -1,17 +1,20 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
 import Search from '../../../../assets/svgs/search';
 import { Text } from '../../../components';
+import { SEARCH_SCREEN } from '../../../navigators/screen-name-constants';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const SearchView = (props) => {
     const {text} = props
+    const navigation = useNavigation()
     return (
-        <View style={styles.container}>
+        <Pressable style={styles.container} onPress={() => navigation.navigate(SEARCH_SCREEN)}>
             <Search/>
             <Text style={styles.text} text={text}/>
-        </View>
+        </Pressable>
     )
 }
 

@@ -553,3 +553,49 @@ export const GET_PAYMENT_METHOD = gql`
     }
   }
 `
+export const GET_SEARCH_RESULTS = gql`
+  query ($category: String, $term: String!, $page: Int, $order: Order) {
+    getResultsBySearch(categorySlug: $category, term: $term, page: $page, order: $order) {
+      benefits {
+        collection {
+          id
+          name
+          slug
+          images {
+            medium
+          }
+          description
+          shortDescription
+          benefits
+          address1
+          otherRateOffer
+          rates {
+            category
+            execRate
+            standardRate
+          }
+          city
+          favorited
+          benefitSummary
+          category {
+            name
+            slug
+          }
+          isNew
+        }
+        metadata {
+          currentPage
+          totalCount
+          totalPages
+        }
+      }
+      categoryMetadata {
+        business
+        experiences
+        hotels
+        lifestyle
+        travel
+      }
+    }
+  }
+`

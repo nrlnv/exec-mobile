@@ -51,5 +51,8 @@ export const DESTINATION_SCREEN = "destination"
 // CATEGORY AND DESTINATION
 export const CATEGORY_AND_DESTINATION_SCREEN = "categoryAndDestination"
 
+// SEARCH SCREEN
+export const SEARCH_SCREEN = "searchScreen"
+
 // PROFILE SCREENS
 export const EDIT_PROFILE_SCREEN = "editProfileScreen"
