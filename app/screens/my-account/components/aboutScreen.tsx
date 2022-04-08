@@ -1,14 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { PASSWORD } from '../../../../assets/images';
-import { Button, Screen, Text } from '../../../components';
+import { Button, Screen } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
 import { selectUser, setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { AccountHeader } from './accountHeader';
+import { ColumnInputItem } from './columnInputItem';
 
 export const AboutScreen = () => {
     const dispatch = useAppDispatch()
@@ -26,13 +26,7 @@ export const AboutScreen = () => {
         <Screen style={styles.container} unsafe >
             <AccountHeader title={'About me'} backText={'Your Profile'} />
             <View style={styles.mainView}>
-                <Text text={'Bio'} style={styles.title} />
-                <TextInput
-                    value={value}
-                    onChangeText={setValue}
-                    multiline
-                    style={styles.value} 
-                />
+                <ColumnInputItem title={'Bio'} value={value} setValue={setValue} multiline />
             </View>
             <Button text={'Save'} style={styles.button} onPress={onSavePress} />
         </Screen>
@@ -48,17 +42,6 @@ const styles = StyleSheet.create({
         marginTop: perfectSize(48),
         paddingHorizontal: perfectSize(24),
         flex: 1,
-    },
-    title: {
-        lineHeight: 19.5,
-        color: color.palette.neutral500,
-        marginBottom: perfectSize(12)
-    },
-    value: {
-        fontSize: 18,
-        lineHeight: 23.4,
-        flex: 1,
-        color: color.palette.white,
     },
     button: {
         marginBottom: perfectSize(30),

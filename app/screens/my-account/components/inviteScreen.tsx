@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { INVITE, PASSWORD } from '../../../../assets/images';
-import { Button, Screen } from '../../../components';
+import { Button, Screen, Text } from '../../../components';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { AccountHeader } from './accountHeader';
@@ -20,6 +20,10 @@ export const InviteScreen = () => {
         <Screen style={styles.container} unsafe >
             <AccountHeader title={'Invite to Exec'} icon={INVITE} />
             <View style={styles.mainView}>
+                <Text 
+                    style={styles.text}
+                    text={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lobortis viverra consequat. Nam quis nunc est. Nullam dictum quis velit id tincidunt.'} 
+                />
                 <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} autoFocus />
                 <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
                 <AccountInput title={'Email'} value={email} onChangeText={setEmail} autoCapitalize='none' />
@@ -42,5 +46,10 @@ const styles = StyleSheet.create({
     button: {
         marginBottom: perfectSize(30),
         marginHorizontal: perfectSize(24)
+    },
+    text: {
+        fontSize: 16,
+        lineHeight: 24,
+        marginBottom: perfectSize(20)
     }
 })
