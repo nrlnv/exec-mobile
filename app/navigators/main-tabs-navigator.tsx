@@ -9,7 +9,7 @@ import React from "react"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 
-import { ABOUT_SCREEN, ADDRESS_SCREEN, BENEFIT_DETAILS_SCREEN, CARD_TAB, CATEGORY_AND_DESTINATION_SCREEN, CATEGORY_SCREEN, DESTINATION_SCREEN, EDIT_PROFILE_SCREEN, EXPLORE_TAB, FAVORITES_TAB, HISTORY_TAB, IMAGE_SCREEN, MEMBER_SUPPORT_SCREEN, MY_ACCOUNT_SCREEN, PASSWORD_SCREEN, SEARCH_SCREEN, SUB_ACCOUNTS_SCREEN } from "./screen-name-constants"
+import { ABOUT_SCREEN, ADDRESS_SCREEN, ADD_SUB_ACCOUNTS_SCREEN, BENEFIT_DETAILS_SCREEN, CARD_TAB, CATEGORY_AND_DESTINATION_SCREEN, CATEGORY_SCREEN, DESTINATION_SCREEN, EDIT_PROFILE_SCREEN, EXPLORE_TAB, FAVORITES_TAB, HISTORY_TAB, IMAGE_SCREEN, MEMBER_SUPPORT_SCREEN, MY_ACCOUNT_SCREEN, PASSWORD_SCREEN, SEARCH_SCREEN, SUB_ACCOUNTS_SCREEN } from "./screen-name-constants"
 import { ExploreStack } from "./main-tabs/explore-navigator"
 import { CardStack } from "./main-tabs/card-navigator"
 import { HistoryStack } from "./main-tabs/history-navigator"
@@ -31,6 +31,7 @@ import { PasswordScreen } from "../screens/my-account/components/passwordScreen"
 import { AddressScreen } from "../screens/my-account/components/addressScreen"
 import { AboutScreen } from "../screens/my-account/components/aboutScreen"
 import { ImageScreen } from "../screens/my-account/components/imageScreen"
+import { AddSubAccountsScreen } from "../screens/my-account/components/addSubAccountsScreen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -122,6 +123,7 @@ export type PrimaryStackParamList = {
   passwordScreen: undefined
   addressScreen: undefined
   aboutScreen: undefined
+  addSubAccountsScreen: undefined
   imageScreen: undefined
 }
 const Stack = createStackNavigator<PrimaryStackParamList>()
@@ -142,6 +144,7 @@ export const MainTabsStackNavigator = () => {
       <Stack.Screen name={CATEGORY_AND_DESTINATION_SCREEN} component={CategoryAndDestinationScreen} />
       <Stack.Screen name={EDIT_PROFILE_SCREEN} component={EditProfileScreen} />
       <Stack.Screen name={SUB_ACCOUNTS_SCREEN} component={SubAccountsScreen} />
+      <Stack.Screen name={ADD_SUB_ACCOUNTS_SCREEN} component={AddSubAccountsScreen} />
       <Stack.Screen name={MEMBER_SUPPORT_SCREEN} component={MemberSupportScreen} />
       <Stack.Screen name={PASSWORD_SCREEN} component={PasswordScreen} />
       <Stack.Screen name={ADDRESS_SCREEN} component={AddressScreen} />

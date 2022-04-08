@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SUB_ACCOUNT } from '../../../../assets/images';
 import { Button, Screen, Text } from '../../../components';
+import { ADD_SUB_ACCOUNTS_SCREEN } from '../../../navigators/screen-name-constants';
 import { selectUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
@@ -10,6 +12,7 @@ import { AccountHeader } from './accountHeader';
 import { SubAccountItem } from './subAccountItem';
 
 export const SubAccountsScreen = () => {
+    const navigation = useNavigation()
     const user = useSelector(selectUser)
     const {maxSubAccountCount, subAccountCount, subAccounts} = user || {}
     const remaining = maxSubAccountCount - subAccountCount
@@ -26,7 +29,7 @@ export const SubAccountsScreen = () => {
                 text={footerText} 
                 style={styles.footerText}    
             />
-            <Button text={'+  Add new'} style={styles.button} onPress={() => {}} disabled={remaining < 1} />
+            <Button text={'+  Add new'} style={styles.button} onPress={() => navigation.navigate(ADD_SUB_ACCOUNTS_SCREEN)} disabled={remaining < 1} />
         </Screen>
     )
 }
