@@ -4,7 +4,7 @@ import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native
 import { ARROW_RIGHT_WHITE } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
-import { EDIT_PROFILE_SCREEN, PASSWORD_SCREEN, SUB_ACCOUNTS_SCREEN } from '../../../navigators/screen-name-constants';
+import { EDIT_PROFILE_SCREEN, INVITE_SCREEN, PASSWORD_SCREEN, SUB_ACCOUNTS_SCREEN } from '../../../navigators/screen-name-constants';
 import { setToken } from '../../../services/redux/slices/authSlice';
 import { perfectSize } from '../../../utils/dimmesion';
 
@@ -20,6 +20,8 @@ export const AccountItem = ({item}) => {
             navigation.navigate(SUB_ACCOUNTS_SCREEN)
         } else if (id === 2) {
             await Linking.openURL('https://www.exec.vip/client/contact')
+        } else if (id === 3) {
+            navigation.navigate(INVITE_SCREEN)
         } else if (id === 4) {
             navigation.navigate(PASSWORD_SCREEN)
         }

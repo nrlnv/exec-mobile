@@ -1,14 +1,22 @@
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Swipeable } from 'react-native-gesture-handler';
 import { REMOVE } from '../../../../assets/images';
 import { Text } from '../../../components';
+import { useAppDispatch } from '../../../hooks/hooks';
 import { BASE_URL } from '../../../services/api';
+import { REMOVE_SUBACCOUNT_MUTATION } from '../../../services/api/mutations';
+import { GET_CURRENT_USER } from '../../../services/api/queries';
+import { setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const SubAccountItem = (props) => {
+    const dispatch = useAppDispatch()
+    const navigation = useNavigation()
     const {image, firstName, lastName, email} = props
 
     const avatarUrl = BASE_URL + image.thumbnail
@@ -22,8 +30,32 @@ export const SubAccountItem = (props) => {
         );
     };
 
-    const onRemovePress = () => {
+    const [delSubAccount, { loading, error }] = useMutation(REMOVE_SUBACCOUNT_MUTATION)
+    const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
+
+    const onRemovePress = async () => {
+        try {
+            await delSubAccount({
+                variables: {
+                    email
+                }
+            })
+            onRemoveSuccess()
+        } catch (error) {
+            Alert.alert(error.message)
+        }
+    }
+
+    const onRemoveSuccess = async () => {
+        try {
+            await getCurrentUser()
+            if (userData) {
+                dispatch(setUser(userData?.currentUser))
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
