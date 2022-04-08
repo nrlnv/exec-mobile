@@ -15,6 +15,7 @@ import { useAppSelector } from "../../hooks/hooks"
 import { selectUser } from "../../services/redux/slices/authSlice"
 import { BASE_URL } from "../../services/api"
 import {IMAGE_SCREEN} from '../../navigators/screen-name-constants'
+import FastImage from "react-native-fast-image";
 
 export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount">> = () => {
   const insets = useSafeAreaInsets()
@@ -31,7 +32,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
       <View style={[styles.header, insetStyle]} >
         <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
         <TouchableOpacity onPress={() => navigation.navigate(IMAGE_SCREEN)} >
-          <Image source={{uri: avatarUrl}} style={styles.avatar} />
+          <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.avatar} />
           <View style={styles.editIcon}>
             <Edit />
           </View>

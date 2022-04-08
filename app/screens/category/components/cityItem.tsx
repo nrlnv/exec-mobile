@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Text } from '../../../components';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
@@ -8,7 +9,7 @@ export const CityItem = (props) => {
     const {text, onPress, style = {}} = props
     return (
         <TouchableOpacity style={[styles.container, style]} onPress={onPress} >
-            <Image style={styles.image} source={{uri: "https://placeimg.com/360/640/any"}}/>
+            <FastImage style={styles.image} source={{uri: "https://placeimg.com/360/640/any", priority: FastImage.priority.normal}}/>
             <Text style={styles.title} text={text}/>
         </TouchableOpacity>
     )

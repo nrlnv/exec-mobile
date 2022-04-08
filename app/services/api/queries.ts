@@ -66,6 +66,7 @@ export const GET_USER_REDEMPTIONS = gql`
           }
           images {
             thumbnail
+            medium
           }
           favorited
           redeemed

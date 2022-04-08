@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Image, ImageStyle, Pressable, TextStyle, View, ViewStyle } from "react-native"
+import { Image, ImageStyle, Pressable, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DigitalCardContainer, Screen, Text, Wallpaper } from "../../components"
@@ -10,6 +10,7 @@ import moment from "moment"
 import { BASE_URL } from "../../services/api"
 import { useAppSelector } from "../../hooks/hooks"
 import { selectUser } from "../../services/redux/slices/authSlice"
+import FastImage from "react-native-fast-image"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -18,14 +19,6 @@ const ROOT: ViewStyle = {
 }
 const CONTAINER: ViewStyle = {
 
-}
-const AVATAR_IMAGE: ImageStyle = {
-  position: "absolute",
-  alignSelf: "center",
-  top: perfectSize(-46),
-  width: perfectSize(94),
-  height: perfectSize(94),
-  borderRadius: perfectSize(46),
 }
 const CARD_CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -85,7 +78,7 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
             <Image source={LOGO_WITH_NAME} style={LOGO}/>
           </View>
         </DigitalCardContainer>
-        <Image style={AVATAR_IMAGE} source={{uri: avatarUrl}}/>
+        <FastImage style={styles.avatarImage} source={{uri: avatarUrl, priority: FastImage.priority.normal}}/>
       </View>
 
       <Pressable style={APPLE_WALLET_IMAGE}>
@@ -94,3 +87,14 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
     </Screen>
   )
 }
+
+const styles = StyleSheet.create({
+  avatarImage: {
+    position: "absolute",
+    alignSelf: "center",
+    top: perfectSize(-46),
+    width: perfectSize(94),
+    height: perfectSize(94),
+    borderRadius: perfectSize(46),
+  }
+})

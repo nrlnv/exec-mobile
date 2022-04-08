@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { FAVORITE, REDEEMED } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
@@ -21,7 +22,7 @@ export const CategoryBenefitItem = (props) => {
 
     return (
         <Pressable style={styles.container} onPress={onBenefitPress} >
-            <Image source={{uri : image}} style={styles.image} />
+            <FastImage source={{uri : image, priority: FastImage.priority.normal}} style={styles.image} />
             <View style={styles.categoryView}>
                 <Label text={value.category.name} />
                 <View style={styles.iconsView}>

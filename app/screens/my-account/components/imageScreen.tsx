@@ -10,6 +10,7 @@ import { perfectSize } from '../../../utils/dimmesion';
 import { AccountHeader } from './accountHeader';
 import ImagePicker, { Image as ImageProps } from 'react-native-image-crop-picker'
 import axios from 'axios'
+import FastImage from 'react-native-fast-image';
 
 export const ImageScreen = () => {
     const credentials = useSelector(selectCredentials)
@@ -73,7 +74,7 @@ export const ImageScreen = () => {
             <AccountHeader title={'Profile image'} />
             <View style={styles.mainView}>
                 <TouchableOpacity onPress={onAddPress}>
-                    <Image source={{uri: avatarUrl}} style={styles.image} />
+                    <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.image} />
                     <View style={styles.editIcon}>
                         <Edit width={20} height={20}/>
                     </View>

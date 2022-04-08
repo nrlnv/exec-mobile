@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Swipeable } from 'react-native-gesture-handler';
 import { FAVORITE, REDEEMED, REMOVE } from '../../../../assets/images';
 import { Text } from '../../../components';
@@ -49,7 +50,7 @@ export const FavoriteBenefitItem = (props) => {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <Pressable style={styles.container} onPress={onBenefitPress} >
-                <Image source={{uri : image}} style={styles.image} />
+                <FastImage source={{uri : image, priority: FastImage.priority.normal}} style={styles.image} />
                 <View style={styles.categoryView}>
                     <Label text={value.category} />
                     <View style={styles.iconsView}>

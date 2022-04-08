@@ -21,6 +21,7 @@ import { RootStackParamList } from '../../types'
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../navigators/screen-name-constants'
 import { Redemption } from '../../types/generatedGql'
 import { CopiedModal } from './components/copiedModal'
+import FastImage from 'react-native-fast-image'
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
@@ -141,7 +142,7 @@ export const BenefitDetails: React.FC = () => {
                                         >
                                         {
                                             benefit.images.map((image, index) => (
-                                                <Image key={index} style={styles.benefitImage} source={{uri: BASE_URL+image.medium}} />
+                                                <FastImage key={index} style={styles.benefitImage} source={{uri: BASE_URL+image.medium, priority: FastImage.priority.normal}} />
                                             ))
                                         }
                                     </PagerView>

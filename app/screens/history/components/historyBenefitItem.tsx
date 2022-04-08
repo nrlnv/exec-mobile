@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { FAVORITE, REDEEMED } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
@@ -17,11 +18,11 @@ export const HistoryBenefitItem = (props) => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.benefit.slug})
     }
 
-    const image = value.benefit.images[0] ? BASE_URL + value.benefit.images[0].thumbnail : "https://placeimg.com/360/640/any"
+    const image = value.benefit.images[0] ? BASE_URL + value.benefit.images[0].medium : "https://placeimg.com/360/640/any"
 
     return (
         <Pressable style={styles.container} onPress={onBenefitPress} >
-            <Image source={{uri : image}} style={styles.image} />
+            <FastImage source={{uri : image, priority: FastImage.priority.normal}} style={styles.image} />
             <View style={styles.categoryView}>
                 <Label text={value.benefit.category.name} />
                 <View style={styles.iconsView}>

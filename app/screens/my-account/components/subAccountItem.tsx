@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Swipeable } from 'react-native-gesture-handler';
 import { REMOVE } from '../../../../assets/images';
 import { Text } from '../../../components';
@@ -28,7 +29,7 @@ export const SubAccountItem = (props) => {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <View style={styles.container}>
-                <Image source={{uri: avatarUrl}} style={styles.avatar}/>
+                <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.avatar}/>
                 <View style={styles.userInfo}>
                     <Text text={`${firstName} ${lastName}`} style={styles.name} />
                     <Text text={email} style={styles.email} />
