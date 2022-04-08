@@ -276,6 +276,7 @@ export const GET_BENEFIT = gql`
       featured
       favorited
       images {
+        thumbnail
         medium
         large
       }
@@ -344,21 +345,6 @@ export const GET_CURRENT_USER = gql`
         lastName
         email
         createdAt
-      }
-      favoriteBenefits {
-        category {
-          name
-          slug
-        }
-        images {
-          medium
-        }
-        city
-        country
-        description
-        name
-        region
-        slug
       }
     }
   }

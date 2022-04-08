@@ -45,7 +45,7 @@ export const SearchScreen = () => {
       const fetchBenefits = useCallback(
         (page: number) => {
           setIsFetching(true)
-          getSearchResults({ variables: { page, term: value } })
+          getSearchResults({ variables: { page, term: value, category: 'all' } })
         },
         [getSearchResults, value]
       )

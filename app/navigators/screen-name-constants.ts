@@ -56,3 +56,9 @@ export const SEARCH_SCREEN = "searchScreen"
 
 // PROFILE SCREENS
 export const EDIT_PROFILE_SCREEN = "editProfileScreen"
+export const SUB_ACCOUNTS_SCREEN = "subAccountsScreen"
+export const MEMBER_SUPPORT_SCREEN = "memberSupportScreen"
+export const PASSWORD_SCREEN = "passwordScreen"
+export const ADDRESS_SCREEN = "addressScreen"
+export const ABOUT_SCREEN = "aboutScreen"
+export const IMAGE_SCREEN = "imageScreen"

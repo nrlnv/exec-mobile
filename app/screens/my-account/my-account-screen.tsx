@@ -1,10 +1,12 @@
 import React, { FC } from "react"
-import { View, StyleSheet, Image } from "react-native"
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { useNavigation } from '@react-navigation/native';
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text, Wallpaper } from "../../components"
 import { color } from "../../theme"
 import { HISTORY_HEADER, PROFILE_DOWN, PROFILE_UP } from "../../../assets/images"
+import Edit from '../../../assets/svgs/edit'
 import { perfectSize } from "../../utils/dimmesion"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { accountItems } from "../../utils/constants"
@@ -12,9 +14,11 @@ import { AccountItem } from "./components/accountItem"
 import { useAppSelector } from "../../hooks/hooks"
 import { selectUser } from "../../services/redux/slices/authSlice"
 import { BASE_URL } from "../../services/api"
+import {IMAGE_SCREEN} from '../../navigators/screen-name-constants'
 
 export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount">> = () => {
   const insets = useSafeAreaInsets()
+  const navigation = useNavigation()
   const insetStyle = { paddingTop: insets.top }
   const user = useAppSelector(selectUser)
 
@@ -26,10 +30,15 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
     <Screen style={styles.container} preset="scroll" unsafe>
       <View style={[styles.header, insetStyle]} >
         <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
-        <Image source={{uri: avatarUrl}} style={styles.avatar} />
+        <TouchableOpacity onPress={() => navigation.navigate(IMAGE_SCREEN)} >
+          <Image source={{uri: avatarUrl}} style={styles.avatar} />
+          <View style={styles.editIcon}>
+            <Edit />
+          </View>
+        </TouchableOpacity>
         <View style={styles.nameView} >
           <Text text={`${firstName} ${lastName}`} style={styles.nameText} />
-          <Text text={`${companyName}company name`} style={styles.companyText} />
+          <Text text={`${companyName}`} style={styles.companyText} />
         </View>
       </View>
       <View style={styles.redemptionsView}>
@@ -139,5 +148,18 @@ const styles = StyleSheet.create({
   },
   accountItemsView: {
     marginTop: perfectSize(20)
+  },
+  editIcon: {
+    position: 'absolute', 
+    right: 0, 
+    bottom: 0, 
+    backgroundColor: color.palette.black,
+    width: perfectSize(26),
+    height: perfectSize(26),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: perfectSize(13),
+    borderWidth: 2,
+    borderColor: color.palette.white
   }
 })

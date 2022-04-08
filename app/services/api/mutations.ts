@@ -302,3 +302,10 @@ export const UPDATE_ONBOARDING_STEP = gql`
     }
   }
 `
+export const REQUEST_SUPPORT = gql`
+  mutation RequestSupport($requestSupportInput2: RequestSupportInput!) {
+    requestSupport(input: $requestSupportInput2) {
+      message
+    }
+  }
+`

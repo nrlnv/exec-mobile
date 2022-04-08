@@ -141,7 +141,7 @@ export const BenefitDetails: React.FC = () => {
                                         >
                                         {
                                             benefit.images.map((image, index) => (
-                                                <Image key={index} style={styles.benefitImage} source={{uri: BASE_URL+image.large}} />
+                                                <Image key={index} style={styles.benefitImage} source={{uri: BASE_URL+image.medium}} />
                                             ))
                                         }
                                     </PagerView>
