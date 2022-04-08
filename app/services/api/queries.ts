@@ -341,10 +341,14 @@ export const GET_CURRENT_USER = gql`
         name
       }
       subAccounts {
+        id
         firstName
         lastName
         email
         createdAt
+        photo {
+          thumbnail
+        }
       }
     }
   }

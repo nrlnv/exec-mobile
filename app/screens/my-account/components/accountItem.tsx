@@ -1,17 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ARROW_RIGHT_WHITE } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
-import { EDIT_PROFILE_SCREEN, MEMBER_SUPPORT_SCREEN, PASSWORD_SCREEN, SUB_ACCOUNTS_SCREEN } from '../../../navigators/screen-name-constants';
+import { EDIT_PROFILE_SCREEN, PASSWORD_SCREEN, SUB_ACCOUNTS_SCREEN } from '../../../navigators/screen-name-constants';
 import { setToken } from '../../../services/redux/slices/authSlice';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const AccountItem = ({item}) => {
     const dispatch = useAppDispatch()
     const navigation = useNavigation()
-    const onPress = () => {
+    const onPress = async () => {
         if (id === 5) {
             dispatch(setToken({}))
         } else if (id === 0) {
@@ -19,7 +19,7 @@ export const AccountItem = ({item}) => {
         } else if (id === 1) {
             navigation.navigate(SUB_ACCOUNTS_SCREEN)
         } else if (id === 2) {
-            navigation.navigate(MEMBER_SUPPORT_SCREEN)
+            await Linking.openURL('https://www.exec.vip/client/contact')
         } else if (id === 4) {
             navigation.navigate(PASSWORD_SCREEN)
         }

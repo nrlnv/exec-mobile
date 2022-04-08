@@ -45,6 +45,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>Exec uses images you upload for your profile picture.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Exec uses images you upload for your profile picture and.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>proximanova_bold.otf</string>
