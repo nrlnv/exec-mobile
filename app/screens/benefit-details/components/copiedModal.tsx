@@ -7,10 +7,12 @@ import { Text } from '../../../components';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
-export const CopiedModal = ({isVisible, text}) => {
+export const CopiedModal = ({isVisible, text = '', title}) => {
 
     const copyToClipboard = () => {
-        Clipboard.setString(text)
+        if (text) {
+            Clipboard.setString(text)
+        }
     }
 
     return (
@@ -22,7 +24,7 @@ export const CopiedModal = ({isVisible, text}) => {
         >
             <View style={styles.container}>
                 <Image source={CHECK_MARK_BIG} style={styles.icon} />
-                <Text style={styles.text} text={'Copied'} />
+                <Text style={styles.text} text={title} />
             </View>
         </Modal>
     )

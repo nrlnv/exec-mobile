@@ -261,7 +261,7 @@ export const BenefitDetails: React.FC = () => {
                                     redemption={redemption}
                                     setRedemption={setRedemption}    
                                 />
-                                <CopiedModal isVisible={showCopiedModal} text={redemption?.redemptionCode || ''} />
+                                <CopiedModal isVisible={showCopiedModal} text={redemption?.redemptionCode || ''} title={'Copied'} />
                             </>
                         ) : null
                     }

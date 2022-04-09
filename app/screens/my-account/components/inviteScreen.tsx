@@ -1,20 +1,32 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { INVITE, PASSWORD } from '../../../../assets/images';
 import { Button, Screen, Text } from '../../../components';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { AccountHeader } from './accountHeader';
 import { AccountInput } from './accountInput';
 
 export const InviteScreen = () => {
+    const navigation = useNavigation()
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
 
+    const [showCopiedModal, setShowCopiedModal] = useState(false)
+
+
     const isDisabled = firstName && lastName && email
 
-    const onSendPress = () => {}
+    const onSendPress = () => {
+        setShowCopiedModal(true)
+        setTimeout(() => {
+            setShowCopiedModal(false)
+            navigation.goBack()
+        }, 1000);
+    }
 
     return (
         <Screen style={styles.container} unsafe >
@@ -29,6 +41,8 @@ export const InviteScreen = () => {
                 <AccountInput title={'Email'} value={email} onChangeText={setEmail} autoCapitalize='none' />
             </View>
             <Button text={'send invitation to exec'} style={styles.button} onPress={onSendPress} disabled={!isDisabled} />
+            <CopiedModal isVisible={showCopiedModal} title={'Sent!'} />
+
         </Screen>
     )
 }

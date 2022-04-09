@@ -11,6 +11,7 @@ import { UPDATE_USER_MUTATION } from '../../../services/api/mutations';
 import { selectUser, setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { AccountHeader } from './accountHeader';
 import { AccountInput } from './accountInput';
 
@@ -27,10 +28,17 @@ export const EditProfileScreen = () => {
     const [website, setWebsite] = useState(user?.companyWebsite)
     const [position, setPosition] = useState(user?.position)
 
+    const [showCopiedModal, setShowCopiedModal] = useState(false)
+
+
     const [updateUserProfile] = useMutation(UPDATE_USER_MUTATION, {
         onCompleted: (data) => {
-          dispatch(setUser(data.updateUser.user))
-          navigation.goBack()
+            setShowCopiedModal(true)
+            dispatch(setUser(data.updateUser.user))
+            setTimeout(() => {
+                setShowCopiedModal(false)
+                navigation.goBack()
+            }, 1000);
         },
       })
 
@@ -68,6 +76,7 @@ export const EditProfileScreen = () => {
                 <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
             </View>
             <Button text={'Save'} style={styles.button} onPress={onSavePress} />
+            <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
 
         </Screen>
     )
