@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Modal from 'react-native-modal'
 import { FILTER_MODAL } from '../../../../assets/images';
-import { Text, Wallpaper } from '../../../components';
+import { Wallpaper } from '../../../components';
+import { useAppSelector } from '../../../hooks/hooks';
+import { selectCities } from '../../../services/redux/slices/citiesSlice';
 import { color } from '../../../theme';
 import { destinationsConst } from '../../../utils/constants';
 import { perfectSize } from '../../../utils/dimmesion';
@@ -10,44 +12,22 @@ import { CityItem } from '../../category/components/cityItem';
 import { DestinationsItem } from '../../category/components/destinationsItem';
 import { ModalHeader } from '../../history/components/modalHeader';
 
-const cities = [
-    {
-        id: 0,
-        text: 'Chicago',
-    },
-    {
-        id: 1,
-        text: 'New York',
-    },
-    {
-        id: 2,
-        text: 'Paris',
-    },
-    {
-        id: 3,
-        text: 'Tokyo',
-    },
-    {
-        id: 4,
-        text: 'Warsaw',
-    },
-    {
-        id: 5,
-        text: 'Berlin',
-    },
-    {
-        id: 6,
-        text: 'Hong Kong',
-    },
-]
-
 export const CityModal = (props) => {
     const {isVisible, onBackdropPress, onCityPress} = props
     const [currentDestination, setCurrentDestination] = useState(0)
 
+    const allCities = useAppSelector(selectCities)
+    const featuredCities = allCities.filter(city => city.featured === true)
+    const americaCities = allCities.filter(city => city.region === 'North America')
+    const europeCities = allCities.filter(city => city.region === 'Europe & Middle East')
+    const asiaCities = allCities.filter(city => city.region === 'Asia Pacific & Australia')
+    const currentCities = currentDestination === 0 ? featuredCities 
+        : currentDestination === 1 ?  americaCities
+        : currentDestination === 2 ? europeCities : asiaCities
+
     const renderItem = ({item}) => {
         return (
-            <CityItem text={item.text} onPress={() => onCityPress(item.text)} style={styles.cityStyle} />
+            <CityItem city={item} onCityPress={onCityPress} style={styles.cityStyle} />
         )
     }
 
@@ -71,8 +51,8 @@ export const CityModal = (props) => {
                     }
                 </View>
                 <FlatList 
-                    data={cities}
-                    keyExtractor={item => item.id}
+                    data={currentCities}
+                    keyExtractor={item => item.slug}
                     numColumns={2}
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
@@ -92,7 +72,7 @@ const styles = StyleSheet.create({
         bottom: -20,
         paddingHorizontal: perfectSize(24),
         paddingVertical: perfectSize(35),
-        maxHeight: '80%',
+        height: '80%',
     },
     destinationsView: {
         flexDirection: 'row',

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Screen, Text, Wallpaper } from '../../components';
 import { color } from '../../theme';
 import { CARET_DOWN, CATEGORY_HEADER, FILTER } from '../../../assets/images';
@@ -10,7 +10,7 @@ import { destinationsConst, filtersConst } from '../../utils/constants';
 import { DestinationsItem } from './components/destinationsItem';
 import { CityItem } from './components/cityItem';
 import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_BENEFITS } from '../../services/api/queries';
 import { CategoryBenefitItem } from './components/categoryBenefitItem';
 import { FilterModal } from '../history/components/filterModal';
@@ -24,6 +24,8 @@ import ArrowRightBig from '../../../assets/svgs/arrow_right_big';
 import { HeaderwithAvatar } from './components/headerWithAvatar';
 import Business from '../../../assets/svgs/business';
 import { RootStackParamList } from '../../types';
+import { useAppSelector } from '../../hooks/hooks';
+import { selectCities } from '../../services/redux/slices/citiesSlice';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -66,6 +68,15 @@ export const CategoryScreen = () => {
     const [currentDestination, setCurrentDestination] = useState(0)
     const [currentFilter, setCurrentFilter] = useState(0)
 
+    const allCities = useAppSelector(selectCities)
+    const featuredCities = allCities.filter(city => city.featured === true)
+    const americaCities = allCities.filter(city => city.region === 'North America')
+    const europeCities = allCities.filter(city => city.region === 'Europe & Middle East')
+    const asiaCities = allCities.filter(city => city.region === 'Asia Pacific & Australia')
+    const currentCities = currentDestination === 0 ? featuredCities 
+        : currentDestination === 1 ?  americaCities
+        : currentDestination === 2 ? europeCities : asiaCities
+
     // const [sort1, setSort1] = useState(0)
     // const [sort2, setSort2] = useState(0)
     // const [filterCategories, setFilterCategories] = useState([])
@@ -77,7 +88,7 @@ export const CategoryScreen = () => {
         setShowCategoryModal(prevState => !prevState)
     }
 
-    const onChangeCategory = (category) => {
+    const onChangeCategory = (category: string) => {
         navigation.setParams({category})
         toggleCategoryModal()
     }
@@ -101,7 +112,7 @@ export const CategoryScreen = () => {
         }
     }
 
-    const [getBenefits, { data, error }] = useLazyQuery(GET_BENEFITS, {
+    const [getBenefits, { data, loading, error }] = useLazyQuery(GET_BENEFITS, {
         onCompleted: handleFetchMoreCompleted,
         fetchPolicy: 'cache-and-network',
     })
@@ -138,7 +149,7 @@ export const CategoryScreen = () => {
         )
     }
 
-    const onCityPress = (destination) => {
+    const onCityPress = (destination: string) => {
         navigation.navigate(CATEGORY_AND_DESTINATION_SCREEN, {category, destination})
     }
 
@@ -179,10 +190,9 @@ export const CategoryScreen = () => {
                         showsHorizontalScrollIndicator={false} 
                         contentContainerStyle={styles.citiesView}
                     >
-                        <CityItem text={'Chicago'} onPress={() => onCityPress('Chicago')} />
-                        <CityItem text={'New York'} onPress={() => onCityPress('New York')} />
-                        <CityItem text={'Paris'} onPress={() => onCityPress('Paris')} />
-                        <CityItem text={'Tokyo'} onPress={() => onCityPress('Tokyo')} />
+                        {currentCities.map(city => (
+                            <CityItem key={city.slug} city={city} onCityPress={onCityPress} />
+                        ))}
                     </ScrollView>
                 </View>
                 <Text style={styles.sectionTitle} text={`${category} Benefits`}/>
@@ -196,6 +206,8 @@ export const CategoryScreen = () => {
                         <Image source={FILTER} style={styles.filterIcon} />
                     </TouchableOpacity> */}
                 </View>
+                <ActivityIndicator animating={loading} color={color.palette.primary500} />
+                {!loading && collection.length === 0 && <Text text={'no benefits found'} style={styles.notFoundText} />}
             </>
         )
     }
@@ -292,5 +304,8 @@ const styles = StyleSheet.create({
     filterIcon: {
         width: perfectSize(40),
         height: perfectSize(40),
-    }
+    },
+    notFoundText: {
+        marginLeft: perfectSize(24),
+    },
 })

@@ -15,7 +15,7 @@ import Travel from "../../../assets/svgs/travel"
 import Experiences from "../../../assets/svgs/experiences"
 import ArrowRightBig from "../../../assets/svgs/arrow_right_big"
 import { useLazyQuery, useQuery } from "@apollo/client"
-import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS, GET_BENEFITS } from "../../services/api/queries"
+import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS, GET_BENEFITS, GET_CITIES } from "../../services/api/queries"
 import { configBenefitsForPreview } from "../../utils/utils"
 import { destinationsConst } from "../../utils/constants"
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
@@ -24,9 +24,10 @@ import { DestinationsItem } from "../category/components/destinationsItem"
 import { CityItem } from "../category/components/cityItem"
 import { SearchView } from "./components/searchView"
 import { setUser } from "../../services/redux/slices/authSlice"
-import { useAppDispatch } from "../../hooks/hooks"
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import Business from "../../../assets/svgs/business"
 import { BenefitsSlider } from "./components/benefitsSlider"
+import { selectCities, setCities } from "../../services/redux/slices/citiesSlice"
 
 export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> = () => {
   const dispatch = useAppDispatch()
@@ -34,6 +35,16 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const insets = useSafeAreaInsets()
   const insetStyle = { marginTop: insets.top }
   const navigation = useNavigation()
+  const [currentDestination, setCurrentDestination] = useState(0)
+
+  const allCities = useAppSelector(selectCities)
+  const featuredCities = allCities.filter(city => city.featured === true)
+  const americaCities = allCities.filter(city => city.region === 'North America')
+  const europeCities = allCities.filter(city => city.region === 'Europe & Middle East')
+  const asiaCities = allCities.filter(city => city.region === 'Asia Pacific & Australia')
+  const currentCities = currentDestination === 0 ? featuredCities 
+    : currentDestination === 1 ?  americaCities
+    : currentDestination === 2 ? europeCities : asiaCities
 
   const { data: popularBenefits } = useQuery(GET_POPULAR_BENEFITS)
   const { data: benefitsForYou } = useQuery(GET_BENEFITS_FOR_YOU)
@@ -58,10 +69,10 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
     category: 'business',
     scope: 'featured'
   }})
+  
+  const [cities, { data: citiesData }] = useLazyQuery(GET_CITIES)
 
   const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
-
-  const [currentDestination, setCurrentDestination] = useState(0)
 
   const navigateToCategoryScreen = (category: string) => {
   navigation.navigate(CATEGORY_SCREEN, {category})
@@ -75,12 +86,27 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
     ;(async () => {
       try {
         await getCurrentUser()
-        dispatch(setUser(userData?.currentUser))
+        if (userData) {
+          dispatch(setUser(userData?.currentUser))
+        }
       } catch (error) {
         console.log(error);
       }
     })()
   }, [userData])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        await cities()
+        if (citiesData){
+          dispatch(setCities(citiesData?.cities))
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })()
+  }, [citiesData])
 
   return (
     <Screen style={styles.container} preset="scroll" unsafe>
@@ -171,10 +197,9 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={DESTINATIONS_SCROLL_CONTAINER}>
-          <CityItem text={'Chicago'} onPress={() => onCityPress('Chicago')} />
-          <CityItem text={'New York'} onPress={() => onCityPress('New York')} />
-          <CityItem text={'Paris'} onPress={() => onCityPress('Paris')} />
-          <CityItem text={'Tokyo'} onPress={() => onCityPress('Tokyo')} />
+          {currentCities.map(city => (
+            <CityItem key={city.slug} city={city} onCityPress={onCityPress} />
+          ))}
         </ScrollView>
       </View>
       <BenefitsSlider benefits={benefitsForYou?.getBenefitsForYou?.collection} text={'For You'} moreButton={false} />

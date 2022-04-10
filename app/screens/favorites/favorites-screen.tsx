@@ -52,7 +52,6 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
       <View style={styles.header}>
         <Text style={styles.sectionTitle} text={"Your Favorite Benefits"}/>
       </View>
-
       <FlatList 
         data={configBenefitsForPreview(userFavorites)}
         renderItem={renderItem}
@@ -62,7 +61,7 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
           <RefreshControl
             refreshing={loading}
             onRefresh={fetchBenefits}
-            tintColor="#fff"
+            tintColor={color.palette.primary500}
           />
         }
       />

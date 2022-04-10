@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from "react"
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native"
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text } from "../../components"
@@ -100,6 +100,8 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
           ))
         }
       </View>
+      <ActivityIndicator animating={loading} color={color.palette.primary500} />
+      {!loading && collection.length === 0 && <Text text={'no benefits found'} style={styles.notFoundText} />}
       {
         !!metadata?.totalCount && (
           <FlatList
@@ -116,7 +118,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
                 onRefresh={() => {
                   fetchRedemptions(1)
                 }}
-                tintColor="#fff"
+                tintColor={color.palette.primary500}
               />
             }
           />
@@ -146,4 +148,7 @@ const styles = StyleSheet.create({
      marginHorizontal: perfectSize(24),
      marginBottom: perfectSize(25)
    },
+   notFoundText: {
+    marginLeft: perfectSize(24)
+  }
 })

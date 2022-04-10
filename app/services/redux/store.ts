@@ -4,6 +4,7 @@ import logger from 'redux-logger'
 import { combineReducers } from 'redux'
 import authSlice from "./slices/authSlice";
 import { FLUSH, persistReducer, persistStore, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import citiesSlice from "./slices/citiesSlice";
 
 const persistConfig = {
     key: 'root',
@@ -12,7 +13,8 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
-    auth: authSlice
+    auth: authSlice,
+    cities: citiesSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

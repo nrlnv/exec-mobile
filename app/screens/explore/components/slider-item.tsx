@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
-import { Button, Text, Wallpaper } from "../../../components"
+import { StyleSheet, TextStyle, View, ViewStyle } from "react-native"
+import FastImage from "react-native-fast-image"
+import { Button, Text } from "../../../components"
 import { BENEFIT_DETAILS_SCREEN } from "../../../navigators/screen-name-constants"
 import { BASE_URL } from "../../../services/api"
 import { BenefitPreviewDTO } from "../../../types"
@@ -36,7 +37,6 @@ export interface SliderItemProps {
 }
 
 export const SliderItem = (props:  SliderItemProps) => {
-  // const { title = "", description = "", onButtonPress } = props
   const { benefit } = props
   const navigation = useNavigation()
   const image = {uri: BASE_URL + benefit.images[0]}
@@ -47,10 +47,20 @@ export const SliderItem = (props:  SliderItemProps) => {
 
   return (
     <View style={SLIDE_CONTAINER}>
-      <Wallpaper backgroundImage={image} preset='fullWidth' />
+      <FastImage source={image} style={styles.image} />
       <Text style={SLIDE_TITLE} text={benefit.name}/>
       <Text style={SLIDE_DESCRIPTION} text={benefit.benefitSummary}/>
       <Button style={SLIDE_BUTTON} text={"more details"} preset={"selfSize"} onPress={onButtonPress}/>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  image: {
+    position: "absolute",
+    width: "100%", // Have to set these to null because android ¯\_(ツ)_/¯
+    height: null,
+    aspectRatio: 375 / 354,
+    opacity: 0.7
+  }
+})

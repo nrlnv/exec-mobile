@@ -2,15 +2,18 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Text } from '../../../components';
+import { BASE_URL } from '../../../services/api';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const CityItem = (props) => {
-    const {text, onPress, style = {}} = props
+    const {city, onCityPress, style = {}} = props
+    const image = city.image.medium ? BASE_URL + city.image.medium : "https://placeimg.com/360/640/any"
+
     return (
-        <TouchableOpacity style={[styles.container, style]} onPress={onPress} >
-            <FastImage style={styles.image} source={{uri: "https://placeimg.com/360/640/any", priority: FastImage.priority.normal}}/>
-            <Text style={styles.title} text={text}/>
+        <TouchableOpacity style={[styles.container, style]} onPress={() => onCityPress(city.name)} >
+            <FastImage style={styles.image} source={{uri: image, priority: FastImage.priority.normal}}/>
+            <Text style={styles.title} text={city.name}/>
         </TouchableOpacity>
     )
 }
@@ -29,6 +32,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         height: "100%",
         width: "100%",
+        opacity: 0.9,
     },
     title: {
         color: color.palette.white,

@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { DESTINATION_HEADER } from '../../../assets/images'
 import { Screen, Text, Wallpaper } from '../../components'
 import { color } from '../../theme'
@@ -119,7 +119,7 @@ export const DestinationScreen = () => {
         }
     }
 
-    const [getBenefits, { data, error }] = useLazyQuery(GET_BENEFITS, {
+    const [getBenefits, { data, loading, error }] = useLazyQuery(GET_BENEFITS, {
         onCompleted: handleFetchMoreCompleted,
         fetchPolicy: 'cache-and-network',
     })
@@ -184,6 +184,8 @@ export const DestinationScreen = () => {
                     ))
                     }
                 </View>
+                <ActivityIndicator animating={loading} color={color.palette.primary500} />
+                {!loading && collection.length === 0 && <Text text={'no benefits found'} style={styles.notFoundText} />}
             </>
         )
     }
@@ -251,5 +253,8 @@ const styles = StyleSheet.create({
         marginHorizontal: perfectSize(24), 
         marginTop: perfectSize(20), 
         marginBottom: perfectSize(60)
+    },
+    notFoundText: {
+        marginLeft: perfectSize(24)
     }
 })
