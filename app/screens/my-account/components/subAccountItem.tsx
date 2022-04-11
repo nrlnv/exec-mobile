@@ -23,7 +23,7 @@ export const SubAccountItem = (props) => {
 
     const renderRightActions = () => {
         return (
-          <TouchableOpacity style={styles.deleteView} onPress={onRemovePress} >
+          <TouchableOpacity style={styles.deleteView} onPress={onRemovePress} disabled={loading} >
                 <Image source={REMOVE} style={styles.icon} />
                 <Text text={'Remove'} style={styles.removeText} />
           </TouchableOpacity>

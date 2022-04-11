@@ -10,6 +10,7 @@ import { GET_CURRENT_USER } from '../../../services/api/queries';
 import { setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { AccountHeader } from './accountHeader';
 import { AccountInput } from './accountInput';
 
@@ -19,12 +20,15 @@ export const AddSubAccountsScreen = () => {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [showCopiedModal, setShowCopiedModal] = useState(false)
+
 
     const [error, setError] = useState('')
 
     const [addSubAccount, { loading }] = useMutation(ADD_SUBACCOUNT_MUTATION)
     const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
+    const isDisabled = firstName && lastName && email && !loading
 
     const onSendPress = async () => {
         try {
@@ -47,6 +51,10 @@ export const AddSubAccountsScreen = () => {
     }
 
     const onAddSuccess = async () => {
+        setShowCopiedModal(true)
+        setTimeout(() => {
+            setShowCopiedModal(false)
+        }, 1000);
         try {
             await getCurrentUser()
             if (userData) {
@@ -66,8 +74,8 @@ export const AddSubAccountsScreen = () => {
                 <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
                 <AccountInput title={'Email'} value={email} onChangeText={setEmail} autoCapitalize='none' />
             </View>
-            <Button text={'send invitation to exec'} style={styles.button} onPress={onSendPress} />
-
+            <Button text={'send invitation to exec'} style={styles.button} onPress={onSendPress} disabled={!isDisabled} />
+            <CopiedModal isVisible={showCopiedModal} title={'Sent!'} />
         </Screen>
     )
 }
