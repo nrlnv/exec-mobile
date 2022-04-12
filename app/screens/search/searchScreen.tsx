@@ -100,13 +100,13 @@ export const SearchScreen = () => {
             {benefits.length > 0 && (
                 <>
                     <Text style={styles.sectionTitle} text={"Benefits"}/>
-                    <View style={styles.filterView}>
+                    {/* <View style={styles.filterView}>
                         {
                             filtersConst.map(t => (
                                 <DestinationsItem item={t} key={t.id} currentId={currentFilter} onPress={setCurrentFilter} />
                             ))
                         }
-                    </View>
+                    </View> */}
                 </>
             )}
             <FlatList 
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         fontSize: perfectSize(20),
         lineHeight: perfectSize(26),
         color: color.palette.white,
-        marginTop: perfectSize(30)
+        marginVertical: perfectSize(30)
     },
     filterView: {
         flexDirection: 'row',

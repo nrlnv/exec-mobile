@@ -43,7 +43,7 @@ export const AddressScreen = () => {
             <AccountHeader title={'Address'} backText={'Your Profile'} />
             <View style={styles.mainView}>
                 <AccountInput title={'Street 1'} value={street} onChangeText={setStreet} />
-                <AccountInput title={'Street 2'} editable={false} />
+                <AccountInput title={'Apartment'} value={apartment} onChangeText={setApartment} />
                 <AccountInput title={'City'} value={city} onChangeText={setCity} />
                 <AccountInput title={'State'} value={state} onChangeText={setState} />
                 <AccountInput title={'Zip Code'} value={zipCode} onChangeText={setZipCode} />

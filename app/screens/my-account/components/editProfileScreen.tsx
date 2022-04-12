@@ -31,7 +31,7 @@ export const EditProfileScreen = () => {
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 
 
-    const [updateUserProfile] = useMutation(UPDATE_USER_MUTATION, {
+    const [updateUserProfile, { loading}] = useMutation(UPDATE_USER_MUTATION, {
         onCompleted: (data) => {
             setShowCopiedModal(true)
             dispatch(setUser(data.updateUser.user))
@@ -72,10 +72,10 @@ export const EditProfileScreen = () => {
                 <AccountInput title={'Company'} value={companyName} onChangeText={setCompanyName} />
                 <AccountInput title={'Website'} value={website} onChangeText={setWebsite} />
                 <AccountInput title={'Position'} value={position} onChangeText={setPosition} />
-                <AccountInput title={'Address'} value={`${address.address}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
+                <AccountInput title={'Address'} value={`${address.address}, ${address.apartment}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
                 <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
             </View>
-            <Button text={'Save'} style={styles.button} onPress={onSavePress} />
+            <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
             <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
 
         </Screen>

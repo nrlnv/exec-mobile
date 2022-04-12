@@ -171,30 +171,34 @@ export const CategoryScreen = () => {
                     </View>
                 </View>
                 <SearchView text={"Where do you want to go?"} />
-                <Text style={styles.sectionTitle} text={"Browse by Destination"}/>
-                <View style={styles.destinationsView}>
-                    {
-                        destinationsConst.map((destination) => (
-                            <DestinationsItem
-                                item={destination} 
-                                currentId={currentDestination} 
-                                onPress={setCurrentDestination}
-                                key={destination.id}
-                            />
-                        ))
-                    }
-                </View>
-                <View>
-                    <ScrollView 
-                        horizontal
-                        showsHorizontalScrollIndicator={false} 
-                        contentContainerStyle={styles.citiesView}
-                    >
-                        {currentCities.map(city => (
-                            <CityItem key={city.slug} city={city} onCityPress={onCityPress} />
-                        ))}
-                    </ScrollView>
-                </View>
+                {category === 'Hotels' ? (
+                    <>
+                        <Text style={styles.sectionTitle} text={"Browse by Destination"}/>
+                        <View style={styles.destinationsView}>
+                            {
+                                destinationsConst.map((destination) => (
+                                    <DestinationsItem
+                                        item={destination} 
+                                        currentId={currentDestination} 
+                                        onPress={setCurrentDestination}
+                                        key={destination.id}
+                                    />
+                                ))
+                            }
+                        </View>
+                        <View>
+                            <ScrollView 
+                                horizontal
+                                showsHorizontalScrollIndicator={false} 
+                                contentContainerStyle={styles.citiesView}
+                            >
+                                {currentCities.map(city => (
+                                    <CityItem key={city.slug} city={city} onCityPress={onCityPress} />
+                                ))}
+                            </ScrollView>
+                        </View>
+                    </>
+                ) : null}
                 <Text style={styles.sectionTitle} text={`${category} Benefits`}/>
                 <View style={styles.filterView}>
                     {

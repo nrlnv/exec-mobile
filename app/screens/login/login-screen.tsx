@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { Image, ImageStyle, TextStyle, ViewStyle } from "react-native"
+import { Image, ImageStyle, TextStyle, ViewStyle, Alert } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AuthContainer, Button, FormTextField } from "../../components"
 import { color } from "../../theme"
@@ -43,6 +43,8 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
   const [password, setPassword] = useState('')
   const [loginErrorMessage, setLoginErrorMessage] = useState('')
 
+  const isDisabled = email && password && !loading
+
   const forgotPassword = () => {
     navigation.navigate(RESET_PASSWORD_SCREEN)
     // navigation.navigate(RESET_SET_PASSWORD_SCREEN)
@@ -53,7 +55,8 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
       const { credentials } = resp.data.login
       dispatch(setToken(credentials))
     } catch (err) {
-      setLoginErrorMessage(err?.response?.data?.error)
+      // setLoginErrorMessage(err?.response?.data?.error)
+      Alert.alert(err.message)
     }
   }
   const requestAccess = () => {
@@ -70,7 +73,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
         <FormTextField style={USERNAME_FIELD} placeholder={"Email, or username"} value={email} name={"emailUsername"} onChangeText={setEmail} />
         <FormTextField style={PASSWORD_FIELD} placeholder={"Password"} value={password} name={"password"} secure biometry onChangeText={setPassword} />
         <Button text={"Forgot password?"} preset={"link"} style={FORGOT_PASSWORD_BUTTON} textStyle={FORGOT_PASSWORD_BUTTON_TEXT} onPress={forgotPassword}/>
-        <Button text={"log in"} style={LOGIN_BUTTON} onPress={onLogin} disabled={email === '' || password === ''} />
+        <Button text={"log in"} style={LOGIN_BUTTON} onPress={onLogin} disabled={!isDisabled} />
    </AuthContainer>
   )
 }
