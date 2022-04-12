@@ -44,7 +44,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Exec uses location to show benefits on map.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Exec uses images you upload for your profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

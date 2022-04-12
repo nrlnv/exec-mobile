@@ -231,6 +231,7 @@ export const GET_BENEFITS = gql`
         latitude
         longitude
         name
+        redemptionType
         postalCode
         rates {
           category

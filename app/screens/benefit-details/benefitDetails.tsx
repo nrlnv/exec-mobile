@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking } from 'react-native'
+import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking, Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, COPY_FILLED, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
@@ -22,6 +22,7 @@ import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../navigators/screen-nam
 import { Redemption } from '../../types/generatedGql'
 import { CopiedModal } from './components/copiedModal'
 import FastImage from 'react-native-fast-image'
+import MapView, {Marker} from 'react-native-maps';
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
@@ -76,6 +77,17 @@ export const BenefitDetails: React.FC = () => {
         if (benefit.website) {
             Linking.openURL(benefit.website)
         }
+    }
+
+    const onDirectionPress = (lat: number, lng: number) => {
+        const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+        const latLng = `${lat},${lng}`;
+        const label = benefit.name;
+        const url = Platform.select({
+        ios: `${scheme}${label}@${latLng}`,
+        android: `${scheme}${latLng}(${label})`
+        })
+        Linking.openURL(url);
     }
 
     const onLabelPress = (type: string, text: string) => {
@@ -222,6 +234,34 @@ export const BenefitDetails: React.FC = () => {
                                                 <Text style={[styles.pricingText, {marginTop: perfectSize(20)}]} text={benefit.address1} />
                                                 <Text style={styles.pricingText} text={benefit.city} />
                                                 <Text style={styles.pricingText} text={benefit.country} />
+                                                {benefit.latitude && benefit.longitude ? (
+                                                    <>
+                                                    <MapView
+                                                        initialRegion={{
+                                                            latitude: benefit.latitude,
+                                                            longitude: benefit.longitude,
+                                                            latitudeDelta: 0.0922,
+                                                            longitudeDelta: 0.0421,
+                                                        }}
+                                                        style={styles.map}
+                                                        zoomControlEnabled
+                                                        zoomEnabled
+                                                    >
+                                                        <Marker
+                                                            // key={index}
+                                                            coordinate={{ latitude : benefit.latitude , longitude : benefit.longitude }}
+                                                            title={'Benefit'}
+                                                            // description={marker.description}
+                                                        />
+                                                    </MapView>
+                                                    <Button style={styles.visitWebsiteButton}>
+                                                        <TouchableOpacity style={styles.visitWebsiteView} onPress={() => onDirectionPress(37.78825, -122.4324)} >
+                                                            <Text text={'GET DIRECTION'} style={styles.visitWebsiteText} />
+                                                            <ArrowRight />
+                                                        </TouchableOpacity>
+                                                    </Button>
+                                                    </>
+                                                ) : null}
                                             </>
                                         ) : null
                                     }
@@ -386,5 +426,11 @@ const styles = StyleSheet.create({
     },
     visitWebsiteText: {
         marginRight: 10
+    },
+    map: {
+        width: '100%',
+        height: perfectSize(300),
+        borderRadius: 10,
+        marginTop: perfectSize(16)
     }
 })

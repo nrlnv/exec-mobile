@@ -2,6 +2,7 @@ import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
+import Config from 'react-native-config'
 
 /**
  * Manages all requests to the API.
@@ -101,4 +102,4 @@ export class Api {
   }
 }
 
-export const BASE_URL = 'https://execdemo.me'
+export const {BASE_URL, GOOGLE_API_KEY} = Config
