@@ -43,10 +43,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Exec uses location to show benefits on map.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Exec uses images you upload for your profile picture.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Exec uses location to show benefits on map.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Exec uses images you upload for your profile picture and.</string>
 	<key>UIAppFonts</key>

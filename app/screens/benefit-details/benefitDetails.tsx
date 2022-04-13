@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, COPY_FILLED, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
-import { GET_BENEFIT } from '../../services/api/queries'
+import { GET_BENEFIT, GET_BENEFITS } from '../../services/api/queries'
 import { color } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
 import RenderHtml from 'react-native-render-html';
@@ -23,6 +23,7 @@ import { Redemption } from '../../types/generatedGql'
 import { CopiedModal } from './components/copiedModal'
 import FastImage from 'react-native-fast-image'
 import MapView, {Marker} from 'react-native-maps';
+import { BenefitsSlider } from '../explore/components/benefitsSlider'
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 
@@ -58,6 +59,10 @@ export const BenefitDetails: React.FC = () => {
     const toggleRedeemModal = () => setShowRedeemModal(prevState => !prevState)
 
     const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
+
+    const { data: similarBenefits} = useQuery(GET_BENEFITS, {variables: {
+        category: 'hotels',
+      }})
 
     const onFavouritePress = async () => {
         setIsFavourited(prevState => !prevState)
@@ -291,9 +296,18 @@ export const BenefitDetails: React.FC = () => {
                                         ) : null
                                     }
                                 </View>
-                                <View style={styles.similarBenefitsView}>
-                                    <Text style={styles.similarBenefitsText} text={'Similar Benefits You May Like'} />
-                                </View>
+                                {/* <View style={styles.similarBenefitsView}>
+                                    <BenefitsSlider 
+                                        benefits={similarBenefits?.benefits?.collection} 
+                                        text={'Similar Benefits You May Like'} 
+                                        moreButton={false}
+                                    />
+                                </View> */}
+                                <BenefitsSlider 
+                                    benefits={similarBenefits?.benefits?.collection} 
+                                    text={'Similar Benefits You May Like'} 
+                                    moreButton={false}
+                                />
                                 <RedeemModal 
                                     isVisible={showRedeemModal} 
                                     onBackdropPress={toggleRedeemModal} 
