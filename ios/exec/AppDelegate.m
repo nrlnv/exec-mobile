@@ -52,7 +52,7 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [super application:application didFinishLaunchingWithOptions:launchOptions];
+//  [super application:application didFinishLaunchingWithOptions:launchOptions];
 
   return YES;
 }

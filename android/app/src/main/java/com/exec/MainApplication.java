@@ -11,16 +11,16 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.BV.LinearGradient.LinearGradientPackage;
 
-import expo.modules.ApplicationLifecycleDispatcher;
-import expo.modules.ReactNativeHostWrapper;
+// import expo.modules.ApplicationLifecycleDispatcher;
+// import expo.modules.ReactNativeHostWrapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
-    this,
+  private final ReactNativeHost mReactNativeHost = 
     new ReactNativeHost(this) {
 
       @Override
@@ -35,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
         // Packages that cannot be autolinked yet can be added manually here, for example:
         // packages.add(new MyReactNativePackage());
         packages.add(new ExecPackage());
+        packages.add(new LinearGradientPackage());
 
           return packages;
       }
@@ -43,7 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
       protected String getJSMainModuleName() {
         return "index";
       }
-    });
+    };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
@@ -55,14 +56,14 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-    ApplicationLifecycleDispatcher.onApplicationCreate(this);
+    // ApplicationLifecycleDispatcher.onApplicationCreate(this);
   }
 
-  @Override
-  public void onConfigurationChanged(@NonNull Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
-  }
+  // @Override
+  // public void onConfigurationChanged(@NonNull Configuration newConfig) {
+  //   super.onConfigurationChanged(newConfig);
+  //   ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig);
+  // }
 
   /**
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like

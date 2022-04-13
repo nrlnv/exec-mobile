@@ -1,4 +1,4 @@
-apply plugin: 'kotlin-android'
+// apply plugin: 'kotlin-android'
 apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
@@ -79,10 +79,12 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: 'index.js',
+    // entryFile: 'index.js',
     enableHermes: false,  // clean and rebuild if changing
-    cliPath: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute().text.trim(), "../cli.js"),
+    // cliPath: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute().text.trim(), "../cli.js"),
 ]
+
+apply from: "../../node_modules/react-native/react.gradle"
 
 // apply from: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute().text.trim(), "../react.gradle")
 // apply from: "../../node_modules/react-native/react.gradle"
@@ -134,10 +136,10 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    compileOptions {
-                   sourceCompatibility 1.8
-                   targetCompatibility 1.8
-    }
+    // compileOptions {
+    //                sourceCompatibility 1.8
+    //                targetCompatibility 1.8
+    // }
 
     defaultConfig {
         applicationId "com.exec"
@@ -210,31 +212,33 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-
-    def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
-    def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
-    def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
+        implementation 'com.google.android.gms:play-services-base:+'
+        implementation 'com.google.android.gms:play-services-maps:+'
+        implementation project(':react-native-linear-gradient')
+    // def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
+    // def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
+    // def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
     // All fresco packages should use the same version
-    if (isGifEnabled || isWebpEnabled) {
-        implementation 'com.facebook.fresco:fresco:2.0.0'
-        implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.0.0'
-    }
+    // if (isGifEnabled || isWebpEnabled) {
+    //     implementation 'com.facebook.fresco:fresco:2.0.0'
+    //     implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.0.0'
+    // }
 
-    if (isGifEnabled) {
-        // For animated gif support
-        implementation 'com.facebook.fresco:animated-gif:2.0.0'
-    }
+    // if (isGifEnabled) {
+    //     // For animated gif support
+    //     implementation 'com.facebook.fresco:animated-gif:2.0.0'
+    // }
 
-    if (isWebpEnabled) {
-        // For webp support
-        implementation 'com.facebook.fresco:webpsupport:2.0.0'
-        if (isWebpAnimatedEnabled) {
-            // Animated webp support
-            implementation 'com.facebook.fresco:animated-webp:2.0.0'
-        }
-    }
+    // if (isWebpEnabled) {
+    //     // For webp support
+    //     implementation 'com.facebook.fresco:webpsupport:2.0.0'
+    //     if (isWebpAnimatedEnabled) {
+    //         // Animated webp support
+    //         implementation 'com.facebook.fresco:animated-webp:2.0.0'
+    //     }
+    // }
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
@@ -258,7 +262,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 // Run this once to be able to run the application with BUCK
@@ -268,5 +272,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute().text.trim(), "../native_modules.gradle");
-applyNativeModulesAppBuildGradle(project)
+// apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute().text.trim(), "../native_modules.gradle");
+// applyNativeModulesAppBuildGradle(project)
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+// 2nd line, add a new apply:
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
