@@ -146,12 +146,13 @@ const styles = StyleSheet.create({
     searchInput: {
         borderRadius: 66,
         backgroundColor: color.palette.white,
-        paddingHorizontal: perfectSize(24),
+        paddingHorizontal: perfectSize(20),
         paddingVertical: perfectSize(20),
         alignItems: 'center',
         flexDirection: 'row',
         marginLeft: perfectSize(24),
-        flex: 1
+        flex: 1,
+        height: perfectSize(64)
     },
     input: {
         fontSize: 18,
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
         color: color.palette.black,
         marginLeft: perfectSize(16),
         flex: 1,
+        height: perfectSize(64)
     },
     sectionTitle: {
         marginLeft: perfectSize(24),

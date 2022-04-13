@@ -1,6 +1,7 @@
+import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { INVITE, PASSWORD } from '../../../../assets/images';
 import { Button, Screen, Text } from '../../../components';
 import { color } from '../../../theme';
@@ -8,6 +9,8 @@ import { perfectSize } from '../../../utils/dimmesion';
 import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { AccountHeader } from './accountHeader';
 import { AccountInput } from './accountInput';
+import { INVITE_MUTATION } from '../../../services/api/mutations';
+
 
 export const InviteScreen = () => {
     const navigation = useNavigation()
@@ -17,19 +20,33 @@ export const InviteScreen = () => {
 
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 
+    const [invite, { loading }] = useMutation(INVITE_MUTATION)
 
-    const isDisabled = firstName && lastName && email
+    const isDisabled = firstName && lastName && email && !loading
 
-    const onSendPress = () => {
-        setShowCopiedModal(true)
-        setTimeout(() => {
-            setShowCopiedModal(false)
-            navigation.goBack()
-        }, 1000);
+    const onSendPress = async () => {
+        try {
+            await invite({
+                variables: {
+                    input: {
+                        firstName,
+                        lastName,
+                        email
+                    }
+                }
+            })
+            setShowCopiedModal(true)
+            setTimeout(() => {
+                setShowCopiedModal(false)
+                navigation.goBack()
+            }, 1000);
+        } catch (error) {
+            Alert.alert(error.message)
+        }
     }
 
     return (
-        <Screen style={styles.container} unsafe >
+        <Screen style={styles.container} preset="scroll" unsafe >
             <AccountHeader title={'Invite to Exec'} icon={INVITE} />
             <View style={styles.mainView}>
                 <Text 

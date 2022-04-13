@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HISTORY_HEADER } from '../../../../assets/images';
 import ArrowLeft from '../../../../assets/svgs/arrow_left';
@@ -11,12 +11,12 @@ import { perfectSize } from '../../../utils/dimmesion';
 export const AccountHeader = (props) => {
     const {backText = 'Account', title, icon = ''} = props
     const insets = useSafeAreaInsets()
-    const insetStyle = { marginTop: insets.top }
+    const insetStyle = { marginTop: Platform.OS === 'ios' ? insets.top : perfectSize(10) }
     const navigation = useNavigation()
 
     return (
         <View>
-            <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
+            <Wallpaper backgroundImage={HISTORY_HEADER} style={[styles.headerImage, {height: 100 + insets.top}]} />
             <TouchableOpacity style={[styles.backButton, insetStyle]} onPress={() => navigation.goBack()} >
                 <ArrowLeft color={color.palette.neutral500} />
                 <Text text={backText} style={styles.backText} />
@@ -32,12 +32,12 @@ export const AccountHeader = (props) => {
 const styles = StyleSheet.create({
     headerImage: {
         width: '100%', 
-        height: perfectSize(143)
+        // height: perfectSize(113)
     },
     backButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft: perfectSize(24)
+        marginLeft: perfectSize(24),
     },
     backText: {
         color: color.palette.neutral500,

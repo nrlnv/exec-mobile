@@ -32,11 +32,9 @@ export const CityModal = (props) => {
         )
     }
 
-    return (
-        <Modal isVisible={isVisible} onBackdropPress={onBackdropPress}>
-            <View style={styles.container}>
-                <Wallpaper backgroundImage={FILTER_MODAL} />
-                <ModalHeader text={'Choose Destination'} onBackdropPress={onBackdropPress}/>
+    const ListHeaderComponent = () => {
+        return (
+            <>
                 <View style={styles.destinationsView}>
                     {
                         destinationsConst.map((destination) => (
@@ -52,13 +50,25 @@ export const CityModal = (props) => {
                     }
                 </View>
                 <CitySearch onCityPress={onCityPress} />
+            </>
+        )
+    }
+
+
+
+    return (
+        <Modal isVisible={isVisible} onBackdropPress={onBackdropPress}>
+            <View style={styles.container}>
+                <Wallpaper backgroundImage={FILTER_MODAL} />
+                <ModalHeader text={'Choose Destination'} onBackdropPress={onBackdropPress}/>
                 <FlatList 
                     data={currentCities}
                     keyExtractor={item => item.slug}
                     numColumns={2}
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{marginTop: perfectSize(20)}}
+                    ListHeaderComponent={ListHeaderComponent}
+                    ListHeaderComponentStyle={{marginBottom: perfectSize(20)}}
                 />
             </View>
         </Modal>

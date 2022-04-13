@@ -227,6 +227,7 @@ export const CategoryScreen = () => {
                 onEndReached={fetchMoreBenefits}
                 keyExtractor={item => item.id}
                 ListHeaderComponent={ListHeaderComponent}
+                nestedScrollEnabled
             />
             {/* <FilterModal 
                 isVisible={showFilterModal} 

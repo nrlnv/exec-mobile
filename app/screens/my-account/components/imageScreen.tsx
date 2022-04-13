@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActionSheetIOS, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActionSheetIOS, Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import Edit from '../../../../assets/svgs/edit';
 import { Button, Screen } from '../../../components';
@@ -11,16 +11,35 @@ import { AccountHeader } from './accountHeader';
 import ImagePicker, { Image as ImageProps } from 'react-native-image-crop-picker'
 import axios from 'axios'
 import FastImage from 'react-native-fast-image';
+import { useNavigation } from '@react-navigation/native';
+import { CopiedModal } from '../../benefit-details/components/copiedModal';
 
 export const ImageScreen = () => {
+    const navigation = useNavigation()
     const credentials = useSelector(selectCredentials)
     const user = useSelector(selectUser)
     const {photo = {}, id} = user || {}
     const avatarUrl = BASE_URL + photo.thumbnail
 
-    const [image, setImage] = useState<ImageProps>()
+    const [imagePath, setImagePath] = useState('')
+    const [mimeType, setMimeType] = useState('')
+    const [showCopiedModal, setShowCopiedModal] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const imagePicker = () => {
+      ImagePicker.openPicker({
+        width: 1000,
+        height: 1200,
+        // cropping: true,
+        includeBase64: true,
+      }).then(image => {
+        setImagePath(image.data)
+        setMimeType(image.mime)
+      })
+    }
 
     const onAddPress = () => {
+      if (Platform.OS === 'ios') {
         ActionSheetIOS.showActionSheetWithOptions(
           {
             options: ['Cancel', 'Camera', 'Photo Library'],
@@ -34,39 +53,47 @@ export const ImageScreen = () => {
               ImagePicker.openCamera({
                 width: 1000,
                 height: 1200,
-                cropping: true,
+                // cropping: true,
+                includeBase64: true,
                 mediaType: 'photo',
               }).then(image => {
-                setImage(image)
+                setImagePath(image.data)
+                setMimeType(image.mime)
               })
             } else if (buttonIndex === 2) {
-              ImagePicker.openPicker({
-                width: 1000,
-                height: 1200,
-                cropping: true,
-              }).then(image => {
-                setImage(image)
-              })
+              imagePicker()
             }
           },
-        )
+        )}
+        else {
+          imagePicker()
+        }
       }
 
     const onSavePress = async () => {
-        const formData = new FormData()
-        formData.append('photo', image.path)
-        formData.append('width', String(image.cropRect.width))
-        formData.append('height', String(image.cropRect.height))
-        formData.append('top', String(image.cropRect.y))
-        formData.append('left', String(image.cropRect.x))
-        
-        await axios.post(`${BASE_URL}/api/panel/members/${id}/upload_photo`, formData, {
-          headers: {
-            'access-token': credentials.accessToken,
-            client: credentials.client,
-            uid: credentials.uid,
-          },
-        })
+      setLoading(true)
+        const data = {
+          photo: imagePath,
+          mime: mimeType
+        }
+        try {
+          await axios.post(`${BASE_URL}/api/panel/members/${id}/upload_photo_mobile`, data, {
+            headers: {
+              'access-token': credentials.accessToken,
+              client: credentials.client,
+              uid: credentials.uid,
+            },
+          })
+          setShowCopiedModal(true)
+          setTimeout(() => {
+              setShowCopiedModal(false)
+              navigation.goBack()
+          }, 1000);
+        } catch (error) {
+          Alert.alert(error.message)
+        }
+      setLoading(false)
+
     }
 
     return (
@@ -74,14 +101,14 @@ export const ImageScreen = () => {
             <AccountHeader title={'Profile image'} />
             <View style={styles.mainView}>
                 <TouchableOpacity onPress={onAddPress}>
-                    <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.image} />
+                    <FastImage source={{uri: imagePath ? `data:${mimeType};base64,${imagePath}` : avatarUrl}} style={styles.image} />
                     <View style={styles.editIcon}>
                         <Edit width={20} height={20}/>
                     </View>
                 </TouchableOpacity>
             </View>
-            <Button text={'Save'} style={styles.button} onPress={onSavePress} />
-
+            <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
+            <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
         </Screen>
     )
 }

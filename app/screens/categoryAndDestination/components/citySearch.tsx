@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native'
+import { Image, Pressable, ScrollView, StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native'
+import { ARROW_RIGHT } from '../../../../assets/images'
+import Marker from '../../../../assets/svgs/marker'
 import Search from '../../../../assets/svgs/search'
 import { Text } from '../../../components'
 import { useAppSelector } from '../../../hooks/hooks'
@@ -39,11 +41,17 @@ export const CitySearch = (props) => {
                         autoCorrect={false}
                     />
                 </View>
-                <View style={[styles.searchResult, hideStyle as StyleProp<ViewStyle>, style]}>
+                <ScrollView style={[styles.searchResult, hideStyle as StyleProp<ViewStyle>, style]}>
                     {searchResult.map(res => (
-                        <Text text={res.name} key={res.slug} style={styles.resultText} onPress={() => onCityPress(res.name)} />
+                        <Pressable key={res.slug} style={styles.cityView} onPress={() => onCityPress(res.name)}>
+                            <View style={styles.flexD}>
+                                <Marker />
+                                <Text text={res.name} style={styles.resultText} />
+                            </View>
+                            <Image source={ARROW_RIGHT} style={styles.icon} />
+                        </Pressable>
                     ))}
-                </View>
+                </ScrollView>
         </>
     )
 }
@@ -57,6 +65,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         // marginLeft: perfectSize(24),
+        height: perfectSize(64),
         flex: 1,
         borderWidth: 1,
         borderColor: '#FAFAFA',
@@ -73,17 +82,36 @@ const styles = StyleSheet.create({
         color: color.palette.black,
         marginLeft: perfectSize(16),
         flex: 1,
-        minHeight: perfectSize(24),
+        // minHeight: perfectSize(24),
+        height: perfectSize(64),
     },
     searchResult: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: color.palette.neutral400,
+        // width: '100%',
+        // borderWidth: 1,
+        // borderColor: color.palette.neutral400,
         borderRadius: 5,
         padding: perfectSize(10),
         backgroundColor: color.palette.white,
     },
     resultText: {
-        color: color.palette.black
+        color: color.palette.black,
+        marginLeft: perfectSize(16),
+        fontSize: 18
+    },
+    cityView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: perfectSize(10),
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.1)'
+    },
+    icon: {
+        width: perfectSize(40),
+        height: perfectSize(40),
+    },
+    flexD: {
+        flexDirection: 'row',
+        alignItems: 'center',
     }
 })

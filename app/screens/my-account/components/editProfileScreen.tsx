@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { PROFILE } from '../../../../assets/images';
 import { Button, Screen } from '../../../components';
@@ -63,22 +63,28 @@ export const EditProfileScreen = () => {
     }
 
     return (
-        <Screen style={styles.container} preset='scroll' unsafe >
-            <AccountHeader title={'Your Profile'} icon={PROFILE} />
-            <View style={styles.mainView}>
-                <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} />
-                <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
-                <AccountInput title={'Email'} value={email} onChangeText={setEmail} />
-                <AccountInput title={'Company'} value={companyName} onChangeText={setCompanyName} />
-                <AccountInput title={'Website'} value={website} onChangeText={setWebsite} />
-                <AccountInput title={'Position'} value={position} onChangeText={setPosition} />
-                <AccountInput title={'Address'} value={`${address.address}, ${address.apartment}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
-                <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
-            </View>
-            <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
-            <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
-
-        </Screen>
+        // <Screen style={styles.container} preset={"scroll"} unsafe >
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={64}
+            style={styles.container}
+        >
+            <ScrollView style={{flex: 1}}>
+                <AccountHeader title={'Your Profile'} icon={PROFILE} />
+                <View style={styles.mainView}>
+                    <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} />
+                    <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
+                    <AccountInput title={'Email'} value={email} onChangeText={setEmail} />
+                    <AccountInput title={'Company'} value={companyName} onChangeText={setCompanyName} />
+                    <AccountInput title={'Website'} value={website} onChangeText={setWebsite} />
+                    <AccountInput title={'Position'} value={position} onChangeText={setPosition} />
+                    <AccountInput title={'Address'} value={`${address.address}, ${address.apartment}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
+                    <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
+                </View>
+                <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
+                <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 

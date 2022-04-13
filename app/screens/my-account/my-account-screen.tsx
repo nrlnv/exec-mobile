@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native"
+import { View, StyleSheet, Image, TouchableOpacity, Platform } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { useNavigation } from '@react-navigation/native';
 import { NavigatorParamList } from "../../navigators"
@@ -20,7 +20,7 @@ import FastImage from "react-native-fast-image";
 export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount">> = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const insetStyle = { paddingTop: insets.top }
+  const insetStyle = { paddingTop: Platform.OS === 'ios' ? insets.top : perfectSize(10) }
   const user = useAppSelector(selectUser)
 
   const {firstName = '', lastName = '', currentYearRedemptionsCount = 0,  redemptionsCount = 0, companyName = '', photo = {}} = user || {}

@@ -309,3 +309,11 @@ export const REQUEST_SUPPORT = gql`
     }
   }
 `
+
+export const INVITE_MUTATION = gql`
+  mutation Mutation($input: InviteInput!) {
+    invite(input: $input) {
+      message
+    }
+  }
+`

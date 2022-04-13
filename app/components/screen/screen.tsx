@@ -37,12 +37,14 @@ function ScreenWithScrolling(props: ScreenProps) {
       style={[preset.outer, backgroundStyle]}
       behavior={isIos ? "padding" : undefined}
       keyboardVerticalOffset={offsets[props.keyboardOffset || "none"]}
+      // keyboardVerticalOffset={offsets[props.keyboardOffset || "none"]}
     >
       <StatusBar barStyle={props.statusBar || "light-content"} />
       <View style={[preset.outer, backgroundStyle, insetStyle]}>
         <ScrollView
           // TODO: remove this if needed
           bounces={false}
+          nestedScrollEnabled
           style={[preset.outer, backgroundStyle]}
           contentContainerStyle={[preset.inner, style]}
           keyboardShouldPersistTaps={props.keyboardShouldPersistTaps || "handled"}
