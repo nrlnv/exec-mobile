@@ -18,7 +18,7 @@ import { useLazyQuery, useQuery } from "@apollo/client"
 import { GET_POPULAR_BENEFITS, GET_BENEFITS_FOR_YOU, GET_CURRENT_USER, GET_HOMEPAGE_HERO_BENEFITS, GET_BENEFITS, GET_CITIES } from "../../services/api/queries"
 import { configBenefitsForPreview } from "../../utils/utils"
 import { destinationsConst } from "../../utils/constants"
-import { CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
+import { CATEGORY_AND_DESTINATION_SCREEN, CATEGORY_SCREEN, DESTINATION_SCREEN } from "../../navigators/screen-name-constants"
 import { useNavigation } from "@react-navigation/native"
 import { DestinationsItem } from "../category/components/destinationsItem"
 import { CityItem } from "../category/components/cityItem"
@@ -79,7 +79,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   }
 
   const onCityPress = (destination: string) => {
-    navigation.navigate(DESTINATION_SCREEN, {destination})
+    navigation.navigate(CATEGORY_AND_DESTINATION_SCREEN, {category: 'Hotels', destination})
   }
 
   useEffect(() => {

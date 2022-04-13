@@ -26,6 +26,7 @@ import Business from '../../../assets/svgs/business';
 import { RootStackParamList } from '../../types';
 import { useAppSelector } from '../../hooks/hooks';
 import { selectCities } from '../../services/redux/slices/citiesSlice';
+import { CitySearch } from '../categoryAndDestination/components/citySearch';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -170,10 +171,10 @@ export const CategoryScreen = () => {
                         <Text text={'Explore the StayEXEC Hotels & Resorts program and enjoy special offers as an EXEC Member'} style={styles.descriptionText} />
                     </View>
                 </View>
-                <SearchView text={"Where do you want to go?"} />
                 {category === 'Hotels' ? (
                     <>
-                        <Text style={styles.sectionTitle} text={"Browse by Destination"}/>
+                        <CitySearch style={{marginHorizontal: perfectSize(24)}} onCityPress={onCityPress} />
+                        <Text style={[styles.sectionTitle, {marginTop: perfectSize(20)}]} text={"Browse by Destination"}/>
                         <View style={styles.destinationsView}>
                             {
                                 destinationsConst.map((destination) => (
@@ -198,7 +199,7 @@ export const CategoryScreen = () => {
                             </ScrollView>
                         </View>
                     </>
-                ) : null}
+                ) : (<SearchView text={"Search for cities or benefits"} />)}
                 <Text style={styles.sectionTitle} text={`${category} Benefits`}/>
                 <View style={styles.filterView}>
                     {

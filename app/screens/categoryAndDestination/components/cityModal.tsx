@@ -11,6 +11,7 @@ import { perfectSize } from '../../../utils/dimmesion';
 import { CityItem } from '../../category/components/cityItem';
 import { DestinationsItem } from '../../category/components/destinationsItem';
 import { ModalHeader } from '../../history/components/modalHeader';
+import { CitySearch } from './citySearch';
 
 export const CityModal = (props) => {
     const {isVisible, onBackdropPress, onCityPress} = props
@@ -50,12 +51,14 @@ export const CityModal = (props) => {
                         ))
                     }
                 </View>
+                <CitySearch onCityPress={onCityPress} />
                 <FlatList 
                     data={currentCities}
                     keyExtractor={item => item.slug}
                     numColumns={2}
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{marginTop: perfectSize(20)}}
                 />
             </View>
         </Modal>
@@ -82,5 +85,5 @@ const styles = StyleSheet.create({
         width: perfectSize(160),
         height: perfectSize(140),
         marginBottom: perfectSize(20)
-    }
+    },
 })
