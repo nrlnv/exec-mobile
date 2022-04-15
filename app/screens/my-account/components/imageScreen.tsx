@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActionSheetIOS, Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActionSheetIOS, ActivityIndicator, Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import Edit from '../../../../assets/svgs/edit';
 import { Button, Screen } from '../../../components';
@@ -106,6 +106,7 @@ export const ImageScreen = () => {
                         <Edit width={20} height={20}/>
                     </View>
                 </TouchableOpacity>
+                <ActivityIndicator color={color.palette.primary500} animating={loading} style={styles.activityIndicator} />
             </View>
             <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
             <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
@@ -148,5 +149,8 @@ const styles = StyleSheet.create({
     button: {
         marginBottom: perfectSize(30),
         marginHorizontal: perfectSize(24)
+    },
+    activityIndicator: {
+      marginTop: perfectSize(20)
     }
 })

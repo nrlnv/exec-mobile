@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Button, Screen } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
@@ -23,13 +23,20 @@ export const AboutScreen = () => {
     }
 
     return (
-        <Screen style={styles.container} unsafe >
-            <AccountHeader title={'About me'} backText={'Your Profile'} />
-            <View style={styles.mainView}>
-                <ColumnInputItem title={'Bio'} value={value} setValue={setValue} multiline />
-            </View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={64}
+            style={styles.container}
+        >
+            <ScrollView>
+                <AccountHeader title={'About me'} backText={'Your Profile'} />
+                <View style={styles.mainView}>
+                    <ColumnInputItem title={'Bio'} value={value} setValue={setValue} multiline />
+                </View>
+            </ScrollView>
             <Button text={'Save'} style={styles.button} onPress={onSavePress} />
-        </Screen>
+        </KeyboardAvoidingView>
+
     )
 }
 

@@ -66,7 +66,7 @@ export const EditProfileScreen = () => {
         // <Screen style={styles.container} preset={"scroll"} unsafe >
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={64}
+            // keyboardVerticalOffset={64}
             style={styles.container}
         >
             <ScrollView style={{flex: 1}}>
@@ -81,9 +81,10 @@ export const EditProfileScreen = () => {
                     <AccountInput title={'Address'} value={`${address.address}, ${address.apartment}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
                     <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
                 </View>
-                <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
-                <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
+                
             </ScrollView>
+            <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
+            <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
         </KeyboardAvoidingView>
     )
 }

@@ -177,7 +177,7 @@ export const BenefitDetails: React.FC = () => {
                                     <View style={styles.flexD}>
                                         <Button  style={styles.redeemButton} onPress={toggleRedeemModal} >
                                             <View style={styles.flexD}>
-                                                {redemption?.redemptionCode ? (
+                                                {redemption?.redemptionCode || redemption?.redemptionLink ? (
                                                     <Image source={CHECK_MARK} style={styles.squareIcon} />
                                                     ) : null}
                                                 <Text text={redemption?.redemptionCode || 'REDEEM'} style={styles.redeemText} />

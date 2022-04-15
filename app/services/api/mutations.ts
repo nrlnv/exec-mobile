@@ -183,6 +183,15 @@ export const REDEEM_WITH_REGISTRATION_MUTATION = gql`
       }
     ) {
       message
+      redemption {
+        redemptionCode
+        createdAt
+        redemptionData
+        redemptionInstruction
+        redemptionLink
+        redemptionType
+        withinThisYear
+      }
     }
   }
 `

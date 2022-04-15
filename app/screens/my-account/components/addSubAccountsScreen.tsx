@@ -1,7 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { INVITE, PASSWORD } from '../../../../assets/images';
 import { Button, Screen } from '../../../components';
 import { useAppDispatch } from '../../../hooks/hooks';
@@ -67,16 +67,24 @@ export const AddSubAccountsScreen = () => {
     }
 
     return (
-        <Screen style={styles.container} unsafe >
-            <AccountHeader title={'Add Sub-Accounts'} icon={INVITE} />
-            <View style={styles.mainView}>
-                <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} autoFocus />
-                <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
-                <AccountInput title={'Email'} value={email} onChangeText={setEmail} autoCapitalize='none' />
-            </View>
+        // <Screen style={styles.container} unsafe >
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={64}
+            style={styles.container}
+        >
+            <ScrollView>
+                <AccountHeader title={'Add Sub-Accounts'} icon={INVITE} />
+                <View style={styles.mainView}>
+                    <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} autoFocus />
+                    <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
+                    <AccountInput title={'Email'} value={email} onChangeText={setEmail} autoCapitalize='none' />
+                </View>
+            </ScrollView>
             <Button text={'send invitation to exec'} style={styles.button} onPress={onSendPress} disabled={!isDisabled} />
             <CopiedModal isVisible={showCopiedModal} title={'Sent!'} />
-        </Screen>
+        </KeyboardAvoidingView>
+        // </Screen>
     )
 }
 

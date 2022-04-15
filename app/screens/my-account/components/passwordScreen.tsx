@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { PASSWORD } from '../../../../assets/images';
 import { Button, Screen } from '../../../components';
 import { color } from '../../../theme';
@@ -27,17 +27,22 @@ export const PasswordScreen = () => {
     }
 
     return (
-        <Screen style={styles.container} unsafe >
-            <AccountHeader title={'Password'} icon={PASSWORD} />
-            <View style={styles.mainView}>
-                <ColumnInputItem title={'Enter your current password'} value={curPassword} setValue={setCurPassword} secureTextEntry />
-                <ColumnInputItem title={'New password'} value={newPassword} setValue={setNewPassword} secureTextEntry />
-                <ColumnInputItem title={'Confirm new password'} value={confirmPassword} setValue={setConfirmPassword} secureTextEntry />
-            </View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={64}
+            style={styles.container}
+        >
+            <ScrollView>
+                <AccountHeader title={'Password'} icon={PASSWORD} />
+                <View style={styles.mainView}>
+                    <ColumnInputItem title={'Enter your current password'} value={curPassword} setValue={setCurPassword} secureTextEntry />
+                    <ColumnInputItem title={'New password'} value={newPassword} setValue={setNewPassword} secureTextEntry />
+                    <ColumnInputItem title={'Confirm new password'} value={confirmPassword} setValue={setConfirmPassword} secureTextEntry />
+                </View>
+            </ScrollView>
             <Button text={'Save New Password'} style={styles.button} onPress={onSavePress} disabled={!isDisabled} />
             <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
-
-        </Screen>
+        </KeyboardAvoidingView>
     )
 }
 
