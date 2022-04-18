@@ -70,6 +70,10 @@ export const GET_USER_REDEMPTIONS = gql`
           }
           favorited
           redeemed
+          description
+          shortDescription
+          benefitSummary
+          otherRateOffer
         }
       }
       metadata {

@@ -1,6 +1,5 @@
-import React, { FC } from "react"
-import { observer } from "mobx-react-lite"
-import { Image, ImageStyle, ViewStyle } from "react-native"
+import React, { FC, useState } from "react"
+import { Alert, Image, ImageStyle, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { AuthContainer, AuthGoBack } from "../../components"
@@ -10,6 +9,8 @@ import { useForm } from "react-hook-form"
 import { ResetForm } from "./components/reset-form"
 import { ResetSuccess } from "./components/reset-success"
 import { openInbox } from "react-native-email-link"
+import { BASE_URL } from "../../services/api"
+import axios from "axios"
 
 const LOGO: ImageStyle = {
   marginTop: perfectSize(59),
@@ -23,14 +24,28 @@ const GO_BACK: ViewStyle = {
 type Inputs = {
   email: string
 }
-export const ResetPasswordScreen: FC<StackScreenProps<NavigatorParamList, "resetPassword">> = observer(({ navigation }) => {
-  const { control, handleSubmit } = useForm<Inputs>();
+export const ResetPasswordScreen = ({ navigation }) => {
+  // const { control, handleSubmit } = useForm<Inputs>();
+  const [email, setEmail] = useState('')
   // TODO changing state of request
   const success = false;
 
-  const onSendInstructions = (data) => {
-    console.log("request access", data)
+  const onSendInstructions = async () => {
+    console.log("request accesssss", email)
+    const data = {
+      email
+    }
+    try {
+      await axios.post(`${BASE_URL}/api/forgot_admin_password`, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    } catch (error) {
+      Alert.alert(error.message)
+    }
   }
+
   const openEmail = async () => {
     try {
       await openInbox();
@@ -38,9 +53,9 @@ export const ResetPasswordScreen: FC<StackScreenProps<NavigatorParamList, "reset
       console.log("Couldn't open email app on ios simulator")
     }
   }
-  const renderForm = (control, handleSubmit) => {
+  const renderForm = (value, onChangeText, onSendInstructions) => {
     return (
-      <ResetForm control={control} handleSubmit={handleSubmit}/>
+      <ResetForm value={value} onChangeText={onChangeText} handleSubmit={onSendInstructions} />
     )
   }
   const renderSuccess = (openEmail) => {
@@ -56,7 +71,7 @@ export const ResetPasswordScreen: FC<StackScreenProps<NavigatorParamList, "reset
   return (
     <AuthContainer bottom={renderBottom(navigation.goBack, success ? "Skip, I'll confirm later" : null)}>
       <Image source={LOGO_WITH_NAME} style={LOGO}/>
-      {!success ? renderForm(control, handleSubmit(onSendInstructions)) : renderSuccess(openEmail)}
+      {!success ? renderForm(email, setEmail, onSendInstructions) : renderSuccess(openEmail)}
     </AuthContainer>
   )
-})
+}

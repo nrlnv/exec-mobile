@@ -120,11 +120,11 @@ export function FormTextField (props: FormTextFieldProps) {
                       testID={testID}
                       {...rest}
                     />
-                    {(!value || value?.length === 0) && biometry && (
+                    {/* {(!value || value?.length === 0) && biometry && (
                       <Pressable style={FACE_ID_CONTAINER} onPress={onBiometry}>
                         <Image source={FACE_ID}/>
                       </Pressable>
-                    )}
+                    )} */}
                   </View>
       {underFieldLabel &&
         <Text style={UNDER_FIELD_LABEL} text={underFieldLabel} />

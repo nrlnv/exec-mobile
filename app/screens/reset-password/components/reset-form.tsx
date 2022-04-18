@@ -27,14 +27,14 @@ export interface RequestFormProps {
   handleSubmit?: any
 }
 
-export const ResetForm = (props:  RequestFormProps) => {
-  const { control, handleSubmit } = props
+export const ResetForm = (props) => {
+  const { value, onChangeText, handleSubmit } = props
 
   return (
     <>
       <Text text={"Reset Password"} style={RESET_PASSWORD_TITLE}/>
       <Text text={"Enter the email associated with your account and we’ll send an email with instructions to reset your password."} style={RESET_PASSWORD_DESCRIPTION}/>
-      <FormTextField style={EMAIL_FIELD} placeholder={"Enter your email"} control={control} name={"email"} center/>
+      <FormTextField style={EMAIL_FIELD} placeholder={"Enter your email"} value={value} onChangeText={onChangeText} name={"email"} center/>
       <Button text={"send instructions"} style={ACTION_BUTTON} onPress={handleSubmit}/>
     </>
   )

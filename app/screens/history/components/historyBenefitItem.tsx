@@ -31,14 +31,14 @@ export const HistoryBenefitItem = (props) => {
                 </View>
             </View>
             <Text style={styles.title} text={value.benefit.name}/>
-            <Text style={styles.description} text={value.otherRateOffer}/>
+            <Text style={styles.description} text={value.benefit.benefitSummary}/>
         </Pressable>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: perfectSize(8)
+        marginBottom: perfectSize(36)
     },
     image: {
         width: '100%',

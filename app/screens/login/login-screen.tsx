@@ -68,7 +68,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
     )
   }
   return (
-   <AuthContainer bottom={renderBottom()}>
+   <AuthContainer>
         <Image source={LOGO_WITH_NAME} style={LOGO}/>
         <FormTextField style={USERNAME_FIELD} placeholder={"Email, or username"} value={email} name={"emailUsername"} onChangeText={setEmail} />
         <FormTextField style={PASSWORD_FIELD} placeholder={"Password"} value={password} name={"password"} secure biometry onChangeText={setPassword} />
