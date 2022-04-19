@@ -75,7 +75,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
   const navigateToCategoryScreen = (category: string) => {
-  navigation.navigate(CATEGORY_SCREEN, {category})
+    navigation.navigate(CATEGORY_SCREEN, {category})
   }
 
   const onCityPress = (destination: string) => {

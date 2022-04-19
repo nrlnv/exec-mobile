@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HISTORY_HEADER } from '../../../../assets/images';
 import ArrowLeft from '../../../../assets/svgs/arrow_left';
@@ -11,13 +11,17 @@ import { perfectSize } from '../../../utils/dimmesion';
 export const AccountHeader = (props) => {
     const {backText = 'Account', title, icon = ''} = props
     const insets = useSafeAreaInsets()
-    const insetStyle = { marginTop: Platform.OS === 'ios' ? insets.top : perfectSize(10) }
+    const insetStyle = { marginTop: Platform.OS === 'ios' ? insets.top + 10 : StatusBar.currentHeight }
     const navigation = useNavigation()
 
     return (
         <View>
-            <Wallpaper backgroundImage={HISTORY_HEADER} style={[styles.headerImage, {height: 100 + insets.top}]} />
-            <TouchableOpacity style={[styles.backButton, insetStyle]} onPress={() => navigation.goBack()} >
+            <Wallpaper backgroundImage={HISTORY_HEADER} style={[styles.headerImage, {height: 110 + insets.top}]} />
+            <TouchableOpacity 
+                style={[styles.backButton, insetStyle]} 
+                onPress={() => navigation.goBack()} 
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}    
+            >
                 <ArrowLeft color={color.palette.neutral500} />
                 <Text text={backText} style={styles.backText} />
             </TouchableOpacity>

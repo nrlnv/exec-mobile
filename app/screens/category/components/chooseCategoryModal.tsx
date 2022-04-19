@@ -31,7 +31,7 @@ export const ChooseCategoryModal = (props) => {
                     data={filterCategoryConst}
                     keyExtractor={item => item.id}
                     renderItem={categoryRenderItem}
-                    numColumns={4}
+                    numColumns={3}
                 />
             </View>
         </Modal>

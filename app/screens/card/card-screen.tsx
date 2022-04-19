@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Image, ImageStyle, Pressable, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
+import { Image, ImageStyle, Platform, Pressable, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DigitalCardContainer, Screen, Text, Wallpaper } from "../../components"
@@ -80,10 +80,11 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
         </DigitalCardContainer>
         <FastImage style={styles.avatarImage} source={{uri: avatarUrl, priority: FastImage.priority.normal}}/>
       </View>
-
-      <Pressable style={APPLE_WALLET_IMAGE}>
-        <Image source={APPLE_WALLET}/>
-      </Pressable>
+      {Platform.OS === 'ios' && (
+        <Pressable style={APPLE_WALLET_IMAGE}>
+          <Image source={APPLE_WALLET}/>
+        </Pressable>
+      )}
     </Screen>
   )
 }

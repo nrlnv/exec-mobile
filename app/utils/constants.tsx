@@ -1,4 +1,11 @@
+import React from 'react'
 import { ADVENTURES, BUSINESS, EXPERIENCES, HOTELS, INVITE, LIFESTYLE, LOG_OUT, PASSWORD, PROFILE, RELAX, RESTAURANTS, SUB_ACCOUNT, SUPPORT, TRAVEL } from "../../assets/images"
+import ArrowRightBig from '../../assets/svgs/arrow_right_big'
+import Business from '../../assets/svgs/business'
+import Experiences from '../../assets/svgs/experiences'
+import Hotel from "../../assets/svgs/hotel"
+import Lifestyle from '../../assets/svgs/lifestyle'
+import Travel from '../../assets/svgs/travel'
 import { color } from "../theme"
 export const timeConst = [
     {
@@ -50,42 +57,32 @@ export const timeConst = [
     {
         id: 0,
         text: 'Hotels',
-        icon: HOTELS
+        icon: <Hotel color={color.palette.black}/>
     },
     {
         id: 1,
         text: 'Lifestyle',
-        icon: LIFESTYLE
+        icon: <Lifestyle color={color.palette.black}/>
     },
     {
         id: 2,
         text: 'Travel',
-        icon: TRAVEL
+        icon: <Travel color={color.palette.black}/>
     },
     {
         id: 3,
         text: 'Experiences',
-        icon: EXPERIENCES
+        icon: <Experiences color={color.palette.black}/>
     },
     {
         id: 4,
         text: 'Business',
-        icon: BUSINESS
+        icon: <Business color={color.palette.black}/>
     },
     {
         id: 5,
-        text: 'Restaurants',
-        icon: RESTAURANTS
-    },
-    {
-        id: 6,
-        text: 'Adventures',
-        icon: ADVENTURES
-    },
-    {
-        id: 7,
-        text: 'Relax',
-        icon: RELAX
+        text: 'View All',
+        icon: <ArrowRightBig color={color.palette.black}/>
     },
   ]
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Screen, Text, Wallpaper } from '../../components';
 import { color } from '../../theme';
 import { CHEVRON_LEFT, HISTORY_HEADER } from '../../../assets/images';
@@ -12,6 +12,7 @@ import {CategoryBenefitItem} from '../category/components/categoryBenefitItem'
 import { useNavigation } from '@react-navigation/native';
 import { filtersConst } from '../../utils/constants';
 import { DestinationsItem } from '../category/components/destinationsItem'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
@@ -23,7 +24,8 @@ const initialPaginationMetadata = {
 
 export const SearchScreen = () => {
     const navigation = useNavigation()
-    const [currentFilter, setCurrentFilter] = useState(0)
+    const insets = useSafeAreaInsets()
+    const insetStyle = { marginTop: Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight }
     const [value, setValue] = useState('')
     const [isFetching, setIsFetching] = useState(true)
     const [paginationMetadata, setPaginationMetadata] = useState<PaginationMetadata>(initialPaginationMetadata)
@@ -53,7 +55,7 @@ export const SearchScreen = () => {
       useEffect(() => {
         setBenefits([])
         setPaginationMetadata(initialPaginationMetadata)
-        // fetchBenefits(1)
+        fetchBenefits(1)
       }, [fetchBenefits])
     
       const fetchMoreBenefits = useCallback(async () => {
@@ -76,7 +78,7 @@ export const SearchScreen = () => {
         <Screen style={styles.container} unsafe>
             <View style={styles.header}>
                 <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
-                <View style={styles.searchView}>
+                <View style={[styles.searchView, insetStyle]}>
                     <TouchableOpacity onPress={() => navigation.goBack()} >
                         <Image source={CHEVRON_LEFT} style={styles.icon} />
                     </TouchableOpacity>
@@ -100,13 +102,6 @@ export const SearchScreen = () => {
             {benefits.length > 0 && (
                 <>
                     <Text style={styles.sectionTitle} text={"Benefits"}/>
-                    {/* <View style={styles.filterView}>
-                        {
-                            filtersConst.map(t => (
-                                <DestinationsItem item={t} key={t.id} currentId={currentFilter} onPress={setCurrentFilter} />
-                            ))
-                        }
-                    </View> */}
                 </>
             )}
             <FlatList 
@@ -131,10 +126,10 @@ const styles = StyleSheet.create({
     },
     headerImage: {
         width: '100%',
-        height: perfectSize(128)
+        height: perfectSize(118)
     },
     searchView: {
-        marginTop: perfectSize(50),
+        // marginTop: perfectSize(50),
         marginHorizontal: perfectSize(24),
         flexDirection: 'row',
         alignItems: 'center',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, StatusBar, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar, Text, Wallpaper } from '..';
 import { HISTORY_HEADER } from '../../../assets/images';
@@ -8,13 +8,12 @@ import { perfectSize } from '../../utils/dimmesion';
 export const ScreenHeader = (props) => {
     const {title} = props
     const insets = useSafeAreaInsets()
-    const insetStylePadding = { paddingTop: insets.top }
-    const insetStyle = { marginTop: insets.top }
+    const insetStyle = { marginTop: Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight }
 
     return (
         <View style={styles.header}>
             <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
-            <Text style={[styles.headerTitle, insetStylePadding]} text={title} />
+            <Text style={[styles.headerTitle, insetStyle]} text={title} />
             <View style={[styles.avatar, insetStyle]}>
                 <Avatar />
             </View>

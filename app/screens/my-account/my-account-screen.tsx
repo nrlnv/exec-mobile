@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { View, StyleSheet, Image, TouchableOpacity, Platform } from "react-native"
+import { View, StyleSheet, Image, TouchableOpacity, Platform, StatusBar } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { useNavigation } from '@react-navigation/native';
 import { NavigatorParamList } from "../../navigators"
@@ -16,30 +16,36 @@ import { selectUser } from "../../services/redux/slices/authSlice"
 import { BASE_URL } from "../../services/api"
 import {IMAGE_SCREEN} from '../../navigators/screen-name-constants'
 import FastImage from "react-native-fast-image";
+import ArrowLeft from "../../../assets/svgs/arrow_left";
 
 export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount">> = () => {
   const insets = useSafeAreaInsets()
   const navigation = useNavigation()
-  const insetStyle = { paddingTop: Platform.OS === 'ios' ? insets.top : perfectSize(10) }
+  const insetStyle = { paddingTop: Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight }
   const user = useAppSelector(selectUser)
 
-  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0,  redemptionsCount = 0, companyName = '', photo = {}} = user || {}
-
+  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0, redemptionsCount = 0, companyName = '', photo = {}} = user || {}
   const avatarUrl = BASE_URL + photo.thumbnail
 
   return (
     <Screen style={styles.container} preset="scroll" unsafe>
-      <View style={[styles.header, insetStyle]} >
+      <View style={insetStyle} >
         <Wallpaper backgroundImage={HISTORY_HEADER} style={styles.headerImage} />
-        <TouchableOpacity onPress={() => navigation.navigate(IMAGE_SCREEN)} >
-          <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.avatar} />
-          <View style={styles.editIcon}>
-            <Edit />
-          </View>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
+            <ArrowLeft color={color.palette.neutral500} />
+            <Text text={'Back'} style={styles.backText} />
         </TouchableOpacity>
-        <View style={styles.nameView} >
-          <Text text={`${firstName} ${lastName}`} style={styles.nameText} />
-          <Text text={`${companyName}`} style={styles.companyText} />
+        <View style={styles.flexD}>
+          <TouchableOpacity onPress={() => navigation.navigate(IMAGE_SCREEN)} >
+            <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.avatar} />
+            <View style={styles.editIcon}>
+              <Edit />
+            </View>
+          </TouchableOpacity>
+          <View style={styles.nameView} >
+            <Text text={`${firstName} ${lastName}`} style={styles.nameText} />
+            <Text text={`${companyName}`} style={styles.companyText} />
+          </View>
         </View>
       </View>
       <View style={styles.redemptionsView}>
@@ -50,12 +56,12 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
         </View>
         <View style={styles.countViews}>
           <View style={styles.countView}>
-            <Text text={currentYearRedemptionsCount} style={styles.countText} />
-            <Text text={'this year\nredemptions'} style={styles.redemptionsText} />
+            <Text text={`${currentYearRedemptionsCount}`} style={styles.countText} />
+            <Text text={`this year\n${currentYearRedemptionsCount > 1 ? 'redemptions' : 'redemption'}`} style={styles.redemptionsText} />
           </View>
           <View style={styles.countView}>
-            <Text text={redemptionsCount} style={styles.countText} />
-            <Text text={'all time\nredemptions'} style={styles.redemptionsText} />
+            <Text text={`${redemptionsCount}`} style={styles.countText} />
+            <Text text={`all time\n${redemptionsCount > 1 ? 'redemptions' : 'redemption'}`} style={styles.redemptionsText} />
           </View>
         </View>
         <View style={styles.accountItemsView}>
@@ -75,8 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.black,
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
+  flexD: {
+    flexDirection: 'row', 
     alignItems: 'center'
   },
   headerImage: {
@@ -162,5 +168,15 @@ const styles = StyleSheet.create({
     borderRadius: perfectSize(13),
     borderWidth: 2,
     borderColor: color.palette.white
-  }
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: perfectSize(24),
+    marginBottom: perfectSize(16)
+},
+backText: {
+    color: color.palette.neutral500,
+    marginLeft: perfectSize(10)
+},
 })

@@ -8,18 +8,23 @@ export const ChoosCategoryItem = (props) => {
     const { item, onChangeCategory } = props
 
     const marginStyle = (id: number) => {
-        return {marginRight: id % 4 === 3 ? 0 : perfectSize(4)}
+        return {marginRight: id % 3 === 2 ? 0 : perfectSize(4)}
     }
 
     const onPress = () => {
-        onChangeCategory(item.text)
+        if (item.text === 'View All') {
+            onChangeCategory('All Benefits')
+        } else {
+            onChangeCategory(item.text)
+        }
     }
 
     return (
         <TouchableOpacity 
             onPress={onPress}
             style={[styles.container, marginStyle(item.id)]}>
-            <Image source={item.icon} style={styles.icon} />
+            {/* <Image source={item.icon} style={styles.icon} /> */}
+            {item.icon}
             <Text text={item.text} style={styles.categoryText} />
         </TouchableOpacity>
     )
@@ -44,8 +49,4 @@ const styles = StyleSheet.create({
         lineHeight: 19.5,
         marginTop: perfectSize(16)
     },
-    icon: {
-        width: perfectSize(20),
-        height: perfectSize(20)
-    }
 })

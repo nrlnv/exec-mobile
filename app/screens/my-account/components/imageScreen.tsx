@@ -13,6 +13,7 @@ import axios from 'axios'
 import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 import { CopiedModal } from '../../benefit-details/components/copiedModal';
+import { ImagePickerModal } from './imagePickerModal';
 
 export const ImageScreen = () => {
     const navigation = useNavigation()
@@ -25,13 +26,26 @@ export const ImageScreen = () => {
     const [mimeType, setMimeType] = useState('')
     const [showCopiedModal, setShowCopiedModal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [showImagePickerModal, setShowImagePickerModal] = useState(false)
 
-    const imagePicker = () => {
+    const openPicker = () => {
       ImagePicker.openPicker({
         width: 1000,
         height: 1200,
-        // cropping: true,
         includeBase64: true,
+        mediaType: 'photo',
+      }).then(image => {
+        setImagePath(image.data)
+        setMimeType(image.mime)
+      })
+    }
+
+    const openCamera = () => {
+      ImagePicker.openCamera({
+        width: 1000,
+        height: 1200,
+        includeBase64: true,
+        mediaType: 'photo',
       }).then(image => {
         setImagePath(image.data)
         setMimeType(image.mime)
@@ -50,23 +64,14 @@ export const ImageScreen = () => {
             if (buttonIndex === 0) {
               // cancel action
             } else if (buttonIndex === 1) {
-              ImagePicker.openCamera({
-                width: 1000,
-                height: 1200,
-                // cropping: true,
-                includeBase64: true,
-                mediaType: 'photo',
-              }).then(image => {
-                setImagePath(image.data)
-                setMimeType(image.mime)
-              })
+              openCamera()
             } else if (buttonIndex === 2) {
-              imagePicker()
+              openPicker()
             }
           },
         )}
         else {
-          imagePicker()
+          setShowImagePickerModal(true)
         }
       }
 
@@ -110,6 +115,12 @@ export const ImageScreen = () => {
             </View>
             <Button text={'Save'} style={styles.button} onPress={onSavePress} disabled={loading} />
             <CopiedModal isVisible={showCopiedModal} title={'Saved!'} />
+            <ImagePickerModal 
+              isVisible={showImagePickerModal} 
+              onBackdropPress={() => setShowImagePickerModal(prevState => !prevState)}
+              openCamera={openCamera}
+              openPicker={openPicker} 
+            />
         </Screen>
     )
 }

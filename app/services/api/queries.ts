@@ -232,6 +232,7 @@ export const GET_BENEFITS = gql`
           thumbnail
         }
         favorited
+        redeemed
         latitude
         longitude
         name

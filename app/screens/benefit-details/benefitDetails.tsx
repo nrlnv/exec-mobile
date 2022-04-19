@@ -215,14 +215,17 @@ export const BenefitDetails: React.FC = () => {
                                             <>
                                                 <RenderHtml
                                                     contentWidth={width}
+                                                    tagsStyles={{
+                                                        body: {color: 'black'}
+                                                    }}
                                                     source={{html: benefit.description}}
                                                     baseStyle={{marginTop: perfectSize(20)}}
                                                 />
-                                                <Button style={styles.visitWebsiteButton}>
-                                                    <TouchableOpacity style={styles.visitWebsiteView} onPress={onWebsitePress} >
+                                                <Button style={styles.visitWebsiteButton} onPress={onWebsitePress}>
+                                                    <View style={styles.visitWebsiteView} >
                                                         <Text text={'VISIT WEBSITE'} style={styles.visitWebsiteText} />
                                                         <ArrowRight />
-                                                    </TouchableOpacity>
+                                                    </View>
                                                 </Button>
                                             </>
                                         ) : null
@@ -259,11 +262,11 @@ export const BenefitDetails: React.FC = () => {
                                                             // description={marker.description}
                                                         />
                                                     </MapView>
-                                                    <Button style={styles.visitWebsiteButton}>
-                                                        <TouchableOpacity style={styles.visitWebsiteView} onPress={() => onDirectionPress(37.78825, -122.4324)} >
+                                                    <Button style={styles.visitWebsiteButton} onPress={() => onDirectionPress(37.78825, -122.4324)}>
+                                                        <View style={styles.visitWebsiteView} >
                                                             <Text text={'GET DIRECTION'} style={styles.visitWebsiteText} />
                                                             <ArrowRight />
-                                                        </TouchableOpacity>
+                                                        </View>
                                                     </Button>
                                                     </>
                                                 ) : null}

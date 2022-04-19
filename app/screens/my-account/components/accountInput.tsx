@@ -6,6 +6,13 @@ import { perfectSize } from '../../../utils/dimmesion'
 
 export const AccountInput = (props) => {
     const {title = '', value = '', onPress = () => {}, onChangeText, ...rest} = props
+
+    const onPressIn = () => {
+        if (title === 'Address' || title === 'About me') {
+            onPress()
+        }
+    }
+    
     return (
         <Pressable style={styles.container} onPress={onPress} >
             <Text text={title} style={styles.title} />
@@ -14,6 +21,7 @@ export const AccountInput = (props) => {
                 onChangeText={onChangeText} 
                 style={styles.value} 
                 {...rest}
+                onPressIn={onPressIn}
             />
         </Pressable>
     )
