@@ -207,7 +207,7 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
       <BenefitsSlider 
         benefits={popularHotels?.benefits?.collection} 
         text={'Popular in Hotels'} 
-        onMorePress={() => navigateToCategoryScreen('Hotel')}
+        onMorePress={() => navigateToCategoryScreen('Hotels')}
       />
       <BenefitsSlider 
         benefits={popularLifestyle?.benefits?.collection} 
