@@ -10,8 +10,6 @@ import {GET_SEARCH_RESULTS} from '../../services/api/queries'
 import { useLazyQuery } from '@apollo/client'
 import {CategoryBenefitItem} from '../category/components/categoryBenefitItem'
 import { useNavigation } from '@react-navigation/native';
-import { filtersConst } from '../../utils/constants';
-import { DestinationsItem } from '../category/components/destinationsItem'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
@@ -163,13 +161,6 @@ const styles = StyleSheet.create({
         lineHeight: perfectSize(26),
         color: color.palette.white,
         marginVertical: perfectSize(30)
-    },
-    filterView: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: perfectSize(25),
-        marginHorizontal: perfectSize(24)
     },
     loader: {
         position: 'absolute',

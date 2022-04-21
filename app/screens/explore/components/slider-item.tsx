@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import FastImage from "react-native-fast-image"
+import { DEFAULT_IMAGE } from "../../../../assets/images"
 import { Button, Text } from "../../../components"
 import { BENEFIT_DETAILS_SCREEN } from "../../../navigators/screen-name-constants"
 import { BASE_URL } from "../../../services/api"
@@ -39,7 +40,9 @@ export interface SliderItemProps {
 export const SliderItem = (props:  SliderItemProps) => {
   const { benefit } = props
   const navigation = useNavigation()
-  const image = {uri: BASE_URL + benefit.images[0]}
+  // const image = {uri: BASE_URL + benefit.images[0]}
+  const source = benefit.images[0] ? {uri: BASE_URL + benefit.images[0], priority: FastImage.priority.normal} : DEFAULT_IMAGE
+
 
   const onButtonPress = () => {
     navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: benefit.slug})
@@ -47,7 +50,7 @@ export const SliderItem = (props:  SliderItemProps) => {
 
   return (
     <View style={SLIDE_CONTAINER}>
-      <FastImage source={image} style={styles.image} />
+      <FastImage source={source} style={styles.image} />
       <Text style={SLIDE_TITLE} text={benefit.name}/>
       <Text style={SLIDE_DESCRIPTION} text={benefit.benefitSummary}/>
       <Button style={SLIDE_BUTTON} text={"more details"} preset={"selfSize"} onPress={onButtonPress}/>

@@ -75,3 +75,10 @@ export function validate(rules: ValidationRules, data: Record<string, unknown>):
   }
   return Validate(data, rules, { fullMessages: false }) || {}
 }
+
+const emailValidation = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+export const validateEmail = (email: string) => {
+  const re = emailValidation
+  return re.test(email)
+}

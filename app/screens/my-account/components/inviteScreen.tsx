@@ -57,7 +57,7 @@ export const InviteScreen = () => {
                 <View style={styles.mainView}>
                     <Text 
                         style={styles.text}
-                        text={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lobortis viverra consequat. Nam quis nunc est. Nullam dictum quis velit id tincidunt.'} 
+                        text={'You have the privilege to invite others that you feel would be a fit for EXEC and fast-track their Membership application.\nPlease use the form below to invite others you think would enjoy EXEC:'} 
                     />
                     <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} autoFocus />
                     <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />

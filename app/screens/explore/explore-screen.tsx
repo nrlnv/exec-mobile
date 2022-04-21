@@ -51,23 +51,23 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
   const { data: heroBenefitsData} = useQuery(GET_HOMEPAGE_HERO_BENEFITS)
   const { data: popularHotels} = useQuery(GET_BENEFITS, {variables: {
     category: 'hotels',
-    scope: 'featured'
+    scope: 'popular'
   }})
   const { data: popularLifestyle} = useQuery(GET_BENEFITS, {variables: {
     category: 'lifestyle',
-    scope: 'featured'
+    scope: 'popular'
   }})
   const { data: popularTravel} = useQuery(GET_BENEFITS, {variables: {
     category: 'travel',
-    scope: 'featured'
+    scope: 'popular'
   }})
   const { data: popularExperiences} = useQuery(GET_BENEFITS, {variables: {
     category: 'experiences',
-    scope: 'featured'
+    scope: 'popular'
   }})
   const { data: popularBusiness} = useQuery(GET_BENEFITS, {variables: {
     category: 'business',
-    scope: 'featured'
+    scope: 'popular'
   }})
   
   const [cities, { data: citiesData }] = useLazyQuery(GET_CITIES)

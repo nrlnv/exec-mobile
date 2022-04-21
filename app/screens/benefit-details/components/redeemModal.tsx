@@ -13,23 +13,27 @@ import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../../navigators/screen-name-constants';
 import { RedeemInput } from './redeemInput';
+import { selectUser } from '../../../services/redux/slices/authSlice';
+import { useAppSelector } from '../../../hooks/hooks';
+import { validate, validateEmail } from '../../../utils/validate';
 
 export const RedeemModal = (props) => {
     const {isVisible, onBackdropPress, benefit, redemption, setRedemption} = props
     const navigation = useNavigation()
+    const user = useAppSelector(selectUser)
     const [isRedeemed, setIsRedeemed] = useState(false)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
     const [showCopiedModal2, setShowCopiedModal2] = useState(false)
-    const [redeemButtonText, setRedeemButtonText] = useState('REVEAL LINK')
+    const [redeemButtonText, setRedeemButtonText] = useState(benefit.redemptionType === 'referral_link' ? 'REVEAL LINK' : 'REVEAL CODE')
 
     const [redeem, {loading: redeemLoading}] = useMutation(REDEEM_MUTATION)
     const [redeemWithRegistrationForm, { loading }] = useMutation(REDEEM_WITH_REGISTRATION_MUTATION)
 
     // registration form submission vars
-    const [userName, setUserName] = useState('')
-    const [userEmail, setUserEmail] = useState('')
+    const [userName, setUserName] = useState(user?.firstName)
+    const [userEmail, setUserEmail] = useState(user?.email)
     const [userPhone, setUserPhone] = useState('')
-    const isDisabled = userName && userEmail && userPhone && !loading
+    const isDisabled = userName && validateEmail(userEmail) && userPhone && !loading
 
     const title = isRedeemed ? 'Redeemed!' : 'How to Redeem'
 
@@ -136,7 +140,7 @@ export const RedeemModal = (props) => {
                     {benefit.redemptionType === 'registration' ? (
                         <View>
                             <Text text={'Please fill the form below to redeem.'} style={styles.instructionText2} />
-                            <RedeemInput value={userName} onChangeText={setUserName} placeholder={'Your name'} />
+                            <RedeemInput value={userName} onChangeText={setUserName} placeholder={'Your name'} editable={false} />
                             <RedeemInput value={userEmail} onChangeText={setUserEmail} placeholder={'Your email'} />
                             <RedeemInput value={userPhone} onChangeText={setUserPhone} placeholder={'Your mobile number'} />
                             <Button text={'submit and redeem'} onPress={onSubmitAndRedeemPress} disabled={!isDisabled} />
@@ -165,7 +169,7 @@ export const RedeemModal = (props) => {
                                     isRedeemed ? (
                                         <View style={styles.flexD}>
                                             <SquareButton icon={COPY} filled onPress={onCopyPress} />
-                                            <SquareButton icon={SHARE} filled onPress={onOpenLinkPress} />
+                                            {redemption?.redemptionLink ? (<SquareButton icon={SHARE} filled onPress={onOpenLinkPress} />) : null}
                                         </View>
                                     ) : null
                                 }

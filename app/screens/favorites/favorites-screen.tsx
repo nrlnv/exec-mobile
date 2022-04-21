@@ -48,6 +48,18 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
     }
   }
 
+  const ListHeaderComponent = () => {
+    return (
+      <>
+        {userFavorites?.length === 0 ? (
+            <Button 
+            text={'Go To Explore'} 
+            onPress={() => navigation.navigate(EXPLORE_TAB)} 
+          />
+        ) : null}
+      </>
+    )
+  }
   
   return (
     <Screen style={styles.container} preset="fixed" unsafe>
@@ -55,29 +67,21 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
       <View style={styles.header}>
         <Text style={styles.sectionTitle} text={"Your Favorite Benefits"}/>
       </View>
-      {
-        userFavorites?.length > 0 ? (
-          <FlatList 
-            data={configBenefitsForPreview(userFavorites)}
-            renderItem={renderItem}
-            contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
-            keyExtractor={item => item.slug}
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={fetchBenefits}
-                tintColor={color.palette.primary500}
-              />
-            }
+      
+      <FlatList 
+        data={configBenefitsForPreview(userFavorites)}
+        renderItem={renderItem}
+        contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
+        keyExtractor={item => item.slug}
+        ListHeaderComponent={ListHeaderComponent}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={fetchBenefits}
+            tintColor={color.palette.primary500}
           />
-        ) : (
-          <Button 
-            text={'Go To Explore'} 
-            onPress={() => navigation.navigate(EXPLORE_TAB)} 
-            style={styles.button}  
-          />
-        )
-      }
+        }
+      />
       
     </Screen>
   )
@@ -100,7 +104,4 @@ const styles = StyleSheet.create({
      justifyContent: 'space-between',
      marginHorizontal: perfectSize(24)
    },
-   button: {
-    marginHorizontal: perfectSize(24),
-   }
 })

@@ -4,7 +4,7 @@ import {color} from '../../../theme'
 import { perfectSize } from '../../../utils/dimmesion';
 
 export const RedeemInput = (props) => {
-    const {value, onChangeText, placeholder} = props
+    const {value, onChangeText, placeholder, ...rest} = props
     return (
         <TextInput 
             value={value}
@@ -12,6 +12,7 @@ export const RedeemInput = (props) => {
             placeholder={placeholder}
             placeholderTextColor={color.palette.neutral400}
             style={styles.container}
+            {...rest}
         />
     )
 }

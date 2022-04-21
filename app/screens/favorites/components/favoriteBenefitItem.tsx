@@ -4,7 +4,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Swipeable } from 'react-native-gesture-handler';
-import { FAVORITE, REDEEMED, REMOVE } from '../../../../assets/images';
+import { DEFAULT_IMAGE, FAVORITE, REDEEMED, REMOVE } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
 import { BASE_URL } from '../../../services/api';
@@ -30,7 +30,9 @@ export const FavoriteBenefitItem = (props) => {
         );
     };
 
-    const image = value.images[0] ? BASE_URL + value.images[0] : "https://placeimg.com/360/640/any"
+    // const image = value.images[0] ? BASE_URL + value.images[0] : "https://placeimg.com/360/640/any"
+    const source = value.images[0] ? {uri: BASE_URL + value.images[0], priority: FastImage.priority.normal} : DEFAULT_IMAGE
+
 
     const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
 
@@ -50,7 +52,7 @@ export const FavoriteBenefitItem = (props) => {
     return (
         <Swipeable renderRightActions={renderRightActions}>
             <Pressable style={styles.container} onPress={onBenefitPress} >
-                <FastImage source={{uri : image, priority: FastImage.priority.normal}} style={styles.image} />
+                <FastImage source={source} style={styles.image} />
                 <View style={styles.categoryView}>
                     <Label text={value.category} />
                     <View style={styles.iconsView}>

@@ -3,7 +3,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking, Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { CHECK_MARK, COPY_FILLED, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
+import { CHECK_MARK, COPY_FILLED, DEFAULT_IMAGE, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
 import { GET_BENEFIT, GET_BENEFITS } from '../../services/api/queries'
@@ -158,9 +158,9 @@ export const BenefitDetails: React.FC = () => {
                                         }}
                                         >
                                         {
-                                            benefit.images.map((image, index) => (
+                                            benefit.images.length > 0 ? benefit.images.map((image, index) => (
                                                 <FastImage key={index} style={styles.benefitImage} source={{uri: BASE_URL+image.medium, priority: FastImage.priority.normal}} />
-                                            ))
+                                            )) : (<FastImage source={DEFAULT_IMAGE} />)
                                         }
                                     </PagerView>
                                     <View style={styles.pageIndicatorContainer}>
@@ -190,10 +190,10 @@ export const BenefitDetails: React.FC = () => {
                                                         icon={COPY_FILLED} 
                                                         onPress={onCopyPress}
                                                     />
-                                                    <SquareButton 
+                                                    {redemption?.redemptionLink ? (<SquareButton 
                                                         icon={SHARE_FILLED} 
                                                         onPress={onOpenLinkPress}
-                                                    />
+                                                    />) : null}
                                                 </>
                                             )
                                         }

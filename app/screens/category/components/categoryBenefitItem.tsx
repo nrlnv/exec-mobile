@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { FAVORITE, REDEEMED } from '../../../../assets/images';
+import { DEFAULT_IMAGE, FAVORITE, REDEEMED } from '../../../../assets/images';
 import { Text } from '../../../components';
 import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constants';
 import { BASE_URL } from '../../../services/api';
@@ -12,7 +12,8 @@ import { Label } from '../../benefit-details/components/label';
 
 export const CategoryBenefitItem = (props) => {
     const {value} = props
-    const image = value.images[0] ? BASE_URL + value.images[0].medium : "https://placeimg.com/360/640/any"
+    // const image = value.images[0] ? BASE_URL + value.images[0].medium : "https://placeimg.com/360/640/any"
+    const source = value.images[0] ? {uri: BASE_URL + value.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
 
     const navigation = useNavigation()
 
@@ -22,7 +23,7 @@ export const CategoryBenefitItem = (props) => {
 
     return (
         <Pressable style={styles.container} onPress={onBenefitPress} >
-            <FastImage source={{uri : image, priority: FastImage.priority.normal}} style={styles.image} />
+            <FastImage source={source} style={styles.image} />
             <View style={styles.categoryView}>
                 <Label text={value.category.name} />
                 <View style={styles.iconsView}>
