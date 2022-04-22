@@ -8,11 +8,16 @@ import { configBenefitsForPreview } from '../../../utils/utils'
 import { BenefitItem } from './benefit-item'
 
 export const BenefitsSlider = (props) => {
-    const {benefits, text, moreButton = true, onMorePress} = props
+    const {benefits, text, moreButton = true, onMorePress, icon} = props
     return (
         <>
             <View style={styles.titleRowContainer}>
-                <Text style={styles.titleRowText} text={text}/>
+                <View style={styles.titleView}>
+                    {icon && (
+                        <View style={{marginRight: perfectSize(16)}}>{icon}</View>
+                    )}
+                    <Text style={styles.titleRowText} text={text}/>
+                </View>
                 {
                     moreButton && (
                         <TouchableOpacity style={styles.moreContainer} onPress={onMorePress} >
@@ -45,7 +50,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     titleRowText: {
-        marginLeft: perfectSize(24),
         fontSize: perfectSize(20),
         lineHeight: perfectSize(26),
         color: color.palette.white,
@@ -70,5 +74,10 @@ const styles = StyleSheet.create({
     moreText: {
         color: color.palette.neutral400,
         marginRight: perfectSize(8),
+    },
+    titleView: {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        marginLeft: perfectSize(24)
     }
 })

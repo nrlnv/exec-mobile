@@ -36,7 +36,7 @@ export const ResetPasswordScreen = ({ navigation }) => {
       email
     }
     try {
-      await axios.post(`${BASE_URL}/api/forgot_admin_password`, data, {
+      await axios.post(`${BASE_URL}/api/forgot_password`, data, {
         headers: {
           'Content-Type': 'application/json',
         },

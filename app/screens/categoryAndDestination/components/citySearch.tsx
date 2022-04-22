@@ -17,7 +17,7 @@ export const CitySearch = (props) => {
 
     useEffect(() => {
         if (value.length > 1) {
-            const cities = allCities.filter(city => city.name.includes(value))
+            const cities = allCities.filter(city => city.name.toLowerCase().includes(value.toLowerCase()))
             setSearchResult(cities)
         } else if (value.length === 0) {
             setSearchResult([])
@@ -41,9 +41,12 @@ export const CitySearch = (props) => {
                         autoCorrect={false}
                     />
                 </View>
-                <ScrollView style={[styles.searchResult, hideStyle as StyleProp<ViewStyle>, style]}>
+                <ScrollView keyboardShouldPersistTaps='always' style={[styles.searchResult, hideStyle as StyleProp<ViewStyle>, style]}>
                     {searchResult.map(res => (
-                        <Pressable key={res.slug} style={styles.cityView} onPress={() => onCityPress(res.name)}>
+                        <Pressable key={res.slug} style={styles.cityView} onPress={() => {
+                            onCityPress(res.name)
+                            setValue('')
+                        }}>
                             <View style={styles.flexD}>
                                 <Marker />
                                 <Text text={res.name} style={styles.resultText} />

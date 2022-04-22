@@ -4,7 +4,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DigitalCardContainer, Screen, Text, Wallpaper } from "../../components"
 import { color } from "../../theme"
-import { APPLE_WALLET, CARD_BG, LOGO_WITH_NAME } from "../../../assets/images"
+import { APPLE_WALLET, CARD_BG, LOGO_WITH_NAME, USER_IMAGE } from "../../../assets/images"
 import { perfectSize } from "../../utils/dimmesion"
 import moment from "moment"
 import { BASE_URL } from "../../services/api"
@@ -65,6 +65,9 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
 
   const avatarUrl = BASE_URL + photo.thumbnail
 
+  const source = photo.thumbnail ? {uri: avatarUrl, priority: FastImage.priority.normal} : USER_IMAGE
+
+
   return (
     <Screen style={ROOT} preset="fixed">
       <Wallpaper backgroundImage={CARD_BG}/>
@@ -78,7 +81,7 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
             <Image source={LOGO_WITH_NAME} style={LOGO}/>
           </View>
         </DigitalCardContainer>
-        <FastImage style={styles.avatarImage} source={{uri: avatarUrl, priority: FastImage.priority.normal}}/>
+        <FastImage style={styles.avatarImage} source={source}/>
       </View>
       {Platform.OS === 'ios' && (
         <Pressable style={APPLE_WALLET_IMAGE}>

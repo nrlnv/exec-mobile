@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text, Wallpaper } from "../../components"
 import { color } from "../../theme"
-import { HISTORY_HEADER, PROFILE_DOWN, PROFILE_UP } from "../../../assets/images"
+import { HISTORY_HEADER, PROFILE_DOWN, PROFILE_UP, USER_IMAGE } from "../../../assets/images"
 import Edit from '../../../assets/svgs/edit'
 import { perfectSize } from "../../utils/dimmesion"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -26,6 +26,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
 
   const {firstName = '', lastName = '', currentYearRedemptionsCount = 0, redemptionsCount = 0, companyName = '', photo = {}} = user || {}
   const avatarUrl = BASE_URL + photo.thumbnail
+  const source = photo.thumbnail ? {uri: avatarUrl, priority: FastImage.priority.normal} : USER_IMAGE
 
   return (
     <Screen style={styles.container} preset="scroll" unsafe>
@@ -37,7 +38,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
         </TouchableOpacity>
         <View style={styles.flexD}>
           <TouchableOpacity onPress={() => navigation.navigate(IMAGE_SCREEN)} >
-            <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={styles.avatar} />
+            <FastImage source={source} style={styles.avatar} />
             <View style={styles.editIcon}>
               <Edit />
             </View>

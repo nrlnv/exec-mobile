@@ -10,6 +10,7 @@ import { GET_CURRENT_USER } from '../../../services/api/queries';
 import { setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { validateEmail } from '../../../utils/validate';
 import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { AccountHeader } from './accountHeader';
 import { AccountInput } from './accountInput';
@@ -22,31 +23,31 @@ export const AddSubAccountsScreen = () => {
     const [email, setEmail] = useState('')
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 
-
-    const [error, setError] = useState('')
-
     const [addSubAccount, { loading }] = useMutation(ADD_SUBACCOUNT_MUTATION)
     const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
 
     const isDisabled = firstName && lastName && email && !loading
 
     const onSendPress = async () => {
-        try {
-            const response = await addSubAccount({
-                variables: {
-                    firstName: firstName.trim(),
-                    lastName: lastName.trim(),
-                    email
-                },
-            })
-            if (response?.data?.addSubAccount?.errors) {
-                setError(response.data.addSubAccount.errors.join(' '))
-                Alert.alert(error)
-              } else {
-                onAddSuccess()
-              }
-        } catch (e) {
-            Alert.alert(e.message);
+        if (validateEmail(email)) {
+            try {
+                const response = await addSubAccount({
+                    variables: {
+                        firstName: firstName.trim(),
+                        lastName: lastName.trim(),
+                        email
+                    },
+                })
+                if (response?.data?.addSubAccount?.errors) {
+                    Alert.alert(response.data.addSubAccount.errors.join(' '))
+                } else {
+                    onAddSuccess()
+                }
+            } catch (e) {
+                Alert.alert(e.message);
+            }
+        } else {
+            Alert.alert('Please enter a valid email address')
         }
     }
 
@@ -73,7 +74,7 @@ export const AddSubAccountsScreen = () => {
             // keyboardVerticalOffset={64}
             style={styles.container}
         >
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps='always' >
                 <AccountHeader title={'Add Sub-Accounts'} icon={INVITE} />
                 <View style={styles.mainView}>
                     <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} autoFocus />

@@ -20,6 +20,7 @@ export const EditProfileScreen = () => {
     const navigation = useNavigation()
     const user = useSelector(selectUser)
     const {address, about} = user || {}
+    const {address: _address, apartment, city, state, country} = address || {}
 
     const [firstName, setFirstName] = useState(user?.firstName)
     const [lastName, setLastName] = useState(user?.lastName)
@@ -27,6 +28,7 @@ export const EditProfileScreen = () => {
     const [companyName, setCompanyName] = useState(user?.companyName)
     const [website, setWebsite] = useState(user?.companyWebsite)
     const [position, setPosition] = useState(user?.position)
+    const addressValue = `${_address && _address + ', '}${apartment && apartment + ', '}${city && city + ', '}${state && state + ', '}${country}`
 
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 
@@ -72,14 +74,14 @@ export const EditProfileScreen = () => {
             <ScrollView style={{flex: 1}}>
                 <AccountHeader title={'Your Profile'} icon={PROFILE} />
                 <View style={styles.mainView}>
-                    <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} />
-                    <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} />
-                    <AccountInput title={'Email'} value={email} onChangeText={setEmail} />
+                    <AccountInput title={'First'} value={firstName} onChangeText={setFirstName} editable={false} />
+                    <AccountInput title={'Last'} value={lastName} onChangeText={setLastName} editable={false} />
+                    <AccountInput title={'Email'} value={email} onChangeText={setEmail} editable={false} />
                     <AccountInput title={'Company'} value={companyName} onChangeText={setCompanyName} />
                     <AccountInput title={'Website'} value={website} onChangeText={setWebsite} />
                     <AccountInput title={'Position'} value={position} onChangeText={setPosition} />
-                    <AccountInput title={'Address'} value={`${address.address}, ${address.apartment}, ${address.city}`} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} />
-                    <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} />
+                    <AccountInput title={'Address'} value={addressValue} editable={false} onPress={() => navigation.navigate(ADDRESS_SCREEN)} isText />
+                    <AccountInput title={'About me'} value={about} editable={false} onPress={() => navigation.navigate(ABOUT_SCREEN)} isText />
                 </View>
                 
             </ScrollView>

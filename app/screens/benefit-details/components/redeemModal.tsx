@@ -9,17 +9,19 @@ import { CopiedModal } from './copiedModal';
 import { Label } from './label';
 import { SquareButton } from './squareButton';
 import { REDEEM_MUTATION, REDEEM_WITH_REGISTRATION_MUTATION } from '../../../services/api/mutations';
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import { CATEGORY_SCREEN, DESTINATION_SCREEN } from '../../../navigators/screen-name-constants';
 import { RedeemInput } from './redeemInput';
-import { selectUser } from '../../../services/redux/slices/authSlice';
-import { useAppSelector } from '../../../hooks/hooks';
+import { selectUser, setUser } from '../../../services/redux/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { validate, validateEmail } from '../../../utils/validate';
+import { GET_CURRENT_USER } from '../../../services/api/queries';
 
 export const RedeemModal = (props) => {
     const {isVisible, onBackdropPress, benefit, redemption, setRedemption} = props
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     const user = useAppSelector(selectUser)
     const [isRedeemed, setIsRedeemed] = useState(false)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
@@ -30,12 +32,27 @@ export const RedeemModal = (props) => {
     const [redeemWithRegistrationForm, { loading }] = useMutation(REDEEM_WITH_REGISTRATION_MUTATION)
 
     // registration form submission vars
-    const [userName, setUserName] = useState(user?.firstName)
+    const [userName, setUserName] = useState(`${user?.firstName} ${user?.lastName}`)
     const [userEmail, setUserEmail] = useState(user?.email)
     const [userPhone, setUserPhone] = useState('')
-    const isDisabled = userName && validateEmail(userEmail) && userPhone && !loading
+    const isDisabled = userName && userEmail && userPhone && !loading
 
     const title = isRedeemed ? 'Redeemed!' : 'How to Redeem'
+
+    const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
+
+
+    const updateUserInfo = async () => {
+        try {
+            await getCurrentUser()
+            if (userData) {
+              dispatch(setUser(userData?.currentUser))
+            }
+          } 
+          catch (error) {
+            console.log(error);
+          }
+    }
 
     const onRevealPress = async () => {
         if (isRedeemed) {
@@ -48,6 +65,7 @@ export const RedeemModal = (props) => {
                     benefitSlug: benefit.slug,
                     },
                 })
+                updateUserInfo()
                 setRedemption(response.data.redeemBenefit.redemption)
                 if (benefit.redemptionType === 'referral_link') {
                     setRedeemButtonText(response.data.redeemBenefit.redemption.redemptionLink)
@@ -62,25 +80,30 @@ export const RedeemModal = (props) => {
     }
 
     const onSubmitAndRedeemPress = async () => {
-        let response
-        try {
-            response = await redeemWithRegistrationForm({
-                variables: {
-                    benefitSlug: benefit.slug,
-                    userName,
-                    userEmail,
-                    userPhone
-                }
-            })
-            setRedemption(response.data.redeemWithRegistrationFormBenefit.redemption)
-            setIsRedeemed(true)
-            setShowCopiedModal2(true)
-            setTimeout(() => {
-                setShowCopiedModal2(false)
-                onBackdropPress()
-            }, 500);
-        } catch (e) {
-            Alert.alert(e.message)
+        if (validateEmail(userEmail)) {
+            let response
+            try {
+                response = await redeemWithRegistrationForm({
+                    variables: {
+                        benefitSlug: benefit.slug,
+                        userName,
+                        userEmail,
+                        userPhone
+                    }
+                })
+                updateUserInfo()
+                setRedemption(response.data.redeemWithRegistrationFormBenefit.redemption)
+                setIsRedeemed(true)
+                setShowCopiedModal2(true)
+                setTimeout(() => {
+                    setShowCopiedModal2(false)
+                    onBackdropPress()
+                }, 500);
+            } catch (e) {
+                Alert.alert(e.message)
+            }
+        } else {
+            Alert.alert('Please enter a valid email address')
         }
     }
 

@@ -52,7 +52,7 @@ export const InviteScreen = () => {
             // keyboardVerticalOffset={40}
             style={styles.container}
         >
-            <ScrollView style={{flex: 1}} >
+            <ScrollView style={{flex: 1}} keyboardShouldPersistTaps='always' >
                 <AccountHeader title={'Invite to Exec'} icon={INVITE} />
                 <View style={styles.mainView}>
                     <Text 

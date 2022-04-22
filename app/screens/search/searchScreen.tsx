@@ -35,7 +35,7 @@ export const SearchScreen = () => {
           setBenefits((prevCollection) => [...prevCollection, ...getResultsBySearch.benefits.collection])
           setPaginationMetadata(getResultsBySearch.benefits.metadata)
           setIsFetching(false)
-        }
+        } 
       }
     
       const [getSearchResults, { data, error, loading }] = useLazyQuery(GET_SEARCH_RESULTS, {
@@ -92,6 +92,7 @@ export const SearchScreen = () => {
                             style={styles.input}
                             autoFocus
                             autoCorrect={false}
+                            clearButtonMode='always'
                         />
                     </View>
                 </View>
@@ -101,6 +102,9 @@ export const SearchScreen = () => {
                 <>
                     <Text style={styles.sectionTitle} text={"Benefits"}/>
                 </>
+            )}
+            {benefits.length === 0 && !loading && (
+                    <Text text={"No benefits found"} style={{marginLeft: perfectSize(24)}} />
             )}
             <FlatList 
                 data={benefits}

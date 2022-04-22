@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
-import { ActionSheetIOS, ActivityIndicator, Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActionSheetIOS, ActivityIndicator, Alert, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import Edit from '../../../../assets/svgs/edit';
 import { Button, Screen } from '../../../components';
 import { BASE_URL } from '../../../services/api';
-import { selectCredentials, selectUser } from '../../../services/redux/slices/authSlice';
+import { selectCredentials, selectUser, setUser } from '../../../services/redux/slices/authSlice';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { AccountHeader } from './accountHeader';
-import ImagePicker, { Image as ImageProps } from 'react-native-image-crop-picker'
+import ImagePicker from 'react-native-image-crop-picker'
 import axios from 'axios'
 import FastImage from 'react-native-fast-image';
 import { useNavigation } from '@react-navigation/native';
 import { CopiedModal } from '../../benefit-details/components/copiedModal';
 import { ImagePickerModal } from './imagePickerModal';
+import { USER_IMAGE } from '../../../../assets/images';
+import { useLazyQuery } from '@apollo/client';
+import { GET_CURRENT_USER } from '../../../services/api/queries';
+import { useAppDispatch } from '../../../hooks/hooks';
 
 export const ImageScreen = () => {
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     const credentials = useSelector(selectCredentials)
     const user = useSelector(selectUser)
     const {photo = {}, id} = user || {}
-    const avatarUrl = BASE_URL + photo.thumbnail
+    const avatarUrl = photo.thumbnail ? {uri: BASE_URL + photo.thumbnail} : USER_IMAGE 
 
     const [imagePath, setImagePath] = useState('')
     const [mimeType, setMimeType] = useState('')
@@ -28,10 +33,13 @@ export const ImageScreen = () => {
     const [loading, setLoading] = useState(false)
     const [showImagePickerModal, setShowImagePickerModal] = useState(false)
 
+    const [getCurrentUser, { data: userData }] = useLazyQuery(GET_CURRENT_USER)
+
+
     const openPicker = () => {
       ImagePicker.openPicker({
-        width: 1000,
-        height: 1200,
+        width: 800,
+        height: 1000,
         includeBase64: true,
         mediaType: 'photo',
       }).then(image => {
@@ -42,8 +50,8 @@ export const ImageScreen = () => {
 
     const openCamera = () => {
       ImagePicker.openCamera({
-        width: 1000,
-        height: 1200,
+        width: 800,
+        height: 1000,
         includeBase64: true,
         mediaType: 'photo',
       }).then(image => {
@@ -89,6 +97,15 @@ export const ImageScreen = () => {
               uid: credentials.uid,
             },
           })
+          try {
+            await getCurrentUser()
+            if (userData) {
+              dispatch(setUser(userData?.currentUser))
+            }
+          } 
+          catch (error) {
+            console.log(error);
+          }
           setShowCopiedModal(true)
           setTimeout(() => {
               setShowCopiedModal(false)
@@ -98,15 +115,16 @@ export const ImageScreen = () => {
           Alert.alert(error.message)
         }
       setLoading(false)
-
     }
+
+    const source = imagePath ? {uri: `data:${mimeType};base64,${imagePath}`, priority: FastImage.priority.normal} : avatarUrl
 
     return (
         <Screen style={styles.container} unsafe >
             <AccountHeader title={'Profile image'} />
             <View style={styles.mainView}>
                 <TouchableOpacity onPress={onAddPress}>
-                    <FastImage source={{uri: imagePath ? `data:${mimeType};base64,${imagePath}` : avatarUrl}} style={styles.image} />
+                    <FastImage source={source} style={styles.image} />
                     <View style={styles.editIcon}>
                         <Edit width={20} height={20}/>
                     </View>
@@ -139,7 +157,6 @@ const styles = StyleSheet.create({
     image: {
         width: perfectSize(164),
         height: perfectSize(164),
-        // marginLeft: perfectSize(27),
         borderRadius: perfectSize(82),
         borderWidth: 2,
         borderColor: color.palette.white

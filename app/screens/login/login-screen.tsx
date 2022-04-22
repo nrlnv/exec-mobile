@@ -47,7 +47,6 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
 
   const forgotPassword = () => {
     navigation.navigate(RESET_PASSWORD_SCREEN)
-    // navigation.navigate(RESET_SET_PASSWORD_SCREEN)
   }
   const onLogin = async () => {
     try {

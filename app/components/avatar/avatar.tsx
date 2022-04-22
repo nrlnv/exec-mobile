@@ -8,6 +8,7 @@ import { BASE_URL } from "../../services/api"
 import { useAppSelector } from "../../hooks/hooks"
 import { selectUser } from "../../services/redux/slices/authSlice"
 import FastImage from "react-native-fast-image"
+import { USER_IMAGE } from "../../../assets/images"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -36,9 +37,11 @@ export const Avatar = (props: AvatarProps) => {
   const styles = Object.assign({}, CONTAINER, style)
   const imageStyle = Object.assign({}, IMAGE, {width: perfectSize(width || 40), height: perfectSize(height || 40)})
 
+  const source = photo.thumbnail ? {uri: avatarUrl, priority: FastImage.priority.normal} : USER_IMAGE
+
   return (
     <Pressable style={styles} onPress={() => navigation.navigate(MY_ACCOUNT_SCREEN)}>
-      <FastImage source={{uri: avatarUrl, priority: FastImage.priority.normal}} style={imageStyle}/>
+      <FastImage source={source} style={imageStyle}/>
     </Pressable>
   )
 }

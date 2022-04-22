@@ -101,7 +101,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
         }
       </View>
       <ActivityIndicator animating={loading} color={color.palette.primary500} />
-      {!loading && collection.length === 0 && <Text text={'no benefits found'} style={styles.notFoundText} />}
+      {!loading && collection.length === 0 && <Text text={'No benefits found'} style={styles.notFoundText} />}
       {
         !!metadata?.totalCount && (
           <FlatList

@@ -1,8 +1,10 @@
+import { useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { PASSWORD } from '../../../../assets/images';
 import { Button, Screen } from '../../../components';
+import { CHANGE_PASSWORD } from '../../../services/api/mutations';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { CopiedModal } from '../../benefit-details/components/copiedModal';
@@ -16,14 +18,28 @@ export const PasswordScreen = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
 
     const [showCopiedModal, setShowCopiedModal] = useState(false)
-    const isDisabled = curPassword && newPassword && confirmPassword
 
-    const onSavePress = () => {
-        setShowCopiedModal(true)
-        setTimeout(() => {
-            setShowCopiedModal(false)
-            navigation.goBack()
-        }, 1000);
+    const [changePassword, {loading}] = useMutation(CHANGE_PASSWORD)
+
+    const isDisabled = curPassword && newPassword && confirmPassword && !loading
+
+    const onSavePress = async () => {
+        try {
+            await changePassword({
+                variables: {
+                    curPassword,
+                    newPassword,
+                    confirmPassword,
+                }
+            })
+            setShowCopiedModal(true)
+            setTimeout(() => {
+                setShowCopiedModal(false)
+                navigation.goBack()
+            }, 1000);
+        } catch (error) {
+            Alert.alert(error.message)
+        }
     }
 
     return (

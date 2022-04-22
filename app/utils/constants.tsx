@@ -123,7 +123,7 @@ export const timeConst = [
   export const destinationsConst = [
       {
           id: 0,
-          text: 'All',
+          text: 'Popular',
       },
       {
         id: 1,

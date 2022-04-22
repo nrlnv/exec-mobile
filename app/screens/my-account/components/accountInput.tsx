@@ -5,7 +5,7 @@ import { color } from '../../../theme'
 import { perfectSize } from '../../../utils/dimmesion'
 
 export const AccountInput = (props) => {
-    const {title = '', value = '', onPress = () => {}, onChangeText, ...rest} = props
+    const {title = '', value = '', onPress = () => {}, onChangeText, isText = false, ...rest} = props
 
     const onPressIn = () => {
         if (title === 'Address' || title === 'About me') {
@@ -16,13 +16,17 @@ export const AccountInput = (props) => {
     return (
         <Pressable style={styles.container} onPress={onPress} >
             <Text text={title} style={styles.title} />
-            <TextInput 
+            {isText ? (
+                <Text text={value} style={styles.value} numberOfLines={1} />
+            ) : (
+                <TextInput 
                 value={value} 
                 onChangeText={onChangeText} 
                 style={styles.value} 
                 {...rest}
                 onPressIn={onPressIn}
             />
+            )}
         </Pressable>
     )
 }

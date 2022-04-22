@@ -39,8 +39,8 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
 
   const allCities = useAppSelector(selectCities)
   const featuredCities = allCities.filter(city => city.featured === true)
-  const americaCities = allCities.filter(city => city.region === 'North America')
-  const europeCities = allCities.filter(city => city.region === 'Europe & Middle East')
+  const americaCities = allCities.filter(city => city.region === 'North America' || city.region === 'South America' || city.region === 'Canada' || city.region === 'Canada' || city.region === 'Caribbean')
+  const europeCities = allCities.filter(city => city.region === 'Europe & Middle East' || city.region === 'Europe')
   const asiaCities = allCities.filter(city => city.region === 'Asia Pacific & Australia')
   const currentCities = currentDestination === 0 ? featuredCities 
     : currentDestination === 1 ?  americaCities
@@ -208,26 +208,31 @@ export const ExploreScreen: FC<StackScreenProps<NavigatorParamList, "explore">> 
         benefits={popularHotels?.benefits?.collection} 
         text={'Popular in Hotels'} 
         onMorePress={() => navigateToCategoryScreen('Hotels')}
+        icon={<Hotel color={color.palette.white} />}
       />
       <BenefitsSlider 
         benefits={popularLifestyle?.benefits?.collection} 
         text={'Popular in Lifestyle'} 
         onMorePress={() => navigateToCategoryScreen('Lifestyle')}
+        icon={<Lifestyle color={color.palette.white} />}
       />
       <BenefitsSlider 
         benefits={popularTravel?.benefits?.collection} 
         text={'Popular in Travel'} 
         onMorePress={() => navigateToCategoryScreen('Travel')}
+        icon={<Travel color={color.palette.white} />}
       />
       <BenefitsSlider 
         benefits={popularExperiences?.benefits?.collection} 
         text={'Popular in Experiences'} 
         onMorePress={() => navigateToCategoryScreen('Experiences')}
+        icon={<Experiences color={color.palette.white} />}
       />
       <BenefitsSlider 
         benefits={popularBusiness?.benefits?.collection} 
         text={'Popular in Business'} 
         onMorePress={() => navigateToCategoryScreen('Business')}
+        icon={<Business color={color.palette.white} />}
       />
 
     </Screen>
@@ -248,7 +253,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     position: "absolute",
-    top: 5,
+    // top: 5,
     right: perfectSize(14),
   },
   pageIndicatorContainer: {

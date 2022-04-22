@@ -326,3 +326,15 @@ export const INVITE_MUTATION = gql`
     }
   }
 `
+
+export const CHANGE_PASSWORD = gql`
+  mutation ChangePasswordMutation($curPassword: String!, $newPassword: String!, $confirmPassword: String!) {
+    changePassword(input: {
+      currentPassword: $curPassword
+      newPassword: $newPassword        
+      newPasswordConfirmation: $confirmPassword
+    }) {
+      message
+    }
+  }
+`

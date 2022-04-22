@@ -18,16 +18,17 @@ const SLIDE_TITLE: TextStyle = {
   fontSize: perfectSize(26),
   lineHeight: perfectSize(34),
   textAlign: "center",
+  marginTop: perfectSize(10),
 }
 const SLIDE_DESCRIPTION: TextStyle = {
   fontSize: perfectSize(16),
   lineHeight: perfectSize(24),
-  marginTop: perfectSize(16),
+  marginTop: perfectSize(10),
   textAlign: "center",
   maxWidth: '80%'
 }
 const SLIDE_BUTTON: ViewStyle = {
-  marginTop: perfectSize(16),
+  marginTop: perfectSize(10),
 }
 
 export interface SliderItemProps {
