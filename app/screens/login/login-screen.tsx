@@ -69,7 +69,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "loginScreen">
   return (
    <AuthContainer>
         <Image source={LOGO_WITH_NAME} style={LOGO}/>
-        <FormTextField style={USERNAME_FIELD} placeholder={"Email, or username"} value={email} name={"emailUsername"} onChangeText={setEmail} />
+        <FormTextField style={USERNAME_FIELD} placeholder={"Email"} value={email} name={"emailUsername"} onChangeText={setEmail} />
         <FormTextField style={PASSWORD_FIELD} placeholder={"Password"} value={password} name={"password"} secure biometry onChangeText={setPassword} />
         <Button text={"Forgot password?"} preset={"link"} style={FORGOT_PASSWORD_BUTTON} textStyle={FORGOT_PASSWORD_BUTTON_TEXT} onPress={forgotPassword}/>
         <Button text={"log in"} style={LOGIN_BUTTON} onPress={onLogin} disabled={!isDisabled} />

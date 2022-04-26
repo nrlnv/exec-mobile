@@ -61,14 +61,14 @@ export const CityModal = (props) => {
             <View style={styles.container}>
                 <Wallpaper backgroundImage={FILTER_MODAL} />
                 <ModalHeader text={'Choose Destination'} onBackdropPress={onBackdropPress}/>
+                <ListHeaderComponent />
                 <FlatList 
                     data={currentCities}
                     keyExtractor={item => item.slug}
                     numColumns={2}
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
-                    ListHeaderComponent={ListHeaderComponent}
-                    ListHeaderComponentStyle={{marginBottom: perfectSize(20)}}
+                    contentContainerStyle={{marginTop: perfectSize(20)}}
                 />
             </View>
         </Modal>

@@ -28,7 +28,7 @@ export const EditProfileScreen = () => {
     const [companyName, setCompanyName] = useState(user?.companyName)
     const [website, setWebsite] = useState(user?.companyWebsite)
     const [position, setPosition] = useState(user?.position)
-    const addressValue = `${_address && _address + ', '}${apartment && apartment + ', '}${city && city + ', '}${state && state + ', '}${country}`
+    const addressValue = `${_address && _address}${apartment && ', ' + apartment}${city && ', ' + city}${state && ', ' + state}${country &&  ', ' + country}`
 
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 

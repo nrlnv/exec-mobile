@@ -35,8 +35,8 @@ const ACTIVE_TAB_TEXT: TextStyle = {
 
 export function MainTabs({ state, descriptors, navigation }) {
   const insets = useSafeAreaInsets()
-  const insetStyle = { paddingBottom: insets.bottom }
-  const bgStyle = {...BACKGROUND, bottom: insets.bottom }
+  const insetStyle = { paddingBottom: insets.bottom - 20 }
+  const bgStyle = {...BACKGROUND, bottom: insets.bottom - 20 }
   return (
     <View style={[CONTAINER, insetStyle]}>
       <View style={bgStyle}>

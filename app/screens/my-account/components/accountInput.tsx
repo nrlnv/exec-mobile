@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { StyleSheet, TextInput, Pressable } from 'react-native'
 import { Text } from '../../../components'
 import { color } from '../../../theme'
@@ -6,20 +6,27 @@ import { perfectSize } from '../../../utils/dimmesion'
 
 export const AccountInput = (props) => {
     const {title = '', value = '', onPress = () => {}, onChangeText, isText = false, ...rest} = props
-
+    const ref = useRef(null);
     const onPressIn = () => {
         if (title === 'Address' || title === 'About me') {
             onPress()
         }
     }
+
+    const onTextPress = () => {
+        if (!ref?.current?.isFocused() && !isText) {
+            ref.current.focus() 
+        }
+    }
     
     return (
         <Pressable style={styles.container} onPress={onPress} >
-            <Text text={title} style={styles.title} />
+            <Text text={title} style={styles.title} onPress={onTextPress} />
             {isText ? (
-                <Text text={value} style={styles.value} numberOfLines={1} />
+                <Text text={value} style={styles.value} />
             ) : (
-                <TextInput 
+                <TextInput
+                ref={ref}
                 value={value} 
                 onChangeText={onChangeText} 
                 style={styles.value} 

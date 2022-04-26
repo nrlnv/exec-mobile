@@ -118,6 +118,7 @@ export function FormTextField (props: FormTextFieldProps) {
                         onChangeText && onChangeText(value.trim())
                       }}
                       testID={testID}
+                      autoCapitalize='none'
                       {...rest}
                     />
                     {/* {(!value || value?.length === 0) && biometry && (

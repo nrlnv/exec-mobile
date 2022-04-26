@@ -27,7 +27,7 @@ export const CitySearch = (props) => {
     const hideStyle = {display: searchResult.length === 0 ? 'none' : 'flex'}
 
     return (
-        <>
+        <View>
             <View style={[styles.searchInput, style]}>
                     <Search />
                     <TextInput
@@ -35,10 +35,11 @@ export const CitySearch = (props) => {
                         onChangeText={setValue}
                         placeholder='Where would you like to go?' 
                         placeholderTextColor={color.palette.neutral400}
-                        // returnKeyType='search'
+                        returnKeyType='search'
                         style={styles.input}
                         // autoFocus
                         autoCorrect={false}
+                        blurOnSubmit
                     />
                 </View>
                 <ScrollView keyboardShouldPersistTaps='always' style={[styles.searchResult, hideStyle as StyleProp<ViewStyle>, style]}>
@@ -55,7 +56,7 @@ export const CitySearch = (props) => {
                         </Pressable>
                     ))}
                 </ScrollView>
-        </>
+        </View>
     )
 }
 
@@ -93,7 +94,8 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         // borderColor: color.palette.neutral400,
         borderRadius: 5,
-        padding: perfectSize(10),
+        paddingHorizontal: perfectSize(10),
+        paddingVertical: perfectSize(5),
         backgroundColor: color.palette.white,
     },
     resultText: {
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: perfectSize(10),
+        paddingVertical: perfectSize(5),
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(0, 0, 0, 0.1)'
     },

@@ -402,6 +402,47 @@ export const GET_POPULAR_BENEFITS = gql`
   }
 `
 
+export const GET_SIMILAR_BENEFITS = gql`
+  query ($slug: String!) {
+    getRelatedBenefits(slug: $slug) {
+      collection {
+        additionalInformation
+        address1
+        address2
+        keyInsights
+        benefits
+        category {
+          name
+          slug
+        }
+        city
+        country
+        description
+        featured
+        favorited
+        redeemed
+        images {
+          medium
+          thumbnail
+        }
+        otherRateOffer
+        benefitSummary
+        latitude
+        longitude
+        name
+        postalCode
+        rates {
+          category
+          execRate
+          standardRate
+        }
+        region
+        slug
+      }
+    }
+  }
+`
+
 export const GET_BENEFITS_FOR_YOU = gql`
   query getBenefitsForYou {
     getBenefitsForYou {

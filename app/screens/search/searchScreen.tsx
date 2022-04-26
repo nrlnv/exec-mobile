@@ -28,8 +28,10 @@ export const SearchScreen = () => {
     const [isFetching, setIsFetching] = useState(true)
     const [paginationMetadata, setPaginationMetadata] = useState<PaginationMetadata>(initialPaginationMetadata)
     const [benefits, setBenefits] = useState<Benefit[]>([])
+    const [searchCount, setSearchCount] = useState(0)
 
     const handleFetchMoreCompleted = () => {
+        setSearchCount(searchCount + 1)
         if (data?.getResultsBySearch) {
           const { getResultsBySearch } = data
           setBenefits((prevCollection) => [...prevCollection, ...getResultsBySearch.benefits.collection])
@@ -103,8 +105,8 @@ export const SearchScreen = () => {
                     <Text style={styles.sectionTitle} text={"Benefits"}/>
                 </>
             )}
-            {benefits.length === 0 && !loading && (
-                    <Text text={"No benefits found"} style={{marginLeft: perfectSize(24)}} />
+            {benefits.length === 0 && !loading && searchCount > 1 && (
+                    <Text text={"No benefits found"} style={{marginLeft: perfectSize(24), marginTop: perfectSize(20)}} />
             )}
             <FlatList 
                 data={benefits}

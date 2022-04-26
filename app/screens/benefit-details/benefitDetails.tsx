@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, COPY_FILLED, DEFAULT_IMAGE, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
-import { GET_BENEFIT, GET_BENEFITS } from '../../services/api/queries'
+import { GET_BENEFIT, GET_BENEFITS, GET_SIMILAR_BENEFITS } from '../../services/api/queries'
 import { color } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
 import RenderHtml from 'react-native-render-html';
@@ -60,8 +60,8 @@ export const BenefitDetails: React.FC = () => {
 
     const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
 
-    const { data: similarBenefits} = useQuery(GET_BENEFITS, {variables: {
-        category: 'hotels',
+    const { data: similarBenefits} = useQuery(GET_SIMILAR_BENEFITS, {variables: {
+        slug
       }})
 
     const onFavouritePress = async () => {
@@ -307,7 +307,7 @@ export const BenefitDetails: React.FC = () => {
                                     />
                                 </View> */}
                                 <BenefitsSlider 
-                                    benefits={similarBenefits?.benefits?.collection} 
+                                    benefits={similarBenefits?.getRelatedBenefits?.collection} 
                                     text={'Similar Benefits You May Like'} 
                                     moreButton={false}
                                 />

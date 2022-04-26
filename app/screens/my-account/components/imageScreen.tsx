@@ -84,11 +84,12 @@ export const ImageScreen = () => {
       }
 
     const onSavePress = async () => {
-      setLoading(true)
+      // setLoading(true)
         const data = {
           photo: imagePath,
           mime: mimeType
         }
+        navigation.goBack()
         try {
           await axios.post(`${BASE_URL}/api/panel/members/${id}/upload_photo_mobile`, data, {
             headers: {
@@ -106,15 +107,15 @@ export const ImageScreen = () => {
           catch (error) {
             console.log(error);
           }
-          setShowCopiedModal(true)
-          setTimeout(() => {
-              setShowCopiedModal(false)
-              navigation.goBack()
-          }, 1000);
+          // setShowCopiedModal(true)
+          // setTimeout(() => {
+          //     setShowCopiedModal(false)
+          //     navigation.goBack()
+          // }, 1000);
         } catch (error) {
           Alert.alert(error.message)
         }
-      setLoading(false)
+      // setLoading(false)
     }
 
     const source = imagePath ? {uri: `data:${mimeType};base64,${imagePath}`, priority: FastImage.priority.normal} : avatarUrl

@@ -33,6 +33,7 @@ import { AboutScreen } from "../screens/my-account/components/aboutScreen"
 import { ImageScreen } from "../screens/my-account/components/imageScreen"
 import { AddSubAccountsScreen } from "../screens/my-account/components/addSubAccountsScreen"
 import { InviteScreen } from "../screens/my-account/components/inviteScreen"
+import { color } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
