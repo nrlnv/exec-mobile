@@ -1,6 +1,6 @@
 import "./i18n"
 import "./utils/ignore-warnings"
-import React from "react"
+import React, { useEffect } from "react"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
 import * as storage from "./utils/storage"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -20,6 +20,7 @@ import { setContext } from '@apollo/client/link/context';
 import { BASE_URL } from "./services/api"
 import { useAppDispatch, useAppSelector } from "./hooks/hooks"
 import { setToken } from "./services/redux/slices/authSlice"
+import { Alert } from "react-native"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -32,7 +33,19 @@ function PlatformApp() {
   const dispatch = useAppDispatch()
   const credentials = useAppSelector((state: RootState) => state.auth.credentials)
 
-  const logOutLink = onError(({ networkError }): void => {
+  const checkInternetConnection = async () => {
+    try {
+      await fetch('https://www.google.com/')
+    } catch (error) {
+      Alert.alert('Please check your internet connection')
+    }
+  }
+
+  useEffect(() => {
+    checkInternetConnection()
+  }, [])
+
+  const logOutLink = onError(({  networkError }): void => {
     if (
       networkError &&
       networkError.name === 'ServerError' &&

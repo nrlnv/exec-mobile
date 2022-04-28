@@ -135,7 +135,7 @@ export const RedeemModal = (props) => {
 
     const redeemedStyle = {backgroundColor: isRedeemed ? color.palette.white : color.palette.primary500}
     const redeemedTextStyle = {color: isRedeemed ? color.palette.black : color.palette.white, fontWeight: 'bold'}
-    const backgroundImage = benefit.images ? {uri: BASE_URL + benefit.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
+    const backgroundImage = benefit?.images.length > 0 ? {uri: BASE_URL + benefit?.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
 
     // if (benefit.redemptionType === 'registration') {
     //     return

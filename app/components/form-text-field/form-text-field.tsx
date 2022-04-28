@@ -119,6 +119,7 @@ export function FormTextField (props: FormTextFieldProps) {
                       }}
                       testID={testID}
                       autoCapitalize='none'
+                      autoCorrect={false}
                       {...rest}
                     />
                     {/* {(!value || value?.length === 0) && biometry && (

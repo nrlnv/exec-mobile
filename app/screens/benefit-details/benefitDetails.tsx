@@ -121,8 +121,14 @@ export const BenefitDetails: React.FC = () => {
     useEffect(() => {
         if (benefit) {
             setIsFavourited(benefit.favorited)
+            setShowDetails(false)
+            setShowLocation(false)
+            setShowPricing(false)
+            setShowTerms(false)
         }
     }, [benefit])
+
+    const sourceHtml = benefit?.description.replaceAll('<p>&nbsp;</p>', '')
 
     return (
         // <Screen preset="scroll" unsafe>
@@ -224,8 +230,7 @@ export const BenefitDetails: React.FC = () => {
                                                     tagsStyles={{
                                                         body: {color: 'black'}
                                                     }}
-                                                    source={{html: benefit.description}}
-                                                    baseStyle={{marginTop: perfectSize(20)}}
+                                                    source={{html: sourceHtml}}
                                                 />
                                                 <Button style={styles.visitWebsiteButton} onPress={onWebsitePress}>
                                                     <View style={styles.visitWebsiteView} >
