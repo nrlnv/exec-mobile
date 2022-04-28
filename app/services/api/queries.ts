@@ -9,6 +9,12 @@ export const GET_HOMEPAGE_HERO_BENEFITS = gql`
         name
         slug
         benefitSummary
+        rates {
+          category
+          execRate
+          standardRate
+        }
+        otherRateOffer
         description
         category {
           name
@@ -30,6 +36,11 @@ export const GET_USER_FAVORITE_BENEFITS = gql`
       }
       collection {
         benefitSummary
+        rates {
+          category
+          execRate
+          standardRate
+        }
         city
         country
         description

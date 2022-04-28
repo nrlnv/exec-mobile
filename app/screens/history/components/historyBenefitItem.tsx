@@ -8,6 +8,7 @@ import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constant
 import { BASE_URL } from '../../../services/api';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { getBenefitInfo } from '../../../utils/utils';
 import { Label } from '../../benefit-details/components/label';
 
 export const HistoryBenefitItem = (props) => {
@@ -20,7 +21,7 @@ export const HistoryBenefitItem = (props) => {
 
     // const image = value.benefit.images[0] ? BASE_URL + value.benefit.images[0].medium : "https://placeimg.com/360/640/any"
     const source = value.benefit.images[0] ? {uri: BASE_URL + value.benefit.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
-    
+    const info = getBenefitInfo(value.benefit)
 
     return (
         <Pressable style={styles.container} onPress={onBenefitPress} >
@@ -33,7 +34,7 @@ export const HistoryBenefitItem = (props) => {
                 </View>
             </View>
             <Text style={styles.title} text={value.benefit.name}/>
-            <Text style={styles.description} text={value.benefit.benefitSummary}/>
+            <Text style={styles.description} text={info}/>
         </Pressable>
     )
 }

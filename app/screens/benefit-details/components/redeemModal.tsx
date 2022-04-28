@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, TouchableOpacity, Image, Linking, Alert } from 'react-native';
 import Modal from 'react-native-modal';
-import { CHECK_MARK_BLACK, CLOSE, COPY, LOGO_WITH_NAME, REDEEM_MODAL_BG, SHARE } from '../../../../assets/images';
+import { CHECK_MARK_BLACK, CLOSE, COPY, DEFAULT_IMAGE, LOGO_WITH_NAME, REDEEM_MODAL_BG, SHARE } from '../../../../assets/images';
 import { Button, Text, Wallpaper } from '../../../components';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
@@ -17,6 +17,8 @@ import { selectUser, setUser } from '../../../services/redux/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { validate, validateEmail } from '../../../utils/validate';
 import { GET_CURRENT_USER } from '../../../services/api/queries';
+import { BASE_URL } from '../../../services/api';
+import FastImage from 'react-native-fast-image';
 
 export const RedeemModal = (props) => {
     const {isVisible, onBackdropPress, benefit, redemption, setRedemption} = props
@@ -133,6 +135,7 @@ export const RedeemModal = (props) => {
 
     const redeemedStyle = {backgroundColor: isRedeemed ? color.palette.white : color.palette.primary500}
     const redeemedTextStyle = {color: isRedeemed ? color.palette.black : color.palette.white, fontWeight: 'bold'}
+    const backgroundImage = benefit.images ? {uri: BASE_URL + benefit.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
 
     // if (benefit.redemptionType === 'registration') {
     //     return
@@ -143,7 +146,7 @@ export const RedeemModal = (props) => {
     return (
         <Modal isVisible={isVisible} onBackdropPress={onBackdropPress} avoidKeyboard >
             <View style={styles.container}>
-                <Wallpaper backgroundImage={REDEEM_MODAL_BG} />
+                <Wallpaper backgroundImage={backgroundImage} style={{opacity: 0.7}} />
                 <TouchableOpacity onPress={onBackdropPress} style={styles.closeButton}>
                     <Image style={styles.closeIcon} source={CLOSE} />
                 </TouchableOpacity>
@@ -173,7 +176,7 @@ export const RedeemModal = (props) => {
                     ) : (
                         <>
                             <Text 
-                                text={'Please click the link to book. Should the rates not load, please be sure the Corporate ID booking code is copied and entered to your search, which should show EXEC or The Community Company designated rates.'} 
+                                text={benefit.redemptionInstruction} 
                                 style={styles.instructionText}    
                             />
                             <View style={styles.flexD}>
@@ -209,7 +212,7 @@ export const RedeemModal = (props) => {
 const styles = StyleSheet.create({
     container: {
         // flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         // height: '90%',
         position: 'absolute',
         left: -20,

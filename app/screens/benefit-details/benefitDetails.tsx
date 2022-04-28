@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking, Platform } from 'react-native'
+import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking, Platform, ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, COPY_FILLED, DEFAULT_IMAGE, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
 import { Avatar, Button, Header, Screen, Text } from '../../components'
@@ -30,6 +30,7 @@ type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'BenefitDetails'>;
 export const BenefitDetails: React.FC = () => {
     const insets = useSafeAreaInsets()
     const insetStylePadding = { paddingTop: insets.top }
+    const insetBottom = {paddingBottom: insets.bottom}
     const insetStyle = { marginTop: insets.top }
 
     const route = useRoute<ProfileScreenRouteProp>()
@@ -124,8 +125,8 @@ export const BenefitDetails: React.FC = () => {
     }, [benefit])
 
     return (
-        <Screen style={{}} preset="scroll" unsafe>
-            <View style={[styles.container, insetStylePadding]}>
+        // <Screen preset="scroll" unsafe>
+            <ScrollView style={[styles.container, insetStylePadding]} contentContainerStyle={insetBottom} >
                 <View style={styles.headerBack} >
                     <Header leftIcon='back' headerText='Explore' onLeftPress={navigation.goBack} style={{marginLeft: perfectSize(8)}} />
                     <View style={[styles.avatar, insetStyle]}>
@@ -173,7 +174,8 @@ export const BenefitDetails: React.FC = () => {
                                 </View>
                                 <View style={styles.benefitDetailsView}>
                                     <Text text={'Benefits:'} style={styles.benefitsText}/>
-                                    <Text text={benefit.benefitSummary} style={styles.benefitSummaryText}/>
+                                    {benefit.benefitSummary ? (<Text text={benefit.benefitSummary} style={styles.benefitSummaryText}/>) : null}
+                                    {benefit.otherRateOffer ? (<Text text={benefit.otherRateOffer} style={styles.benefitSummaryText}/>) : null}
                                     <View style={styles.flexD}>
                                         <Button  style={styles.redeemButton} onPress={toggleRedeemModal} >
                                             <View style={styles.flexD}>
@@ -204,12 +206,16 @@ export const BenefitDetails: React.FC = () => {
                                         />
                                     </View>
                                     <View style={styles.line} />
-                                    <DetailsItem 
-                                        isShow={showDetails} 
-                                        onItemPress={() => setShowDetails(prevState => !prevState)} 
-                                        text={'Details'}
-                                        icon={DETAILS}  
-                                    />
+                                    {
+                                        benefit.description ? (
+                                            <DetailsItem 
+                                                isShow={showDetails} 
+                                                onItemPress={() => setShowDetails(prevState => !prevState)} 
+                                                text={'Details'}
+                                                icon={DETAILS}  
+                                            />
+                                        ) : null
+                                    }
                                     {
                                         showDetails && benefit.description ? (
                                             <>
@@ -230,12 +236,16 @@ export const BenefitDetails: React.FC = () => {
                                             </>
                                         ) : null
                                     }
-                                    <DetailsItem 
-                                        isShow={showLocation} 
-                                        onItemPress={() => setShowLocation(prevState => !prevState)} 
-                                        text={'Location'}
-                                        icon={LOCATION}
-                                    />
+                                    {
+                                        benefit.address1 && benefit.city && benefit.country ? (
+                                            <DetailsItem 
+                                                isShow={showLocation} 
+                                                onItemPress={() => setShowLocation(prevState => !prevState)} 
+                                                text={'Location'}
+                                                icon={LOCATION}
+                                            />
+                                        ) : null
+                                    }
                                     {
                                         showLocation && benefit.address1 && benefit.city && benefit.country ? (
                                             <>
@@ -273,39 +283,52 @@ export const BenefitDetails: React.FC = () => {
                                             </>
                                         ) : null
                                     }
-                                    <DetailsItem 
+                                    {benefit.rates?.length ? (<DetailsItem 
                                         isShow={showPricing} 
                                         onItemPress={() => setShowPricing(prevState => !prevState)} 
                                         text={'Pricing Details'}
                                         icon={PRICING}
-                                    />
+                                    />) : null}
                                     {
-                                        showPricing && benefit.benefitSummary ? (
-                                            <>
-                                               <Text style={[styles.pricingText, {marginTop: perfectSize(20)}]} text={'Preferred Pricing for EXEC Members'} />
-                                               <Text style={styles.pricingText2} text={benefit.benefitSummary} /> 
-                                            </>
+                                        showPricing && benefit.rates?.length ? (
+                                            // <>
+                                            //    <Text style={[styles.pricingText, {marginTop: perfectSize(20)}]} text={'Preferred Pricing for EXEC Members'} />
+                                            //    <Text style={styles.pricingText2} text={benefit.benefitSummary} /> 
+                                            // </>
+                                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                                                <View>
+                                                    <Text text={'Category'} style={styles.pricingText2}/>
+                                                    {benefit.rates.map((rate, index) => (
+                                                        <Text key={index} text={rate.category} style={styles.pricingText}/>
+                                                    ))}
+                                                </View>
+                                                <View style={{alignItems: 'center'}}>
+                                                    <Text text={'EXEC Rate'} style={styles.pricingText2}/>
+                                                    {benefit.rates.map((rate, index) => (
+                                                        <Text key={index} text={`$${rate.execRate}`} style={styles.pricingText}/>
+                                                    ))}
+                                                </View>
+                                                <View style={{alignItems: 'center'}}>
+                                                    <Text text={'Standard'} style={styles.pricingText2}/>
+                                                    {benefit.rates.map((rate, index) => (
+                                                        <Text key={index} text={`$${rate.standardRate}`} style={styles.pricingText}/>
+                                                    ))}
+                                                </View>
+                                            </View>
                                         ) : null
                                     }
-                                    <DetailsItem 
+                                    {benefit.termsAndCondition ? (<DetailsItem 
                                         isShow={showTerms} 
                                         onItemPress={() => setShowTerms(prevState => !prevState)} 
                                         text={'Terms and Condition'}
                                         icon={TERMS}
-                                    />
+                                    />) : null}
                                     {
                                         showTerms && benefit.termsAndCondition ? (
                                             <Text style={[styles.pricingText, {marginTop: perfectSize(20)}]} text={benefit.termsAndCondition} />
                                         ) : null
                                     }
                                 </View>
-                                {/* <View style={styles.similarBenefitsView}>
-                                    <BenefitsSlider 
-                                        benefits={similarBenefits?.benefits?.collection} 
-                                        text={'Similar Benefits You May Like'} 
-                                        moreButton={false}
-                                    />
-                                </View> */}
                                 <BenefitsSlider 
                                     benefits={similarBenefits?.getRelatedBenefits?.collection} 
                                     text={'Similar Benefits You May Like'} 
@@ -323,8 +346,8 @@ export const BenefitDetails: React.FC = () => {
                         ) : null
                     }
                 </View>
-            </View>
-        </Screen>
+            </ScrollView>
+        // </Screen>
     )
 }
 
@@ -373,16 +396,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', 
         marginBottom: perfectSize(15)
     },
-    similarBenefitsView: {
-        flex: 1, 
-        backgroundColor: color.palette.black, 
-        paddingVertical: perfectSize(30), 
-        paddingHorizontal: perfectSize(24)
-    },
-    similarBenefitsText: {
-        fontSize: 20, 
-        lineHeight: 26
-    },
     pricingText: {
         fontSize: 16,
         color: color.palette.black, 
@@ -392,7 +405,8 @@ const styles = StyleSheet.create({
     },
     pricingText2: {
         color: color.palette.black, 
-        fontWeight: 'bold', lineHeight: 24
+        fontWeight: 'bold', 
+        lineHeight: 24
     },
     visitWebsiteView: {
         flexDirection: 'row', 

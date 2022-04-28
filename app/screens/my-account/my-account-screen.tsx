@@ -24,7 +24,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
   const insetStyle = { paddingTop: Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight }
   const user = useAppSelector(selectUser)
 
-  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0, redemptionsCount = 0, companyName = '', photo = {}} = user || {}
+  const {firstName = '', lastName = '', currentYearRedemptionsCount = 0, companyName = '', redemptionsCount = 0, photo = {}} = user || {}
   const avatarUrl = BASE_URL + photo.thumbnail
   const source = photo.thumbnail ? {uri: avatarUrl, priority: FastImage.priority.normal} : USER_IMAGE
 
@@ -45,7 +45,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
           </TouchableOpacity>
           <View style={styles.nameView} >
             <Text text={`${firstName} ${lastName}`} style={styles.nameText} />
-            <Text text={`${companyName}`} style={styles.companyText} />
+            <Text text={`${companyName || ''}`} style={styles.companyText} />
           </View>
         </View>
       </View>
@@ -58,11 +58,11 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
         <View style={styles.countViews}>
           <View style={styles.countView}>
             <Text text={`${currentYearRedemptionsCount}`} style={styles.countText} />
-            <Text text={`this year\n${currentYearRedemptionsCount > 1 ? 'redemptions' : 'redemption'}`} style={styles.redemptionsText} />
+            <Text text={`${currentYearRedemptionsCount > 1 ? 'redemptions' : 'redemption'}\n this year`} style={styles.redemptionsText} />
           </View>
           <View style={styles.countView}>
             <Text text={`${redemptionsCount}`} style={styles.countText} />
-            <Text text={`all time\n${redemptionsCount > 1 ? 'redemptions' : 'redemption'}`} style={styles.redemptionsText} />
+            <Text text={`${redemptionsCount > 1 ? 'redemptions' : 'redemption'}\n all time`} style={styles.redemptionsText} />
           </View>
         </View>
         <View style={styles.accountItemsView}>

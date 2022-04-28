@@ -11,6 +11,7 @@ import { ResetSuccess } from "./components/reset-success"
 import { openInbox } from "react-native-email-link"
 import { BASE_URL } from "../../services/api"
 import axios from "axios"
+import { useNavigation } from "@react-navigation/native"
 
 const LOGO: ImageStyle = {
   marginTop: perfectSize(59),
@@ -24,14 +25,14 @@ const GO_BACK: ViewStyle = {
 type Inputs = {
   email: string
 }
-export const ResetPasswordScreen = ({ navigation }) => {
+export const ResetPasswordScreen = () => {
+  const navigation = useNavigation()
   // const { control, handleSubmit } = useForm<Inputs>();
   const [email, setEmail] = useState('')
   // TODO changing state of request
   const success = false;
 
   const onSendInstructions = async () => {
-    console.log("request accesssss", email)
     const data = {
       email
     }
@@ -41,8 +42,11 @@ export const ResetPasswordScreen = ({ navigation }) => {
           'Content-Type': 'application/json',
         },
       })
+      Alert.alert('Instructions sent successfully')
+      navigation.goBack()
     } catch (error) {
-      Alert.alert(error.message)
+      console.log(error.response.data.error)
+      Alert.alert(error.response.data.error)
     }
   }
 

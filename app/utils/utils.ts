@@ -1,5 +1,5 @@
 import { BenefitPreviewDTO } from "../types"
-import { Benefit } from "../types/generatedGql"
+import { Benefit, Maybe, Rate } from "../types/generatedGql"
 
 export const getBenefitPreviewData = (benefit: Benefit): BenefitPreviewDTO => ({
     id: benefit?.id,
@@ -20,4 +20,15 @@ export const getBenefitPreviewData = (benefit: Benefit): BenefitPreviewDTO => ({
 export const configBenefitsForPreview = (data: Benefit[]): BenefitPreviewDTO[] => {
     if (!data) return []
     return data.map((benefit) => getBenefitPreviewData(benefit))
+  }
+
+  export const getBenefitRatesText = (rates: Maybe<Rate>[]): string => {
+    if (!rates) return ''
+    return rates?.[0] ? `Rates from $${rates[0]?.execRate}` : ''
+  }
+  
+  export const getBenefitInfo = (benefit: Maybe<Benefit | BenefitPreviewDTO>): string => {
+    if (!benefit) return ''
+    const { rates, otherRateOffer, benefitSummary } = benefit
+    return rates?.length ? getBenefitRatesText(rates) : otherRateOffer || benefitSummary || ''
   }

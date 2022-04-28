@@ -8,6 +8,7 @@ import { BENEFIT_DETAILS_SCREEN } from "../../../navigators/screen-name-constant
 import { BASE_URL } from "../../../services/api"
 import { BenefitPreviewDTO } from "../../../types"
 import { perfectSize } from "../../../utils/dimmesion"
+import { getBenefitInfo } from "../../../utils/utils"
 
 const SLIDE_CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -43,7 +44,7 @@ export const SliderItem = (props:  SliderItemProps) => {
   const navigation = useNavigation()
   // const image = {uri: BASE_URL + benefit.images[0]}
   const source = benefit.images[0] ? {uri: BASE_URL + benefit.images[0], priority: FastImage.priority.normal} : DEFAULT_IMAGE
-
+  const info = getBenefitInfo(benefit)
 
   const onButtonPress = () => {
     navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: benefit.slug})
@@ -53,7 +54,7 @@ export const SliderItem = (props:  SliderItemProps) => {
     <View style={SLIDE_CONTAINER}>
       <FastImage source={source} style={styles.image} />
       <Text style={SLIDE_TITLE} text={benefit.name}/>
-      <Text style={SLIDE_DESCRIPTION} text={benefit.benefitSummary}/>
+      <Text style={SLIDE_DESCRIPTION} text={info}/>
       <Button style={SLIDE_BUTTON} text={"more details"} preset={"selfSize"} onPress={onButtonPress}/>
     </View>
   )

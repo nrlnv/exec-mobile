@@ -11,6 +11,7 @@ import { BASE_URL } from '../../../services/api';
 import { ADD_FAVORITE_MUTATION } from '../../../services/api/mutations';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { getBenefitInfo } from '../../../utils/utils';
 import { Label } from '../../benefit-details/components/label';
 
 export const FavoriteBenefitItem = (props) => {
@@ -32,7 +33,7 @@ export const FavoriteBenefitItem = (props) => {
 
     // const image = value.images[0] ? BASE_URL + value.images[0] : "https://placeimg.com/360/640/any"
     const source = value.images[0] ? {uri: BASE_URL + value.images[0], priority: FastImage.priority.normal} : DEFAULT_IMAGE
-
+    const info = getBenefitInfo(value)
 
     const [addFavorite] = useMutation(ADD_FAVORITE_MUTATION)
 
@@ -61,7 +62,7 @@ export const FavoriteBenefitItem = (props) => {
                     </View>
                 </View>
                 <Text style={styles.title} text={value.name}/>
-                <Text style={styles.description} text={value.benefitSummary}/>
+                <Text style={styles.description} text={info}/>
             </Pressable>
         </Swipeable>
     )

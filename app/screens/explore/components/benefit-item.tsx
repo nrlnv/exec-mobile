@@ -9,6 +9,7 @@ import { BASE_URL } from "../../../services/api"
 import { color } from "../../../theme"
 import { Benefit } from "../../../types/generatedGql"
 import { perfectSize } from "../../../utils/dimmesion"
+import { getBenefitInfo } from "../../../utils/utils"
 import { Label } from "../../benefit-details/components/label"
 
 export interface BenefitItemProps {
@@ -18,6 +19,8 @@ export interface BenefitItemProps {
 export const BenefitItem = (props) => {
     const { value } = props
     const navigation = useNavigation()
+
+    const info = getBenefitInfo(value)
     const onBenefitPress = () => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.slug})
     }
@@ -36,7 +39,7 @@ export const BenefitItem = (props) => {
                 </View>
             </View>
             <Text style={styles.title} text={value.name}/>
-            <Text style={styles.description} text={value.benefitSummary}/>
+            <Text style={styles.description} text={info}/>
         </Pressable>
     )
   }

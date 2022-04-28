@@ -5,6 +5,7 @@ import {
   ImageURISource,
   Platform,
 } from "react-native"
+import FastImage from "react-native-fast-image"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
@@ -42,5 +43,5 @@ export function AutoImage(props: ImageProps) {
     }
   }, [])
 
-  return <RNImage {...props} style={[imageSize, props.style]} />
+  return <FastImage {...props} style={[imageSize, props.style]} />
 }

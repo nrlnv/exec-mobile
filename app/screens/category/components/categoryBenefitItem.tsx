@@ -8,6 +8,7 @@ import { BENEFIT_DETAILS_SCREEN } from '../../../navigators/screen-name-constant
 import { BASE_URL } from '../../../services/api';
 import { color } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
+import { getBenefitInfo } from '../../../utils/utils';
 import { Label } from '../../benefit-details/components/label';
 
 export const CategoryBenefitItem = (props) => {
@@ -16,6 +17,8 @@ export const CategoryBenefitItem = (props) => {
     const source = value.images[0] ? {uri: BASE_URL + value.images[0].medium, priority: FastImage.priority.normal} : DEFAULT_IMAGE
 
     const navigation = useNavigation()
+    
+    const info = getBenefitInfo(value)
 
     const onBenefitPress = () => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.slug})
@@ -32,7 +35,7 @@ export const CategoryBenefitItem = (props) => {
                 </View>
             </View>
             <Text style={styles.title} text={value.name}/>
-            <Text style={styles.description} text={value.otherRateOffer}/>
+            <Text style={styles.description} text={info}/>
         </Pressable>
     )
 }
