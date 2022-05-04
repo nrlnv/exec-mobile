@@ -4,42 +4,17 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React, { useEffect, useMemo } from "react"
-import { Alert, useColorScheme, View } from "react-native"
+import React, { useMemo } from "react"
+import { useColorScheme, View } from "react-native"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { AUTH_STACK, MAIN_STACK } from "./screen-name-constants"
 import { createStackNavigator, StackNavigationOptions } from "@react-navigation/stack"
 import { AuthStack } from "./auth-navigator"
-import { MainTabsNavigator, MainTabsStackNavigator } from "./main-tabs-navigator"
+import { MainTabsStackNavigator } from "./main-tabs-navigator"
 import { color } from "../theme"
 import { useAppSelector } from "../hooks/hooks"
 import { selectToken } from "../services/redux/slices/authSlice"
-// import {useNetInfo} from "@react-native-community/netinfo"
-
-const _checkInet = () => {
-  return new Promise((resolve) => {
-    let loaded = false
-    let resolved = false
-    let xhr = new XMLHttpRequest();
-    xhr.timeout = 500;
-    xhr.open('GET', 'https://www.apple.com/', true);
-    setTimeout(()=> {
-      if (!loaded) {
-        xhr.abort();
-        resolved = true;
-        return resolve(false)
-      }
-    }, 500)
-    xhr.onload = ()=> {if (xhr.status === 200 && !resolved) {
-      loaded = true;
-      return resolve(true)
-      }}
-    xhr.ontimeout = ()=> {return resolve(false)}
-    xhr.onerror = ()=> {if (!resolved) {return resolve(false)}}
-    xhr.send()
-  })
-};
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -91,7 +66,6 @@ const AppStack = () => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
-  // const { isInternetReachable } = useNetInfo()
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
   const navTheme = {
@@ -101,16 +75,6 @@ export const AppNavigator = (props: NavigationProps) => {
       background: 'transparent',
     },
   };
-
-  // useEffect(() => {
-  //   _checkInet().then(isConnected => {
-  //     console.log({isConnected});
-  //     if (!isConnected === false) {
-  //       Alert.alert('Disconnected', 'You are not connected to the internet. Reconnect and try again.')
-  //     }
-  //   })
-  // }, [_checkInet])
-
 
   return (
     <View style={{flex: 1, backgroundColor: color.palette.black}}>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useCallback, useEffect, useState } from "react"
 import { FlatList, StyleSheet, View, RefreshControl } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
@@ -12,46 +12,79 @@ import { FavoriteBenefitItem } from "./components/favoriteBenefitItem"
 import { perfectSize } from "../../utils/dimmesion"
 import { useNavigation } from "@react-navigation/native"
 import { EXPLORE_TAB } from "../../navigators/screen-name-constants"
+import { Benefit, CollectionMetadata } from "../../types/generatedGql"
+
+type PaginationMetadata = Omit<CollectionMetadata, 'limitValue'>
 
 export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites">> = () => {
   const navigation = useNavigation()
-
-  const [userFavorites, setUserFavorites] = useState([])
-
-  const [getUserFavoriteBenefits, {data: userFavoriteBenefitsData, loading}] = useLazyQuery(GET_USER_FAVORITE_BENEFITS)
-
   const renderItem = ({item}) => {
     return (
       <FavoriteBenefitItem value={item} removeFromFavorite={removeFromFavorite} />
     )
   }
 
-  const fetchBenefits = async () => {
-    try {
-      await getUserFavoriteBenefits()
-      setUserFavorites(userFavoriteBenefitsData?.getUserFavoriteBenefits?.collection)
-    } catch (error) {
-      console.log(error);
+  const [collection, setCollection] = useState<Benefit[]>([])
+  const [metadata, setMetadata] = useState<PaginationMetadata>({
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: 1,
+  })
+
+  const handleFetchMoreCompleted = () => {
+    if (data) {
+        const { getUserFavoriteBenefits } = data
+        collection.push(...getUserFavoriteBenefits.collection)
+        setCollection(collection)
+        setMetadata(getUserFavoriteBenefits.metadata)
     }
   }
 
+  const [getUserFavoriteBenefits, {data, loading, error}] = useLazyQuery(GET_USER_FAVORITE_BENEFITS, {
+    onCompleted: handleFetchMoreCompleted,
+    fetchPolicy: 'network-only',
+  })
+
+  const fetchBenefits = useCallback(
+    (page: number) => {
+        if (page === 1) {
+          setCollection([])
+        }
+        getUserFavoriteBenefits({
+            variables: {
+                limit: 10,
+                page: page || 1
+            },
+        })
+    },
+    [getUserFavoriteBenefits]
+)
+
   useEffect(() => {
-    fetchBenefits()
-  }, [userFavoriteBenefitsData])
+    setCollection([])
+    fetchBenefits(1)
+}, [fetchBenefits])
+
+const fetchMoreBenefits = useCallback(async () => {
+  if (!error && !loading) {
+    const currentPage = metadata?.currentPage || 0
+    fetchBenefits(currentPage + 1)
+  }
+}, [error, loading, fetchBenefits, metadata?.currentPage])
 
   const removeFromFavorite = (slug) => {
-    const arr = [...userFavorites]
-    const removeIndex = userFavorites.map(item => item.slug).indexOf(slug)
+    const arr = [...collection]
+    const removeIndex = collection.map(item => item.slug).indexOf(slug)
     if (removeIndex !== -1) {
       arr.splice(removeIndex, 1);
-      setUserFavorites(arr)
+      setCollection(arr)
     }
   }
 
   const ListHeaderComponent = () => {
     return (
       <>
-        {userFavorites?.length === 0 ? (
+        {collection?.length === 0 ? (
             <Button 
             text={'Go To Explore'} 
             onPress={() => navigation.navigate(EXPLORE_TAB)} 
@@ -59,6 +92,12 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
         ) : null}
       </>
     )
+  }
+
+  const onEndReached = () => {
+    if (collection.length < metadata.totalCount) {
+      fetchMoreBenefits()
+    }
   }
   
   return (
@@ -69,15 +108,19 @@ export const FavoritesScreen: FC<StackScreenProps<NavigatorParamList, "favorites
       </View>
       
       <FlatList 
-        data={configBenefitsForPreview(userFavorites)}
+        data={configBenefitsForPreview(collection)}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
         keyExtractor={item => item.slug}
         ListHeaderComponent={ListHeaderComponent}
+        onEndReachedThreshold={0.5}
+        onEndReached={onEndReached}
         refreshControl={
           <RefreshControl
             refreshing={loading}
-            onRefresh={fetchBenefits}
+            onRefresh={() => {
+              fetchBenefits(1)
+            }}
             tintColor={color.palette.primary500}
           />
         }

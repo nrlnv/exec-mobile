@@ -83,11 +83,11 @@ export const CardScreen: FC<StackScreenProps<NavigatorParamList, "card">> = () =
         </DigitalCardContainer>
         <FastImage style={styles.avatarImage} source={source}/>
       </View>
-      {Platform.OS === 'ios' && (
+      {/* {Platform.OS === 'ios' && (
         <Pressable style={APPLE_WALLET_IMAGE}>
           <Image source={APPLE_WALLET}/>
         </Pressable>
-      )}
+      )} */}
     </Screen>
   )
 }

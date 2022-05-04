@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { DEFAULT_IMAGE, FAVORITE, REDEEMED } from '../../../../assets/images';
@@ -14,6 +14,9 @@ import { Label } from '../../benefit-details/components/label';
 export const HistoryBenefitItem = (props) => {
     const { value } = props
     const navigation = useNavigation()
+
+    const [isFavorited, setIsFavorited] = useState(value.favorited)
+
 
     const onBenefitPress = () => {
         navigation.navigate(BENEFIT_DETAILS_SCREEN, {slug: value.benefit.slug})

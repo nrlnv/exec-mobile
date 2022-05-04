@@ -6,7 +6,7 @@ import { CARET_DOWN, CATEGORY_HEADER, FILTER } from '../../../assets/images';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { perfectSize } from '../../utils/dimmesion';
 import Hotel from '../../../assets/svgs/hotel';
-import { destinationsConst, filtersConst } from '../../utils/constants';
+import { categoryDescription, destinationsConst, filtersConst } from '../../utils/constants';
 import { DestinationsItem } from './components/destinationsItem';
 import { CityItem } from './components/cityItem';
 import { Benefit, CollectionMetadata, Order } from '../../types/generatedGql';
@@ -168,7 +168,7 @@ export const CategoryScreen = () => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.categoryDescription}>
-                        <Text text={'Explore the StayEXEC Hotels & Resorts program and enjoy special offers as an EXEC Member'} style={styles.descriptionText} />
+                        <Text text={categoryDescription(category)} style={styles.descriptionText} />
                     </View>
                 </View>
                 {category === 'Hotels' ? (
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         backgroundColor: color.palette.black
     },
     header: {
-        minHeight: perfectSize(260),
+        // minHeight: perfectSize(320),
     },
     categoryTitle: {
         flexDirection: 'row',
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     categoryDescription: {
         marginTop: perfectSize(14),
         paddingHorizontal: perfectSize(24),
+        marginBottom: perfectSize(40)
     },
     descriptionText: {
         fontSize: 16,

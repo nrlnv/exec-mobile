@@ -9,9 +9,9 @@ import { CollectionMetadata, Redemption } from "../../types/generatedGql"
 import { useLazyQuery } from "@apollo/client"
 import { GET_USER_REDEMPTIONS } from "../../services/api/queries"
 import { ScreenHeader } from "../../components/header/screenHeader"
-import { HistoryBenefitItem } from "./components/historyBenefitItem"
 import { TimeItem } from "./components/timeItem"
 import { timeConst } from "../../utils/constants"
+import { CategoryBenefitItem } from "../category/components/categoryBenefitItem"
 
 const timeHandler = (id: number) => {
   switch (id) {
@@ -78,7 +78,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
 
   const renderItem = ({item}) => {
     return (
-      <HistoryBenefitItem value={item} />
+      <CategoryBenefitItem value={item.benefit} />
     )
   }
 
@@ -111,7 +111,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
             onEndReachedThreshold={0.5}
             onEndReached={onEndReached}
             keyExtractor={item => item.createdAt}
-            contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
+            // contentContainerStyle={{paddingHorizontal: perfectSize(24)}}
             refreshControl={
               <RefreshControl
                 refreshing={loading}

@@ -21,6 +21,7 @@ import { BASE_URL } from "./services/api"
 import { useAppDispatch, useAppSelector } from "./hooks/hooks"
 import { setToken } from "./services/redux/slices/authSlice"
 import { Alert } from "react-native"
+import NetInfo from "@react-native-community/netinfo";
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -33,16 +34,16 @@ function PlatformApp() {
   const dispatch = useAppDispatch()
   const credentials = useAppSelector((state: RootState) => state.auth.credentials)
 
-  const checkInternetConnection = async () => {
-    try {
-      await fetch('https://www.google.com/')
-    } catch (error) {
-      Alert.alert('Please check your internet connection')
-    }
-  }
-
   useEffect(() => {
-    checkInternetConnection()
+// Subscribe
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (!state.isConnected) {
+        Alert.alert('Please check your internet connection')
+      }
+    });
+
+    // Unsubscribe
+    return () => unsubscribe();
   }, [])
 
   const logOutLink = onError(({  networkError }): void => {

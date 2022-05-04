@@ -62,7 +62,7 @@ export const MyAccountScreen: FC<StackScreenProps<NavigatorParamList, "myAccount
           </View>
           <View style={styles.countView}>
             <Text text={`${redemptionsCount}`} style={styles.countText} />
-            <Text text={`${redemptionsCount > 1 ? 'redemptions' : 'redemption'}\n all time`} style={styles.redemptionsText} />
+            <Text text={'all\nredemptions'} style={styles.redemptionsText} />
           </View>
         </View>
         <View style={styles.accountItemsView}>

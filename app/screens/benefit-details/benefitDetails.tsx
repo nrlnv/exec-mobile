@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, View, useWindowDimensions, StyleSheet, TouchableOpacity, Linking, Platform, ScrollView } from 'react-native'
+import { Image, View, useWindowDimensions, StyleSheet, Linking, Platform, ScrollView, DeviceEventEmitter } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CHECK_MARK, COPY_FILLED, DEFAULT_IMAGE, DETAILS, LOCATION, PRICING, SHARE_FILLED, STAR, STAR_FILLED, TERMS } from '../../../assets/images'
-import { Avatar, Button, Header, Screen, Text } from '../../components'
+import { Avatar, Button, Header, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
-import { GET_BENEFIT, GET_BENEFITS, GET_SIMILAR_BENEFITS } from '../../services/api/queries'
+import { GET_BENEFIT, GET_SIMILAR_BENEFITS } from '../../services/api/queries'
 import { color } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
 import RenderHtml from 'react-native-render-html';
@@ -36,7 +36,18 @@ export const BenefitDetails: React.FC = () => {
     const route = useRoute<ProfileScreenRouteProp>()
     const navigation = useNavigation()
     const { width } = useWindowDimensions();
-    const { slug } = route?.params
+    const { slug, isFavorited, setIsFavorited } = route?.params
+
+    // const toggleFavorite = () => {
+    //     setIsFavourited(prevState => !prevState)
+    //     DeviceEventEmitter.emit("event.testEvent", {eventData: !isFavourited});
+    // }
+
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.removeAllListeners("event.testEvent")
+          };
+        }, []);
 
     const { data } = useQuery(GET_BENEFIT, {
         variables: {
@@ -52,7 +63,7 @@ export const BenefitDetails: React.FC = () => {
     const [showTerms, setShowTerms] = useState(false)
     const [showRedeemModal, setShowRedeemModal] = useState(false)
     const [activeSlide, setActiveSlide] = useState(0)
-    const [isFavourited, setIsFavourited] = useState(false)
+    const [isStarred, setIsStarred] = useState(isFavorited)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
 
     const [redemption, setRedemption] = useState<Partial<Redemption>>({})
@@ -66,7 +77,9 @@ export const BenefitDetails: React.FC = () => {
       }})
 
     const onFavouritePress = async () => {
-        setIsFavourited(prevState => !prevState)
+        setIsFavorited(prevState => !prevState)
+        setIsStarred(prevState => !prevState)
+        // toggleFavorite()
         try {
             await addFavorite({
                 variables: {
@@ -75,7 +88,9 @@ export const BenefitDetails: React.FC = () => {
             })
         } catch (e) {
             console.error(e)
-            setIsFavourited(prevState => !prevState)
+            setIsFavorited(prevState => !prevState)
+            setIsStarred(prevState => !prevState)
+            // toggleFavorite()
         }
     }
 
@@ -120,7 +135,7 @@ export const BenefitDetails: React.FC = () => {
 
     useEffect(() => {
         if (benefit) {
-            setIsFavourited(benefit.favorited)
+            // setIsFavourited(benefit.favorited)
             setShowDetails(false)
             setShowLocation(false)
             setShowPricing(false)
@@ -128,7 +143,9 @@ export const BenefitDetails: React.FC = () => {
         }
     }, [benefit])
 
-    const sourceHtml = benefit?.description.replaceAll('<p>&nbsp;</p>', '')
+    // const sourceHtml = benefit?.description.replace(/(<p[^>]+?>|<p>|<\/p>)/img, "")
+    const sourceHtml = benefit?.description.replace(/&nbsp;/g, '').replace(/<p><\/p>/gi, '')
+    // const sourceHtml = benefit?.description
 
     return (
         // <Screen preset="scroll" unsafe>
@@ -206,8 +223,8 @@ export const BenefitDetails: React.FC = () => {
                                             )
                                         }
                                         <SquareButton 
-                                            icon={isFavourited ? STAR : STAR_FILLED} 
-                                            filled={isFavourited} 
+                                            icon={isStarred ? STAR : STAR_FILLED} 
+                                            filled={isStarred} 
                                             onPress={onFavouritePress}
                                         />
                                     </View>

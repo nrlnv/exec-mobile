@@ -29,11 +29,8 @@ export const GET_HOMEPAGE_HERO_BENEFITS = gql`
 `
 
 export const GET_USER_FAVORITE_BENEFITS = gql`
-  query GetUserFavoriteBenefits {
-    getUserFavoriteBenefits {
-      metadata {
-        totalCount
-      }
+  query GetUserFavoriteBenefits($limit: Int, $page: Int) {
+    getUserFavoriteBenefits(limit: $limit, page: $page) {
       collection {
         benefitSummary
         rates {
@@ -58,6 +55,12 @@ export const GET_USER_FAVORITE_BENEFITS = gql`
           medium
           thumbnail
         }
+      }
+      metadata {
+        totalCount
+        currentPage
+        limitValue
+        totalPages
       }
     }
   }

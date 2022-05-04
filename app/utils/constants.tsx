@@ -1,5 +1,5 @@
 import React from 'react'
-import { ADVENTURES, BUSINESS, EXPERIENCES, HOTELS, INVITE, LIFESTYLE, LOG_OUT, PASSWORD, PROFILE, RELAX, RESTAURANTS, SUB_ACCOUNT, SUPPORT, TRAVEL } from "../../assets/images"
+import { INVITE, LOG_OUT, PASSWORD, PROFILE, SUB_ACCOUNT, SUPPORT } from "../../assets/images"
 import ArrowRightBig from '../../assets/svgs/arrow_right_big'
 import Business from '../../assets/svgs/business'
 import Experiences from '../../assets/svgs/experiences'
@@ -153,3 +153,22 @@ export const timeConst = [
         text: 'Featured'
     },
   ]
+
+  export const categoryDescription = (category: string) => {
+      switch (category) {
+            case 'Hotels':
+                return 'The EXEC Hotels & Resorts Collection curates the most sought-after hotels and resorts globally.'
+            case 'Lifestyle':
+                return 'Be fit. Be well. Be fashionable. Be the leader. Look and feel your best with the EXEC Lifestyle benefits program.'
+            case 'Business':
+                return 'EXEC Business benefits provide you access the essentials to run your business and help it grow.'
+            case 'Experiences':
+                return 'Access is priceless. Enjoy benefits on tickets, unique experiences, one-of-a-kind events and more with the EXEC Experiences program.'
+            case 'Travel':
+                return 'The EXEC Travel Program partners with leading travel brands to ease the stress of business and leisure travel.'
+            case 'All Benefits':
+                return 'The EXEC program curates the finest travel, hotel, and lifestyle benefits to upgrade your life and give you access to some of the most exclusive privileges and experiences in the world.'
+            default: 
+                return ''
+      }
+  }

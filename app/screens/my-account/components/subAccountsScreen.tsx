@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SUB_ACCOUNT } from '../../../../assets/images';
 import { Button, Screen, Text } from '../../../components';
@@ -17,6 +17,15 @@ export const SubAccountsScreen = () => {
     const {maxSubAccountCount, subAccountCount, subAccounts} = user || {}
     const remaining = maxSubAccountCount - subAccountCount
     const footerText = remaining === 1 ? `${remaining} sub-account remaining` : `${remaining} sub-accounts remaining`
+    
+    const onAddPress = async () => {
+        if (remaining > 0) {
+            navigation.navigate(ADD_SUB_ACCOUNTS_SCREEN)
+        } else {
+            await Linking.openURL('https://exec.vip/client/contact')
+        }
+    }
+
     return (
         <Screen style={styles.container} unsafe >
             <AccountHeader title={'Sub-Accounts'} icon={SUB_ACCOUNT} />
@@ -29,7 +38,7 @@ export const SubAccountsScreen = () => {
                 text={footerText} 
                 style={styles.footerText}    
             />
-            <Button text={'+  Add new'} style={styles.button} onPress={() => navigation.navigate(ADD_SUB_ACCOUNTS_SCREEN)} disabled={remaining < 1} />
+            <Button text={'+  Add new'} style={styles.button} onPress={onAddPress} />
         </Screen>
     )
 }
