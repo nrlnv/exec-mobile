@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity, Image, Linking, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Linking, Alert, useWindowDimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import { CHECK_MARK_BLACK, CLOSE, COPY, DEFAULT_IMAGE, LOGO_WITH_NAME, REDEEM_MODAL_BG, SHARE } from '../../../../assets/images';
 import { Button, Text, Wallpaper } from '../../../components';
-import { color } from '../../../theme';
+import { color, typography } from '../../../theme';
 import { perfectSize } from '../../../utils/dimmesion';
 import { CopiedModal } from './copiedModal';
 import { Label } from './label';
@@ -19,11 +19,13 @@ import { validate, validateEmail } from '../../../utils/validate';
 import { GET_CURRENT_USER } from '../../../services/api/queries';
 import { BASE_URL } from '../../../services/api';
 import FastImage from 'react-native-fast-image';
+import RenderHTML from 'react-native-render-html';
 
 export const RedeemModal = (props) => {
     const {isVisible, onBackdropPress, benefit, redemption, setRedemption} = props
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
+    const { width } = useWindowDimensions();
     const user = useAppSelector(selectUser)
     const [isRedeemed, setIsRedeemed] = useState(false)
     const [showCopiedModal, setShowCopiedModal] = useState(false)
@@ -175,9 +177,12 @@ export const RedeemModal = (props) => {
                         </View>
                     ) : (
                         <>
-                            <Text 
-                                text={benefit.redemptionInstruction} 
-                                style={styles.instructionText}    
+                            <RenderHTML
+                                contentWidth={width}
+                                tagsStyles={{
+                                    body: styles.instructionText
+                                }}
+                                source={{html: benefit.redemptionInstruction}}
                             />
                             <View style={styles.flexD}>
                                 <Button style={[styles.revealLinkButton, redeemedStyle]} onPress={onRevealPress} disabled={redeemLoading} >
@@ -264,12 +269,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: perfectSize(30)
     },
+    // instructionText: {
+    //     marginTop: perfectSize(24),
+    //     color: color.palette.neutral400,
+    //     textAlign: 'center',
+    //     alignSelf: 'center',
+    //     marginBottom: perfectSize(30)
+    // },
     instructionText: {
-        marginTop: perfectSize(24),
-        color: color.palette.neutral400,
+        fontSize: 15,
+        color: color.palette.neutral400, 
+        lineHeight: 19.5, 
+        marginBottom: perfectSize(5), 
         textAlign: 'center',
-        alignSelf: 'center',
-        marginBottom: perfectSize(30)
+        fontFamily: typography.primary
     },
     instructionText2: {
         marginVertical: perfectSize(16),

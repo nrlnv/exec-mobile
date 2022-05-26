@@ -7,7 +7,7 @@ import { CHECK_MARK, COPY_FILLED, DEFAULT_IMAGE, DETAILS, LOCATION, PRICING, SHA
 import { Avatar, Button, Header, Text } from '../../components'
 import { BASE_URL } from '../../services/api'
 import { GET_BENEFIT, GET_SIMILAR_BENEFITS } from '../../services/api/queries'
-import { color } from '../../theme'
+import { color, typography } from '../../theme'
 import { perfectSize } from '../../utils/dimmesion'
 import RenderHtml from 'react-native-render-html';
 import ArrowRight from '../../../assets/svgs/arrow_right'
@@ -245,7 +245,8 @@ export const BenefitDetails: React.FC = () => {
                                                 <RenderHtml
                                                     contentWidth={width}
                                                     tagsStyles={{
-                                                        body: {color: 'black'}
+                                                        // body: {color: 'black', fontSize: 16, lineHeight: 24, }
+                                                        body: styles.pricingText
                                                     }}
                                                     source={{html: sourceHtml}}
                                                 />
@@ -424,6 +425,7 @@ const styles = StyleSheet.create({
         lineHeight: 24, 
         marginBottom: perfectSize(5), 
         textAlign: 'justify',
+        fontFamily: typography.primary
     },
     pricingText2: {
         color: color.palette.black, 
